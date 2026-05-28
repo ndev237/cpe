@@ -1,0 +1,310 @@
+{% extends 'mon_app/baseA.html' %}
+
+{% block content %}
+<style>
+    /* Conteneur principal */
+    .form-container {
+        font-family: 'Poppins', sans-serif;
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 10px;
+    }
+
+    .page-header {
+        margin-bottom: 30px;
+    }
+
+    .page-header h1 {
+        font-size: 1.8rem;
+        color: #003366; /* Bleu Nuit */
+        margin: 0;
+        font-weight: 600;
+    }
+
+    .page-header p {
+        color: #64748b;
+        font-size: 0.9rem;
+        margin-top: 4px;
+    }
+
+    /* Carte du formulaire */
+    .form-card {
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+        border: 1px solid rgba(0,0,0,0.05);
+        padding: 30px;
+    }
+
+    [data-theme="dark"] .form-card {
+        background: #1e293b;
+        border-color: #334155;
+    }
+
+    /* Organisation des lignes du formulaire */
+    .form-group {
+        margin-bottom: 24px;
+    }
+
+    .form-group label {
+        display: block;
+        font-size: 0.9rem;
+        font-weight: 600;
+        color: #334155;
+        margin-bottom: 8px;
+    }
+
+    [data-theme="dark"] .form-group label {
+        color: #cbd5e1;
+    }
+
+    /* Style des entrées de texte et zones de texte Django */
+    .form-group input[type="text"],
+    .form-group textarea {
+        width: 100%;
+        padding: 12px 16px;
+        border: 1px solid #cbd5e1;
+        border-radius: 8px;
+        font-size: 0.9rem;
+        font-family: inherit;
+        outline: none;
+        transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        background-color: #fff;
+    }
+
+    [data-theme="dark"] .form-group input[type="text"],
+    [data-theme="dark"] .form-group textarea {
+        background-color: #0f172a;
+        border-color: #334155;
+        color: #fff;
+    }
+
+    .form-group input:focus,
+    .form-group textarea:focus {
+        border-color: #4A7c59; /* Vert de ta sidebar */
+        box-shadow: 0 0 0 3px rgba(74, 124, 89, 0.15);
+    }
+
+    /* Interrupteurs / Checkboxes alignés horizontalement */
+    .checkbox-group {
+        display: flex;
+        gap: 30px;
+        flex-wrap: wrap;
+        margin-top: 10px;
+    }
+
+    .checkbox-label {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        cursor: pointer;
+        font-size: 0.9rem;
+        font-weight: 500;
+        color: #334155;
+    }
+
+    [data-theme="dark"] .checkbox-label {
+        color: #cbd5e1;
+    }
+
+    .checkbox-label input[type="checkbox"] {
+        width: 18px;
+        height: 18px;
+        accent-color: #4A7c59; /* Vert de ta sidebar */
+        cursor: pointer;
+    }
+
+    /* Zone personnalisée pour l'image */
+    .file-drop-zone {
+        border: 2px dashed #cbd5e1;
+        border-radius: 8px;
+        padding: 20px;
+        text-align: center;
+        background: #f8fafc;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+
+    [data-theme="dark"] .file-drop-zone {
+        background: #0f172a;
+        border-color: #334155;
+    }
+
+    .file-drop-zone:hover {
+        border-color: #4A7c59;
+        background: rgba(74, 124, 89, 0.02);
+    }
+
+    /* Prévisualisation de l'image */
+    #imagePreview {
+        max-width: 100%;
+        max-height: 200px;
+        border-radius: 6px;
+        margin-top: 15px;
+        display: none;
+        object-fit: cover;
+    }
+
+    /* Barre d'action finale (Boutons) */
+    .form-actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 12px;
+        margin-top: 30px;
+        border-top: 1px solid #f1f5f9;
+        padding-top: 20px;
+    }
+
+    [data-theme="dark"] .form-actions {
+        border-color: #334155;
+    }
+
+    .btn {
+        padding: 10px 24px;
+        border-radius: 8px;
+        font-size: 0.9rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .btn-secondary {
+        background-color: #f1f5f9;
+        color: #475569;
+        border: 1px solid #e2e8f0;
+    }
+
+    .btn-secondary:hover {
+        background-color: #e2e8f0;
+    }
+
+    [data-theme="dark"] .btn-secondary {
+        background-color: #334155;
+        color: #f1f5f9;
+        border-color: #475569;
+    }
+
+    [data-theme="dark"] .btn-secondary:hover {
+        background-color: #475569;
+    }
+
+    .btn-primary {
+        background-color: #4A7c59; /* Vert de ta sidebar */
+        color: white;
+        border: none;
+    }
+
+    .btn-primary:hover {
+        background-color: #385f44;
+        box-shadow: 0 4px 12px rgba(74, 124, 89, 0.2);
+    }
+</style>
+
+<div class="form-container">
+    
+    <div class="page-header">
+        <h1>Créer une Annonce / Actualité</h1>
+        <p>Remplissez le formulaire ci-dessous pour publier une nouvelle information sur le site public.</p>
+    </div>
+
+    <div class="form-card">
+        <form method="POST" enctype="multipart/form-data" id="annonceForm">
+            {% csrf_token %}
+
+            <div class="form-group">
+                <label for="{{ form.titre.id_for_label }}">{{ form.titre.label }}</label>
+                {{ form.titre }}
+            </div>
+
+            <div class="form-group">
+                <label for="{{ form.slug.id_for_label }}">{{ form.slug.label }}</label>
+                {{ form.slug }}
+            </div>
+
+            <div class="form-group">
+                <label for="{{ form.contenu.id_for_label }}">{{ form.contenu.label }}</label>
+                {{ form.contenu }}
+            </div>
+
+            <div class="form-group">
+                <label for="{{ form.image.id_for_label }}">{{ form.image.label }}</label>
+                <div class="file-drop-zone" onclick="document.getElementById('{{ form.image.id_for_label }}').click()">
+                    <i class="fas fa-cloud-upload-alt" style="font-size: 2rem; color: #94a3b8; margin-bottom: 8px; display: block;"></i>
+                    <span style="font-size: 0.85rem; color: #64748b;">Cliquez pour choisir une image d'illustration</span>
+                    <div style="display: none;">{{ form.image }}</div>
+                    
+                    <img id="imagePreview" src="#" alt="Aperçu de l'image">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Options de publication</label>
+                <div class="checkbox-group">
+                    <label class="checkbox-label">
+                        {{ form.est_epinglee }}
+                        <span>{{ form.est_epinglee.label }}</span>
+                    </label>
+                    <label class="checkbox-label">
+                        {{ form.est_active }}
+                        <span>{{ form.est_active.label }}</span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="form-actions">
+                <a href="{% url 'admin_list_anonces' %}" class="btn btn-secondary">
+                    Annuler
+                </a>
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-paper-plane"></i> Publier l'annonce
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const titreInput = document.getElementById("{{ form.titre.id_for_label }}");
+        const slugInput = document.getElementById("{{ form.slug.id_for_label }}");
+        const imageInput = document.getElementById("{{ form.image.id_for_label }}");
+        const previewImg = document.getElementById("imagePreview");
+
+        // 1. GÉNÉRATION DU SLUG AUTOMATIQUE EN TAPANT LE TITRE
+        if (titreInput && slugInput) {
+            titreInput.addEventListener("input", function() {
+                let text = titreInput.value;
+                let slug = text.toLowerCase()
+                               .trim()
+                               .normalize('NFD') // Supprime les accents
+                               .replace(/[\u0300-\u036f]/g, '')
+                               .replace(/[^a-z0-9\s-]/g, '') // Supprime les caractères spéciaux
+                               .replace(/[\s_]+/g, '-') // Remplace les espaces par des tirets
+                               .replace(/-+/g, '-'); // Évite les tirets doubles
+                slugInput.value = slug;
+            });
+        }
+
+        // 2. PRÉVISUALISATION DE L'IMAGE SÉLECTIONNÉE EN DIRECT
+        if (imageInput && previewImg) {
+            imageInput.addEventListener("change", function() {
+                const file = this.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        previewImg.src = e.target.result;
+                        previewImg.style.display = "block";
+                    }
+                    reader.readAsDataURL(file);
+                } else {
+                    previewImg.style.display = "none";
+                }
+            });
+        }
+    });
+</script>
+{% endblock %}

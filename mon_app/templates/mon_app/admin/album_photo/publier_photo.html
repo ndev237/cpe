@@ -1,0 +1,158 @@
+{% extends "mon_app/baseA.html" %}
+
+{% block content %}
+<style>
+    /* Style du conteneur de formulaire */
+    .form-container {
+        background: #ffffff;
+        border-radius: 16px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+        padding: 2.5rem;
+        max-width: 700px;
+        margin: 0 auto;
+        transition: background 0.3s, color 0.3s;
+    }
+
+    [data-theme="dark"] .form-container {
+        background: #1e293b;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    }
+
+    .form-title {
+        font-size: 1.5rem;
+        font-weight: 700;
+        margin-bottom: 1.5rem;
+        color: var(--primary-dark-blue);
+    }
+    [data-theme="dark"] .form-title {
+        color: #f1f5f9;
+    }
+
+    /* Groupes de champs */
+    .form-group {
+        margin-bottom: 1.5rem;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .form-group label {
+        font-size: 0.875rem;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+    }
+
+    /* Inputs et Textarea */
+    .form-control {
+        width: 100%;
+        padding: 0.75rem 1rem;
+        font-family: 'Poppins', sans-serif;
+        font-size: 0.9rem;
+        border: 1px solid #cbd5e1;
+        border-radius: 10px;
+        background: #ffffff;
+        color: #333333;
+        outline: none;
+        transition: border-color 0.2s;
+    }
+    [data-theme="dark"] .form-control {
+        background: #0f172a;
+        border-color: #334155;
+        color: #f1f5f9;
+    }
+
+    .form-control:focus {
+        border-color: var(--sidebar-bg);
+    }
+
+    /* Style spécifique pour le champ fichier */
+    .form-control-file {
+        padding: 0.5rem;
+        border: 2px dashed #cbd5e1;
+        border-radius: 10px;
+        cursor: pointer;
+        background: #f8fafc;
+    }
+    [data-theme="dark"] .form-control-file {
+        background: #0f172a;
+        border-color: #334155;
+    }
+
+    /* Actions bouton */
+    .form-actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 1rem;
+        margin-top: 2rem;
+    }
+
+    .btn-submit {
+        background: var(--bg-gradient);
+        color: white;
+        border: none;
+        padding: 0.75rem 1.5rem;
+        font-family: 'Poppins', sans-serif;
+        font-size: 0.9rem;
+        font-weight: 600;
+        border-radius: 10px;
+        cursor: pointer;
+        box-shadow: 0 4px 12px rgba(209, 143, 178, 0.4);
+        transition: transform 0.2s, opacity 0.2s;
+    }
+
+    .btn-submit:hover {
+        transform: translateY(-2px);
+        opacity: 0.9;
+    }
+
+    .btn-cancel {
+        background: transparent;
+        border: 1px solid #cbd5e1;
+        color: #64748b;
+        padding: 0.75rem 1.5rem;
+        font-family: 'Poppins', sans-serif;
+        font-size: 0.9rem;
+        font-weight: 500;
+        border-radius: 10px;
+        text-decoration: none;
+        text-align: center;
+        transition: background 0.2s;
+    }
+    [data-theme="dark"] .btn-cancel {
+        border-color: #334155;
+        color: #94a3b8;
+    }
+    .btn-cancel:hover {
+        background: rgba(0, 0, 0, 0.05);
+    }
+</style>
+
+<div class="form-container">
+    <h2 class="form-title"><i class="fas fa-camera" style="margin-right: 10px; color: var(--sidebar-bg);"></i> Publier une nouvelle photo</h2>
+    
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        
+        <div class="form-group">
+            <label for="id_titre">Titre de l'événement</label>
+            <input type="text" name="titre" id="id_titre" class="form-control" required placeholder="Ex: Remise des diplômes 2026">
+        </div>
+
+        <div class="form-group">
+            <label for="id_contenu">Description / Contenu</label>
+            <textarea name="contenu" id="id_contenu" rows="5" class="form-control" required placeholder="Décrivez brièvement le contexte de la photo..."></textarea>
+        </div>
+
+        <div class="form-group">
+            <label for="id_image">Fichier Image d'illustration</label>
+            <input type="file" name="image" id="id_image" class="form-control form-control-file" accept="image/*">
+        </div>
+
+        <div class="form-actions">
+            <a href="{% url 'dashboard_admin' %}" class="btn-cancel">Annuler</a>
+            <button type="submit" class="btn-submit">
+                <i class="fas fa-paper-plane" style="margin-right: 8px;"></i> Publier la photo
+            </button>
+        </div>
+    </form>
+</div>
+{% endblock %}

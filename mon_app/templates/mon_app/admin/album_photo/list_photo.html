@@ -1,0 +1,305 @@
+{% extends "mon_app/baseA.html" %}
+
+{% block content %}
+<style>
+    /* --- CONTENEUR PRINCIPAL & EN-TÊTE --- */
+    .page-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 2rem;
+        flex-wrap: wrap;
+        gap: 1rem;
+    }
+
+    .page-title {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--primary-dark-blue);
+    }
+    [data-theme="dark"] .page-title {
+        color: #f1f5f9;
+    }
+
+    /* Barre de recherche et bouton d'action */
+    .action-zone {
+        display: flex;
+        gap: 1rem;
+        align-items: center;
+        flex-wrap: wrap;
+    }
+
+    .search-wrapper {
+        position: relative;
+    }
+
+    .search-input {
+        padding: 0.6rem 1rem 0.6rem 2.5rem;
+        font-family: 'Poppins', sans-serif;
+        font-size: 0.9rem;
+        border: 1px solid #cbd5e1;
+        border-radius: 10px;
+        width: 250px;
+        outline: none;
+        transition: all 0.2s;
+    }
+    .search-wrapper i {
+        position: absolute;
+        left: 10px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #94a3b8;
+    }
+    .search-input:focus {
+        border-color: var(--sidebar-bg);
+        width: 300px;
+    }
+
+    .btn-add {
+        background: var(--bg-gradient);
+        color: white;
+        text-decoration: none;
+        padding: 0.6rem 1.2rem;
+        font-weight: 600;
+        font-size: 0.9rem;
+        border-radius: 10px;
+        box-shadow: 0 4px 12px rgba(209, 143, 178, 0.4);
+        transition: transform 0.2s;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+    .btn-add:hover {
+        transform: translateY(-2px);
+    }
+
+    /* --- TABLEAU STYLE MEUBLE/MODERNE --- */
+    .table-container {
+        background: #ffffff;
+        border-radius: 16px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02);
+        overflow-x: auto;
+        border: 1px solid #e2e8f0;
+    }
+    [data-theme="dark"] .table-container {
+        background: #1e293b;
+        border-color: #334155;
+    }
+
+    .custom-table {
+        width: 100%;
+        border-collapse: collapse;
+        text-align: left;
+        font-size: 0.9rem;
+    }
+
+    .custom-table th {
+        background-color: #f8fafc;
+        color: #64748b;
+        font-weight: 600;
+        padding: 1rem 1.5rem;
+        border-bottom: 1px solid #e2e8f0;
+        text-transform: uppercase;
+        font-size: 0.75rem;
+        letter-spacing: 0.5px;
+    }
+    [data-theme="dark"] .custom-table th {
+        background-color: #0f172a;
+        color: #94a3b8;
+        border-bottom: #334155;
+    }
+
+    .custom-table td {
+        padding: 1rem 1.5rem;
+        border-bottom: 1px solid #f1f5f9;
+        color: #334155;
+        vertical-align: middle;
+    }
+    [data-theme="dark"] .custom-table td {
+        border-bottom: 1px solid #334155;
+        color: #cbd5e1;
+    }
+
+    .custom-table tbody tr:last-child td {
+        border-bottom: none;
+    }
+
+    .custom-table tbody tr:hover {
+        background-color: #f8fafc;
+    }
+    [data-theme="dark"] .custom-table tbody tr:hover {
+        background-color: rgba(255, 255, 255, 0.02);
+    }
+
+    /* Cellule Image Miniature */
+    .table-img-blur {
+        width: 60px;
+        height: 45px;
+        object-fit: cover;
+        border-radius: 8px;
+        border: 1px solid #e2e8f0;
+        background: #f1f5f9;
+    }
+    [data-theme="dark"] .table-img-blur {
+        border-color: #475569;
+    }
+
+    .title-cell {
+        font-weight: 600;
+        color: #1e293b;
+    }
+    [data-theme="dark"] .title-cell {
+        color: #f1f5f9;
+    }
+
+    /* --- BOUTON SUPPRIMER --- */
+    .btn-delete {
+        background: transparent;
+        border: 1px solid #fecaca;
+        color: #ef4444;
+        padding: 0.4rem 0.8rem;
+        font-size: 0.8rem;
+        font-weight: 500;
+        border-radius: 8px;
+        cursor: pointer;
+        font-family: 'Poppins', sans-serif;
+        transition: all 0.2s;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.25rem;
+    }
+    .btn-delete:hover {
+        background: #fee2e2;
+    }
+    [data-theme="dark"] .btn-delete:hover {
+        background: rgba(239, 68, 68, 0.2);
+    }
+
+    /* État vide */
+    .empty-state {
+        text-align: center;
+        padding: 4rem 2rem;
+        background: #ffffff;
+        border-radius: 16px;
+        border: 1px dashed #cbd5e1;
+    }
+    [data-theme="dark"] .empty-state {
+        background: #1e293b;
+        border-color: #334155;
+    }
+    .empty-state i {
+        font-size: 3rem;
+        color: #94a3b8;
+        margin-bottom: 1rem;
+    }
+</style>
+
+<div class="page-header">
+    <h2 class="page-title">
+        <i class="fas fa-images" style="margin-right: 10px; color: var(--sidebar-bg);"></i> Gestion de l'Album
+    </h2>
+    
+    <div class="action-zone">
+        <div class="search-wrapper">
+            <i class="fas fa-search"></i>
+            <input type="text" id="photoSearch" class="search-input" placeholder="Rechercher par titre...">
+        </div>
+        <a href="{% url 'admin_publier_photo' %}" class="btn-add">
+            <i class="fas fa-plus"></i> Ajouter une photo
+        </a>
+    </div>
+</div>
+
+{% if photos %}
+<div class="table-container">
+    <table class="custom-table" id="photoTable">
+        <thead>
+            <tr>
+                <th style="width: 100px;">Aperçu</th>
+                <th>Titre de l'événement</th>
+                <th>Description / Contenu</th>
+                <th style="width: 120px; text-align: right;">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for photo in photos %}
+            <tr class="photo-row" data-title="{{ photo.titre|lower }}">
+                <td>
+                    {% if photo.image %}
+                        <img src="{{ photo.image.url }}" alt="{{ photo.titre }}" class="table-img-blur">
+                    {% else %}
+                        <div style="width: 60px; height: 45px; display: flex; align-items: center; justify-content: center; background: #e2e8f0; border-radius: 8px; color: #94a3b8;">
+                            <i class="fas fa-image"></i>
+                        </div>
+                    {% endif %}
+                </td>
+                <td class="title-cell">{{ photo.titre }}</td>
+                <td style="color: #64748b;">{{ photo.contenu|truncatechars:100 }}</td>
+                <td style="text-align: right;">
+                    <form action="{% url 'admin_supprimer_photo' photo.pk %}" method="POST" onsubmit="return confirmDelete('{{ photo.titre|escapejs }}');" style="display: inline-block;">
+                        {% csrf_token %}
+                        <button type="submit" class="btn-delete">
+                            <i class="fas fa-trash-alt"></i> Supprimer
+                        </button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<div class="empty-state" id="noResultState" style="display: none; margin-top: 2rem;">
+    <i class="fas fa-search"></i>
+    <p style="font-weight: 500;">Aucun événement ne correspond à votre recherche.</p>
+</div>
+
+{% else %}
+<div class="empty-state">
+    <i class="fas fa-images"></i>
+    <p style="font-weight: 500; margin-bottom: 1rem;">L'album photo est actuellement vide.</p>
+    <a href="{% url 'admin_publier_photo' %}" class="btn-add">Publier la première photo</a>
+</div>
+{% endif %}
+
+<script>
+    // 1. Filtrage dynamique des lignes du tableau en temps réel
+    const searchInput = document.getElementById('photoSearch');
+    const photoTable = document.getElementById('photoTable');
+    const noResultState = document.getElementById('noResultState');
+
+    if (searchInput && photoTable) {
+        const rows = photoTable.getElementsByClassName('photo-row');
+        
+        searchInput.addEventListener('input', function(e) {
+            const filterValue = e.target.value.toLowerCase().trim();
+            let hasVisibleRows = false;
+
+            for (let i = 0; i < rows.length; i++) {
+                const rowTitle = rows[i].getAttribute('data-title');
+                
+                if (rowTitle.includes(filterValue)) {
+                    rows[i].style.display = "";
+                    hasVisibleRows = true;
+                } else {
+                    rows[i].style.display = "none";
+                }
+            }
+
+            // Afficher le tableau ou l'état vide selon les résultats
+            if (hasVisibleRows) {
+                photoTable.style.display = "";
+                noResultState.style.display = "none";
+            } else {
+                photoTable.style.display = "none";
+                noResultState.style.display = "block";
+            }
+        });
+    }
+
+    // 2. Alerte de confirmation de suppression
+    function confirmDelete(title) {
+        return confirm(`Êtes-vous sûr de vouloir supprimer définitivement la photo de l'événement : "${title}" ?`);
+    }
+</script>
+{% endblock %}

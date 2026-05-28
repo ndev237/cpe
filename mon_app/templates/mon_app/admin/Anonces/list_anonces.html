@@ -1,0 +1,311 @@
+{% extends 'mon_app/baseA.html' %}
+
+{% block content %}
+<style>
+    /* Conteneur Principal */
+    .annonces-container {
+        font-family: 'Poppins', sans-serif;
+        padding: 10px;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    /* En-tête (Titre + Recherche) */
+    .page-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 20px;
+        margin-bottom: 30px;
+    }
+
+    .page-header h1 {
+        font-size: 1.8rem;
+        color: #003366; /* Bleu Nuit */
+        margin: 0;
+        font-weight: 600;
+    }
+
+    /* Barre de recherche */
+    .search-box {
+        position: relative;
+        display: flex;
+        align-items: center;
+    }
+
+    .search-box input {
+        padding: 10px 15px;
+        padding-left: 40px;
+        width: 300px;
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+        font-size: 0.9rem;
+        outline: none;
+        transition: border-color 0.2s ease;
+        background-color: white;
+    }
+
+    [data-theme="dark"] .search-box input {
+        background-color: #1e293b;
+        border-color: #334155;
+        color: white;
+    }
+
+    .search-box input:focus {
+        border-color: #D18FB2; /* Rose Serpents */
+    }
+
+    .search-box i {
+        position: absolute;
+        left: 15px;
+        color: #94a3b8;
+    }
+
+    /* Tableau responsive */
+    .table-responsive {
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+        border: 1px solid rgba(0,0,0,0.05);
+        overflow-x: auto;
+    }
+
+    [data-theme="dark"] .table-responsive {
+        background: #1e293b;
+        border-color: #334155;
+    }
+
+    /* Style du Tableau */
+    .annonce-table {
+        width: 100%;
+        border-collapse: collapse;
+        text-align: left;
+        min-width: 850px;
+    }
+
+    .annonce-table th, 
+    .annonce-table td {
+        padding: 16px 20px;
+        border-bottom: 1px solid #f1f5f9;
+        font-size: 0.9rem;
+        vertical-align: middle;
+    }
+
+    [data-theme="dark"] .annonce-table th,
+    [data-theme="dark"] .annonce-table td {
+        border-bottom: 1px solid #334155;
+    }
+
+    .annonce-table th {
+        background-color: #f8fafc;
+        color: #475569;
+        font-weight: 600;
+        text-transform: uppercase;
+        font-size: 0.75rem;
+        letter-spacing: 0.5px;
+    }
+
+    [data-theme="dark"] .annonce-table th {
+        background-color: #151f32;
+        color: #94a3b8;
+    }
+
+    .annonce-table tr:hover {
+        background-color: #f8fafc;
+    }
+
+    [data-theme="dark"] .annonce-table tr:hover {
+        background-color: #243249;
+    }
+
+    /* Image d'illustration */
+    .annonce-img {
+        width: 50px;
+        height: 50px;
+        border-radius: 6px;
+        object-fit: cover;
+        background-color: #f1f5f9;
+    }
+
+    /* Badges de Statuts */
+    .badge-status {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        padding: 4px 10px;
+        border-radius: 6px;
+        font-size: 0.75rem;
+        font-weight: 600;
+    }
+
+    .status-pinned {
+        background-color: rgba(255, 193, 7, 0.15);
+        color: #b27b00;
+    }
+
+    .status-active {
+        background-color: rgba(161, 213, 177, 0.2);
+        color: #1e6b36;
+    }
+
+    .status-inactive {
+        background-color: rgba(239, 68, 68, 0.1);
+        color: #dc2626;
+    }
+
+    /* Actions */
+    .action-btn-group {
+        display: flex;
+        gap: 8px;
+    }
+
+    .action-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 32px;
+        height: 32px;
+        border-radius: 6px;
+        text-decoration: none;
+        font-size: 0.85rem;
+        transition: all 0.2s ease;
+        border: none;
+        cursor: pointer;
+    }
+
+    .btn-edit {
+        background-color: rgba(0, 51, 102, 0.08);
+        color: #003366;
+    }
+    .btn-edit:hover {
+        background-color: #003366;
+        color: white;
+    }
+
+    .empty-message {
+        padding: 40px;
+        text-align: center;
+        color: #64748b;
+    }
+
+    @media (max-width: 640px) {
+        .page-header {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+        .search-box {
+            width: 100%;
+        }
+        .search-box input {
+            width: 100%;
+        }
+    }
+</style>
+
+<div class="annonces-container">
+    
+    <div class="page-header">
+        <h1>Annonces & Actualités ({{ annonces|length }})</h1>
+        
+        <div class="search-box">
+            <i class="fas fa-search"></i>
+            <input type="text" id="annonceSearch" placeholder="Rechercher une annonce...">
+        </div>
+    </div>
+
+    <div class="table-responsive">
+        <table class="annonce-table" id="annoncesTable">
+            <thead>
+                <tr>
+                    <th style="width: 80px;">Image</th>
+                    <th>Titre / Contenu</th>
+                    <th>Date de Publication</th>
+                    <th>Épinglée</th>
+                    <th>Statut</th>
+                    <th style="width: 100px;">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for annonce in annonces %}
+                <tr class="annonce-row">
+                    <td>
+                        {% if annonce.image %}
+                            <img src="{{ annonce.image.url }}" alt="Illustration" class="annonce-img">
+                        {% else %}
+                            <div class="annonce-img" style="display: flex; align-items: center; justify-content: center; background: #e2e8f0; color: #94a3b8;">
+                                <i class="fas fa-image"></i>
+                            </div>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <div class="annonce-searchable-text" style="font-weight: 600; color: #1e293b; margin-bottom: 4px;">
+                            {{ annonce.titre }}
+                        </div>
+                        <div class="annonce-searchable-content" style="font-size: 0.8rem; color: #64748b; max-width: 400px; display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; overflow: hidden;">
+                            {{ annonce.contenu }}
+                        </div>
+                    </td>
+                    <td style="color: #475569; font-size: 0.85rem;">
+                        {{ annonce.date_publication|date:"d M Y à H:i" }}
+                    </td>
+                    <td>
+                        {% if annonce.est_epinglee %}
+                            <span class="badge-status status-pinned"><i class="fas fa-thumbtack"></i> Oui</span>
+                        {% else %}
+                            <span style="color: #94a3b8; font-size: 0.85rem;">Non</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if annonce.est_active %}
+                            <span class="badge-status status-active">Publiée</span>
+                        {% else %}
+                            <span class="badge-status status-inactive">Brouillon</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <div class="action-btn-group">
+                            <a href="#" class="action-btn btn-edit" title="Modifier l'annonce">
+                                <i class="fas fa-pen"></i>
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="6" class="empty-message">
+                        <i class="fas fa-bullhorn" style="font-size: 2rem; margin-bottom: 10px; display: block; color: #cbd5e1;"></i>
+                        Aucune annonce enregistrée pour le moment.
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const searchInput = document.getElementById("annonceSearch");
+        
+        if (searchInput) {
+            searchInput.addEventListener("keyup", function() {
+                const filter = searchInput.value.toLowerCase();
+                const rows = document.querySelectorAll(".annonce-row");
+                
+                rows.forEach(function(row) {
+                    const titre = row.querySelector(".annonce-searchable-text").textContent.toLowerCase();
+                    const contenu = row.querySelector(".annonce-searchable-content").textContent.toLowerCase();
+                    
+                    // Permet de chercher à la fois dans le titre ou le texte de l'annonce
+                    if (titre.includes(filter) || contenu.includes(filter)) {
+                        row.style.display = "";
+                    } else {
+                        row.style.display = "none";
+                    }
+                });
+            });
+        }
+    });
+</script>
+{% endblock %}

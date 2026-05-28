@@ -1,0 +1,272 @@
+{% extends 'mon_app/baseA.html' %}
+
+{% block content %}
+<style>
+    /* Configuration et reset global pour le contenu du tableau de bord */
+    .dashboard-container {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        color: #333;
+        padding: 20px;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    /* En-tête du tableau de bord */
+    .dash-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 30px;
+        border-bottom: 2px solid rgba(0,0,0,0.05);
+        padding-bottom: 15px;
+    }
+    .dash-header h1 {
+        font-size: 2rem;
+        color: #003366; /* Bleu Foncé principal */
+        margin: 0;
+    }
+    .dash-header .date {
+        color: #666;
+        font-size: 0.95rem;
+    }
+
+    /* Grille des cartes de statistiques */
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        gap: 20px;
+        margin-bottom: 35px;
+    }
+    .stat-card {
+        background: white;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        border: 1px solid rgba(0,0,0,0.05);
+        display: flex;
+        align-items: center;
+        gap: 15px;
+    }
+    .stat-icon {
+        width: 50px;
+        height: 50px;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+    }
+    .stat-info h3 {
+        margin: 0;
+        font-size: 0.9rem;
+        color: #777;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+    .stat-info .number {
+        font-size: 1.8rem;
+        font-weight: bold;
+        color: #111;
+        margin-top: 5px;
+    }
+
+    /* Variations de couleurs pour les icônes des stats */
+    .icon-blue { background: rgba(0, 51, 102, 0.1); color: #003366; }
+    .icon-pink { background: rgba(209, 143, 178, 0.1); color: #D18FB2; }
+    .icon-green { background: rgba(161, 213, 177, 0.2); color: #2E7D32; }
+
+    /* Section principale : Grille 2 colonnes (Tableau + Actions) */
+    .main-grid {
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+        gap: 25px;
+    }
+
+    .content-box {
+        background: white;
+        padding: 25px;
+        border-radius: 10px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        border: 1px solid rgba(0,0,0,0.05);
+    }
+    .content-box h2 {
+        font-size: 1.3rem;
+        color: #333;
+        margin-top: 0;
+        margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    /* Tableau des données */
+    .custom-table {
+        width: 100%;
+        border-collapse: collapse;
+        text-align: left;
+    }
+    .custom-table th, .custom-table td {
+        padding: 12px 15px;
+        border-bottom: 1px solid #edf2f7;
+    }
+    .custom-table th {
+        background-color: #f8fafc;
+        color: #4a5568;
+        font-weight: 600;
+    }
+    .custom-table tr:hover {
+        background-color: #f8fafc;
+    }
+
+    /* Badges d'état */
+    .status-badge {
+        padding: 4px 8px;
+        border-radius: 4px;
+        font-size: 0.8rem;
+        font-weight: bold;
+    }
+    .status-active { background-color: #A1D5B1; color: #003366; }
+    .status-pending { background-color: #fef3c7; color: #d97706; }
+
+    /* Raccourcis d'actions */
+    .action-list {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+    .action-btn {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 14px;
+        background: #f8fafc;
+        text-decoration: none;
+        color: #333;
+        border-radius: 8px;
+        font-weight: 500;
+        transition: all 0.2s ease;
+        border: 1px solid transparent;
+    }
+    .action-btn:hover {
+        background: white;
+        border-color: #D18FB2;
+        color: #D18FB2;
+        transform: translateX(4px);
+    }
+    .action-btn i {
+        font-size: 1.1rem;
+    }
+
+    /* Responsive */
+    @media (max-width: 900px) {
+        .main-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+
+<div class="dashboard-container">
+    
+    <header class="dash-header">
+        <div>
+            <h1>Tableau de bord</h1>
+            <p class="date">Bienvenue dans votre espace d'administration</p>
+        </div>
+        <span class="badge" style="background: #003366; color: white; padding: 8px 15px;">Admin</span>
+    </header>
+
+    <section class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-icon icon-blue">
+                <i class="fa-solid fa-graduation-cap"></i>
+            </div>
+            <div class="stat-info">
+                <h3>Formations</h3>
+                <div class="number">12</div>
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon icon-pink">
+                <i class="fa-solid fa-users"></i>
+            </div>
+            <div class="stat-info">
+                <h3>Apprenants</h3>
+                <div class="number">148</div>
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon icon-green">
+                <i class="fa-solid fa-bullhorn"></i>
+            </div>
+            <div class="stat-info">
+                <h3>Annonces</h3>
+                <div class="number">5</div>
+            </div>
+        </div>
+    </section>
+
+    <div class="main-grid">
+        
+        <section class="content-box">
+            <h2><i class="fa-solid fa-list-check" style="color: #003366;"></i> Suivi des dernières inscriptions</h2>
+            <div style="overflow-x: auto;">
+                <table class="custom-table">
+                    <thead>
+                        <tr>
+                            <th>Nom & Prénom</th>
+                            <th>Formation</th>
+                            <th>Date</th>
+                            <th>Statut</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Amadou Kane</td>
+                            <td>Développement Python</td>
+                            <td>24 Mai 2026</td>
+                            <td><span class="status-badge status-active">Confirmé</span></td>
+                        </tr>
+                        <tr>
+                            <td>Safiatou Maïga</td>
+                            <td>Marketing Digital</td>
+                            <td>22 Mai 2026</td>
+                            <td><span class="status-badge status-active">Confirmé</span></td>
+                        </tr>
+                        <tr>
+                            <td>Ousmane Diop</td>
+                            <td>Gestion de Projet</td>
+                            <td>20 Mai 2026</td>
+                            <td><span class="status-badge status-pending">En attente</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section class="content-box">
+            <h2><i class="fa-solid fa-bolt" style="color: #D18FB2;"></i> Actions Rapides</h2>
+            <div class="action-list">
+                <a href="#" class="action-btn">
+                    <i class="fa-solid fa-plus-circle"></i>
+                    <span>Ajouter une formation</span>
+                </a>
+                <a href="#" class="action-btn">
+                    <i class="fa-solid fa-bullhorn"></i>
+                    <span>Publier une annonce</span>
+                </a>
+                <a href="#" class="action-btn">
+                    <i class="fa-solid fa-user-plus"></i>
+                    <span>Inscrire un élève</span>
+                </a>
+                <a href="#" class="action-btn">
+                    <i class="fa-solid fa-gear"></i>
+                    <span>Configuration</span>
+                </a>
+            </div>
+        </section>
+
+    </div>
+</div>
+{% endblock %}

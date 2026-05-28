@@ -1,0 +1,523 @@
+{% extends 'mon_app/base.html' %}
+{% load static %}
+
+{% block title %}
+<title>{{ formation.titre }} - CPE Formation</title>
+{% endblock %}
+
+{% block content %}
+<style>
+    /* --- VARIABLES DE COULEURS --- */
+    :root {
+        --primary-rose: #D18FB2;        /* Rose Serpents */
+        --primary-rose-hover: #b87599;
+        --primary-dark-blue: #003366;   /* Bleu Nuit */
+        --text-gray-dark: #4b5563;
+        --text-gray-light: #9ca3af;
+        --bg-light: #f8fafc;
+        --border-color: #f1f5f9;
+        --shadow-sm: 0 1px 3px rgba(0,0,0,0.05), 0 1px 2px rgba(0,0,0,0.02);
+        --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.05), 0 10px 10px -5px rgba(0, 0, 0, 0.02);
+    }
+
+    /* --- NOTIFICATIONS FLASH --- */
+    .flash-container {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        z-index: 50;
+        max-width: 400px;
+    }
+    .flash-message {
+        background-color: #059669; /* emerald-600 */
+        color: white;
+        padding: 16px 24px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
+        margin-bottom: 12px;
+        font-size: 14px;
+        font-weight: 500;
+    }
+    .flash-icon {
+        background-color: rgba(255, 255, 255, 0.2);
+        padding: 6px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 24px;
+        height: 24px;
+    }
+
+    /* --- HERO HEADER --- */
+    .hero-header {
+        background-color: var(--primary-dark-blue);
+        color: white;
+        padding: 60px 24px;
+        position: relative;
+        overflow: hidden;
+    }
+    .hero-pattern {
+        position: absolute;
+        inset: 0;
+        opacity: 0.1;
+        background-image: radial-gradient(#fff 1px, transparent 1px);
+        background-size: 16px 16px;
+    }
+    .hero-container {
+        max-w: 1280px;
+        margin: 0 auto;
+        position: relative;
+        z-index: 10;
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 32px;
+        align-items: center;
+    }
+    @media (min-width: 1024px) {
+        .hero-container {
+            grid-template-columns: repeat(12, minmax(0, 1fr));
+        }
+        .hero-text-side { grid-column: span 8; }
+        .hero-image-side { grid-column: span 4; display: flex; justify-content: flex-end; }
+    }
+    .badge-categorie {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 4px 12px;
+        border-radius: 9999px;
+        text-transform: uppercase;
+        font-size: 12px;
+        font-weight: 600;
+        letter-spacing: 0.05em;
+        margin-bottom: 16px;
+        background-color: rgba(209, 143, 178, 0.2);
+        color: var(--primary-rose);
+        border: 1px solid rgba(209, 143, 178, 0.3);
+    }
+    .badge-dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background-color: var(--primary-rose);
+    }
+    .hero-title {
+        font-size: 32px;
+        font-weight: 800;
+        line-height: 1.2;
+        margin: 0 0 16px 0;
+    }
+    @media (min-width: 768px) { .hero-title { font-size: 48px; } }
+    .hero-desc {
+        font-size: 16px;
+        color: #d1d5db;
+        max-width: 650px;
+        font-weight: 300;
+        line-height: 1.6;
+        margin: 0;
+    }
+    @media (min-width: 768px) { .hero-desc { font-size: 18px; } }
+    
+    /* Image animée */
+    .image-wrapper {
+        position: relative;
+        width: 100%;
+        max-width: 320px;
+    }
+    .image-blur-effect {
+        position: absolute;
+        inset: 0;
+        background-color: var(--primary-rose);
+        border-radius: 16px;
+        filter: blur(8px);
+        opacity: 0.2;
+        transition: opacity 0.3s;
+    }
+    .hero-img {
+        position: relative;
+        width: 100%;
+        height: 256px;
+        object-fit: cover;
+        border-radius: 16px;
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        transition: transform 0.3s;
+    }
+    @media (min-width: 1024px) { .hero-img { transform: rotate(2deg); } }
+    .image-wrapper:hover .hero-img { transform: rotate(0deg); }
+    .image-wrapper:hover .image-blur-effect { opacity: 0.4; }
+
+    /* --- LAYOUT PRINCIPAL --- */
+    .main-content {
+        max-width: 1280px;
+        margin: 0 auto;
+        padding: 48px 24px;
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 48px;
+        align-items: start;
+    }
+    @media (min-width: 1024px) {
+        .main-content { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+        .col-left { grid-column: span 2; }
+        .col-right { grid-column: span 1; position: sticky; top: 96px; }
+    }
+    .space-y { display: flex; flex-direction: column; gap: 32px; }
+
+    /* --- BLOC CARACTÉRISTIQUES --- */
+    .features-card {
+        background-color: white;
+        padding: 24px;
+        border-radius: 16px;
+        border: 1px solid var(--border-color);
+        box-shadow: var(--shadow-sm);
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 24px;
+    }
+    @media (min-width: 768px) { .features-card { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+    .feature-item { display: flex; align-items: center; gap: 12px; }
+    .feature-icon {
+        padding: 12px;
+        border-radius: 12px;
+        background-color: var(--bg-light);
+        color: var(--primary-dark-blue);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 44px;
+        height: 44px;
+    }
+    .feature-icon.rose {
+        background-color: #fdf2f8;
+        color: var(--primary-rose);
+    }
+    .feature-label {
+        font-size: 10px;
+        color: var(--text-gray-light);
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        margin: 0;
+    }
+    .feature-value {
+        font-size: 14px;
+        font-weight: 700;
+        color: var(--primary-dark-blue);
+        margin: 2px 0 0 0;
+    }
+    .feature-value.price { font-weight: 900; }
+
+    /* --- CONTENU DU PROGRAMME --- */
+    .program-card {
+        background-color: white;
+        padding: 32px;
+        border-radius: 16px;
+        border: 1px solid var(--border-color);
+        box-shadow: var(--shadow-sm);
+    }
+    .program-header {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        border-bottom: 1px solid var(--primary-rose);
+        padding-bottom: 16px;
+        margin-bottom: 24px;
+    }
+    .program-indicator {
+        width: 8px;
+        height: 24px;
+        background-color: var(--primary-rose);
+        border-radius: 4px;
+    }
+    .program-title {
+        font-size: 24px;
+        font-weight: 700;
+        color: var(--primary-dark-blue);
+        margin: 0;
+    }
+
+    /* Rendu HTML dynamique du programme */
+    .style-programme { line-layout: 1.6; }
+    .style-programme h2, .style-programme h3 {
+        font-size: 20px;
+        font-weight: 700;
+        color: var(--primary-dark-blue);
+        margin-top: 24px;
+        margin-bottom: 12px;
+    }
+    .style-programme ul {
+        list-style-type: disc !important;
+        margin-left: 24px !important;
+        margin-bottom: 16px;
+        padding-left: 8px;
+    }
+    .style-programme li {
+        margin-bottom: 8px;
+        color: var(--text-gray-dark);
+        font-size: 15px;
+    }
+    .style-programme p {
+        margin-bottom: 16px;
+        color: var(--text-gray-dark);
+        font-size: 15px;
+    }
+
+    /* --- FORMULAIRE D'INSCRIPTION --- */
+    .form-card {
+        background-color: white;
+        padding: 32px;
+        border-radius: 24px;
+        border: 1px solid #f8fafc;
+        box-shadow: var(--shadow-xl);
+        position: relative;
+        overflow: hidden;
+    }
+    .form-top-line {
+        position: absolute;
+        top: 0; left: 0; right: 0;
+        height: 6px;
+        background-color: var(--primary-rose);
+    }
+    .form-title {
+        font-size: 20px;
+        font-weight: 700;
+        color: var(--primary-dark-blue);
+        margin: 0 0 4px 0;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    .form-subtitle {
+        font-size: 12px;
+        color: var(--text-gray-light);
+        margin: 0 0 24px 0;
+    }
+    .form-group { margin-bottom: 16px; }
+    .form-label {
+        display: block;
+        font-size: 11px;
+        font-weight: 700;
+        color: #6b7280;
+        text-transform: uppercase;
+        margin-bottom: 4px;
+        letter-spacing: 0.05em;
+    }
+    .input-icon-wrapper { position: relative; }
+    .input-icon {
+        position: absolute;
+        inset-y: 0; left: 0;
+        display: flex;
+        align-items: center;
+        padding-left: 14px;
+        color: var(--text-gray-light);
+        font-size: 12px;
+        pointer-events: none;
+    }
+    .form-input {
+        width: 100%;
+        padding: 12px 16px 12px 36px;
+        border-radius: 12px;
+        border: 1px solid #e5e7eb;
+        background-color: rgba(248, 250, 252, 0.5);
+        font-size: 14px;
+        color: #374151;
+        transition: all 0.2s;
+        box-sizing: border-box;
+    }
+    .form-input::placeholder { color: #d1d5db; }
+    .form-input:focus {
+        outline: none;
+        border-color: var(--primary-rose);
+        background-color: white;
+        box-shadow: 0 0 0 3px rgba(209, 143, 178, 0.25);
+    }
+    .form-textarea {
+        padding-left: 16px; /* Pas d'icône pour le textarea */
+        resize: none;
+    }
+    
+    /* Bouton Rose */
+    .btn-submit-rose {
+        width: 100%;
+        background-color: var(--primary-rose);
+        color: white;
+        font-weight: 700;
+        padding: 14px 24px;
+        border-radius: 12px;
+        border: none;
+        font-size: 14px;
+        letter-spacing: 0.02em;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        box-shadow: 0 4px 6px -1px rgba(209, 143, 178, 0.2);
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        margin-top: 8px;
+    }
+    .btn-submit-rose:hover {
+        background-color: var(--primary-rose-hover);
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(209, 143, 178, 0.4);
+    }
+    .btn-icon { font-size: 12px; opacity: 0.9; }
+</style>
+
+{# --- NOTIFICATIONS FLASH --- #}
+{% if messages %}
+<div class="flash-container">
+    {% for message in messages %}
+    <div class="flash-message">
+        <div class="flash-icon">
+            <i class="fas fa-check"></i>
+        </div>
+        <span>{{ message }}</span>
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+
+{# --- HERO HEADER --- #}
+<header class="hero-header">
+    <div class="hero-pattern"></div>
+    <div class="hero-container">
+        
+        <div class="hero-text-side">
+            <span class="badge-categorie">
+                <span class="badge-dot"></span>
+                Formation Professionnelle
+            </span>
+            <h1 class="hero-title">{{ formation.titre }}</h1>
+            <p class="hero-desc">{{ formation.description_courte }}</p>
+        </div>
+
+        {% if formation.image %}
+        <div class="hero-image-side">
+            <div class="image-wrapper">
+                <div class="image-blur-effect"></div>
+                <img src="{{ formation.image.url }}" alt="{{ formation.titre }}" class="hero-img">
+            </div>
+        </div>
+        {% endif %}
+
+    </div>
+</header>
+
+{# --- MAIN CONTENT --- #}
+<main class="main-content">
+    
+    {# --- COLONNE GAUCHE : INFOS & PROGRAMME --- #}
+    <div class="col-left space-y">
+        
+        {# Grille de caractéristiques #}
+        <div class="features-card">
+            <div class="feature-item">
+                <div class="feature-icon">
+                    <i class="far fa-clock"></i>
+                </div>
+                <div>
+                    <p class="feature-label">Durée</p>
+                    <p class="feature-value">{{ formation.duree|default:"6 mois" }}</p>
+                </div>
+            </div>
+            
+            <div class="feature-item">
+                <div class="feature-icon">
+                    <i class="fas fa-graduation-cap"></i>
+                </div>
+                <div>
+                    <p class="feature-label">Niveau requis</p>
+                    <p class="feature-value">Baccalauréat</p>
+                </div>
+            </div>
+
+            <div class="feature-item">
+                <div class="feature-icon">
+                    <i class="far fa-file-alt"></i>
+                </div>
+                <div>
+                    <p class="feature-label">Certification</p>
+                    <p class="feature-value">Certifié CPE</p>
+                </div>
+            </div>
+
+            <div class="feature-item">
+                <div class="feature-icon rose">
+                    <i class="fas fa-wallet"></i>
+                </div>
+                <div>
+                    <p class="feature-label">Tarif</p>
+                    <p class="feature-value price">{% if formation.prix %}{{ formation.prix }} FCFA{% else %}À venir{% endif %}</p>
+                </div>
+            </div>
+        </div>
+
+        {# Corps du programme #}
+        <div class="program-card">
+            <div class="program-header">
+                <div class="program-indicator"></div>
+                <h2 class="program-title">Présentation du Programme</h2>
+            </div>
+            <div class="style-programme">
+                {{ formation.programme_detaille|safe }}
+            </div>
+        </div>
+    </div>
+
+    {# --- COLONNE DROITE : FORMULAIRE --- #}
+    <div class="col-right">
+        <div class="form-card">
+            <div class="form-top-line"></div>
+            
+            <h3 class="form-title">
+                <i class="fas fa-user-graduate" style="color: var(--primary-rose); font-size: 14px;"></i> Inscription Rapide
+            </h3>
+            <p class="form-subtitle">Un conseiller d'orientation CPE vous recontactera sous 24h.</p>
+
+            <form method="POST">
+                {% csrf_token %}
+                
+                <div class="form-group">
+                    <label class="form-label">Nom complet</label>
+                    <div class="input-icon-wrapper">
+                        <span class="input-icon"><i class="far fa-user"></i></span>
+                        <input type="text" name="nom" required placeholder="Ex: Jean Paul" class="form-input">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Adresse Email</label>
+                    <div class="input-icon-wrapper">
+                        <span class="input-icon"><i class="far fa-envelope"></i></span>
+                        <input type="email" name="email" required placeholder="exemple@mail.com" class="form-input">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Numéro de Téléphone</label>
+                    <div class="input-icon-wrapper">
+                        <span class="input-icon"><i class="fas fa-phone-alt"></i></span>
+                        <input type="tel" name="telephone" required placeholder="Ex: +237 6xx xx xx xx" class="form-input">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Votre message (Optionnel)</label>
+                    <textarea name="message" rows="3" placeholder="Avez-vous des questions particulières ?" class="form-input form-textarea"></textarea>
+                </div>
+
+                <button type="submit" class="btn-submit-rose">
+                    <i class="fas fa-paper-plane btn-icon"></i> Envoyer ma Demande
+                </button>
+            </form>
+        </div>
+    </div>
+
+</main>
+{% endblock %}

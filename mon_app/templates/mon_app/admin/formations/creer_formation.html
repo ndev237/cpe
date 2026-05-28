@@ -1,0 +1,87 @@
+{% extends 'mon_app/baseA.html' %} 
+
+{% block content %}
+<style>
+    .form-container { max-width: 800px; margin: 20px auto; padding: 32px; background: white; border-radius: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.02); }
+    .form-title { color: #003366; margin-bottom: 28px; font-size: 26px; font-weight: 700; letter-spacing: -0.5px; }
+    .form-field { margin-bottom: 24px; }
+    .form-field label { display: block; font-weight: 600; margin-bottom: 8px; color: #4b5563; font-size: 14px; }
+    
+    /* Ciblage automatique des inputs générés par Django pour conserver ton design */
+    .form-field input[type="text"], 
+    .form-field input[type="number"], 
+    .form-field input[type="email"], 
+    .form-field textarea, 
+    .form-field select { 
+        width: 100%; 
+        padding: 12px; 
+        border: 1px solid #e2e8f0; 
+        border-radius: 10px; 
+        background-color: #f8fafc;
+        box-sizing: border-box; 
+        transition: all 0.2s ease;
+        font-family: inherit;
+    }
+    
+    /* Effet focus élégant avec ton rose de charte */
+    .form-field input:focus, .form-field textarea:focus, .form-field select:focus { 
+        outline: none; 
+        border-color: #D18FB2; 
+        background-color: #fff;
+        box-shadow: 0 0 0 4px rgba(209, 143, 178, 0.15); 
+    }
+
+    /* Style spécifique pour le champ d'upload de fichier (Image) */
+    .form-field input[type="file"] {
+        padding: 8px 0;
+        color: #4b5563;
+        font-size: 14px;
+    }
+
+    /* Style pour la case à cocher (est_active) */
+    .form-field input[type="checkbox"] {
+        width: 18px;
+        height: 18px;
+        accent-color: #D18FB2;
+        cursor: pointer;
+    }
+
+    .btn-submit { background-color: #003366; color: white; border: none; padding: 14px 28px; border-radius: 10px; font-weight: 600; cursor: pointer; transition: all 0.2s; }
+    .btn-submit:hover { background-color: #002244; transform: translateY(-1px); }
+</style>
+
+<div class="form-container border border-gray-100">
+    <h2 class="form-title">{% firstof titre_page "Créer une nouvelle formation" %}</h2>
+    
+    <form method="POST" enctype="multipart/form-data" class="space-y-2">
+        {% csrf_token %}
+        
+        {% for field in form %}
+            <div class="form-field">
+                {% if field.field.widget.input_type == "checkbox" %}
+                    <div class="flex items-center gap-3 mt-2">
+                        {{ field }}
+                        <label for="{{ field.id_for_label }}" class="!mb-0 cursor-pointer">{{ field.label }}</label>
+                    </div>
+                {% else %}
+                    <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                    {{ field }}
+                {% endif %}
+                
+                {% if field.errors %}
+                    <div class="mt-1.5 flex items-center gap-1.5 text-red-600">
+                        <i class="fas fa-exclamation-circle text-xs"></i>
+                        <span class="font-medium text-xs">{{ field.errors|striptags }}</span>
+                    </div>
+                {% endif %}
+            </div>
+        {% endfor %}
+        
+        <div class="pt-4 border-t border-gray-100 flex justify-end">
+            <button type="submit" class="btn-submit shadow-md shadow-blue-900/10">
+                <i class="fas fa-save mr-2"></i> Publier la formation
+            </button>
+        </div>
+    </form>
+</div>
+{% endblock %}

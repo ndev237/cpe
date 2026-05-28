@@ -1,0 +1,318 @@
+{% extends 'mon_app/base.html' %}
+
+{% load static %}
+{% block content %}
+<style>
+    /* Styles généraux pour un rendu moderne */
+    * { box-sizing: border-box; }
+
+    /* Section Hero : Rose Serpents harmonisé */
+    .hero { 
+        background: linear-gradient(rgba(140, 215, 168, 0.9), rgba(140, 213, 174, 0.9)), url('https://picsum.photos/1200/400') no-repeat center center/cover; 
+        color: rgb(16, 16, 16); 
+        padding: 60px 40px; 
+        text-align: center; 
+        border-radius: 12px; 
+        margin-bottom: 40px; 
+    }
+    .hero h1 { font-size: 3rem; margin-bottom: 10px; font-weight: 700; }
+    
+    /* Titres des sections passés en bleu nuit #003366 */
+    .section-title { text-align: center; margin: 40px 0 20px 0; color: #003366; font-size: 2rem; font-weight: 700; position: relative; }
+    .section-title::after { content: ''; display: block; width: 60px; height: 3px; background: #A1D5B1; margin: 10px auto 0 auto; border-radius: 2px; }
+    
+    /* Grilles d'affichage */
+    .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 25px; }
+    .grid-4 { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; }
+    
+    /* Grille spécifique pour les deux témoignages séparés */
+    .grid-testimonials { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; max-width: 980px; margin: 0 auto; }
+    
+    /* Style de base des cartes */
+    .card { background: white; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); overflow: hidden; transition: transform 0.25s ease, box-shadow 0.25s ease; display: flex; flex-direction: column; border: 1px solid rgba(0,0,0,0.06); }
+    .card:hover { transform: translateY(-6px); box-shadow: 0 14px 38px rgba(0,0,0,0.1); }
+    .card-body { padding: 25px; flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between; }
+    
+    /* Titres des cartes passés en bleu nuit #003366 */
+    .card-title { font-size: 1.3rem; margin-top: 0; color: #003366; font-weight: 600; }
+    
+    /* Badges : Vert Caducée avec texte bleu foncé pour le contraste */
+    .badge { background: #e2f5e8; color: #003366; padding: 6px 12px; border-radius: 6px; font-size: 0.85rem; font-weight: bold; width: fit-content; border: 1px solid #A1D5B1; }
+    
+    /* Boutons : Rose Serpents */
+    .btn { display: inline-block; background: #D18FB2; color: white; padding: 10px 20px; text-decoration: none; border-radius: 8px; margin-top: 15px; font-weight: bold; text-align: center; transition: all 0.2s ease; border: none; cursor: pointer; }
+    .btn:hover { background: #003366; color: white !important; transform: translateY(-2px); }
+    
+    /* Logos Partenaires */
+    .partner-logo { filter: grayscale(100%); opacity: 0.7; transition: all 0.3s ease; text-align: center; padding: 20px; }
+    .partner-logo:hover { filter: grayscale(0%); opacity: 1; }
+    .partner-logo img { max-width: 150px; max-height: 60px; object-fit: contain; }
+
+    /* Textes de paragraphe secondaires */
+    .text-muted { color: #475569; line-height: 1.6; }
+
+    /* Images pleines tailles */
+    .annonce-img-full-width {
+        width: 100%;
+        height: 180px;
+        object-fit: cover;
+        display: block;
+    }
+
+    /* Animation de défilement lent vertical pour les images */
+    #formations .annonce-img-full-width {
+        height: 140px;
+        animation: slowScrollDown 14s linear infinite;
+        object-position: center top;
+    }
+
+    #annonces .annonce-img-full-width {
+        height: 180px;
+        animation: slowScrollDown 14s linear infinite;
+        object-position: center top;
+    }
+
+    @keyframes slowScrollDown {
+        0% { object-position: center top; }
+        100% { object-position: center bottom; }
+    }
+
+    /* Media Queries : Responsive pour smartphones et tablettes */
+    @media (max-width: 720px) {
+        .hero { padding: 32px 16px; border-radius: 8px; }
+        .hero h1 { font-size: 2rem; }
+        .section-title { font-size: 1.5rem; margin: 28px 0 16px 0; }
+
+        .grid-3 { grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; }
+        .grid-4 { grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; }
+        
+        /* Les témoignages passent sur une seule colonne sur mobile */
+        .grid-testimonials { grid-template-columns: 1fr; gap: 16px; }
+
+        .annonce-img-full-width { height: 140px; }
+        #formations .annonce-img-full-width { height: 120px; }
+        #annonces .annonce-img-full-width { height: 140px; }
+
+        .card-title { font-size: 1.1rem; }
+    }
+</style>
+
+<section class="hero">
+    <h1>Propulsez votre avenir professionnel</h1>
+    <p>Découvrez nos formations d'excellence encadrées par des experts du secteur.</p>
+    <a href="#formations" class="btn" style="background: #003366; color: white;">Explorer nos formations</a>
+</section>
+
+<section id="annonces">
+    <h2 class="section-title">Dernières Annonces & Événements</h2>
+    <div class="grid-3">
+        {% for annonce in annonces %}
+        <div class="card">
+            {% if annonce.image %}
+                <img src="{{ annonce.image.url }}" alt="{{ annonce.titre }}" class="annonce-img-full-width">
+            {% endif %}
+            <div class="card-body">
+                <div>
+                    {% if annonce.est_epinglee %}
+                        <span class="badge" style="background: #ff4d4d; color: white; border-color: #ff4d4d;">IMPORTANT</span>
+                    {% endif %}
+                    <h3 class="card-title" style="margin-top: 10px;">{{ annonce.titre }}</h3>
+                    <p style="color: #64748b; font-size: 0.9rem; margin-bottom: 8px;">Publié le {{ annonce.date_publication|date:"d M Y" }}</p>
+                    <p class="text-muted">{{ annonce.contenu }}</p>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <p style="text-align: center; grid-column: 1/-1; color: #64748b;">Aucune annonce publiée pour le moment.</p>
+        {% endfor %}
+    </div>
+</section>
+
+<section id="formations">
+    <h2 class="section-title font-weight-bold">Nos Formations Professionnelles</h2>
+    <div style="display:flex; justify-content: flex-end; align-items: center; margin-bottom: 18px;">
+        <a href="{% url 'nos_formation' %}" class="btn" style="background:#003366; color:white; margin-top: 0;">Voir plus</a>
+    </div>
+
+    <div class="grid-3">
+        {% for formation in formations_phares %}
+        <div class="card">
+            {% if formation.image %}
+                <img src="{{ formation.image.url }}" alt="{{ formation.titre }}" class="annonce-img-full-width">
+            {% else %}
+                <img src="https://picsum.photos/600/240" alt="Placeholder" class="annonce-img-full-width">
+            {% endif %}
+            <div class="card-body">
+                <div>
+                    <span class="badge">{{ formation.categorie }}</span>
+                    <h3 class="card-title" style="margin-top:10px;">{{ formation.titre }}</h3>
+                    <p class="text-muted">{{ formation.description_courte }}</p>
+                </div>
+                
+                <div>
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 15px; font-size: 0.9rem; font-weight: bold; color: #64748b;">
+                        <span><i class="far fa-clock" style="color: #D18FB2;"></i> {{ formation.duree }}</span>
+                        {% if formation.prix %}
+                            <span style="color: #003366;">{{ formation.prix }} FCFA</span>
+                        {% endif %}
+                    </div>
+                    <a href="{% url 'detail_formation' slug=formation.slug %}" class="btn">En savoir plus</a>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <p style="text-align: center; grid-column: 1/-1; color: #64748b;">Nos formations seront bientôt publiées.</p>
+        {% endfor %}
+    </div>
+</section>
+
+<section id="avantages-cours" style="margin-top: 40px;">
+    <h2 class="section-title">Avantages de nos cours</h2>
+    <div class="grid-4">
+        <div class="card">
+            <div class="card-body">
+                <div>
+                    <span class="badge"><i class="fa-solid fa-chalkboard-user"></i>&nbsp;&nbsp;Cours encadrés</span>
+                    <h3 class="card-title" style="margin-top: 10px;">Apprentissage guidé</h3>
+                    <p class="text-muted">Des formateurs disponibles pour expliquer, corriger et accompagner à chaque étape.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-body">
+                <div>
+                    <span class="badge"><i class="fa-solid fa-laptop-code"></i>&nbsp;&nbsp;Mise en pratique</span>
+                    <h3 class="card-title" style="margin-top: 10px;">Projets & exercices</h3>
+                    <p class="text-muted">Vous travaillez sur des cas concrets pour transformer la théorie en compétences.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-body">
+                <div>
+                    <span class="badge"><i class="fa-solid fa-clipboard-check"></i>&nbsp;&nbsp;Évaluation</span>
+                    <h3 class="card-title" style="margin-top: 10px;">Suivi et progression</h3>
+                    <p class="text-muted">Devoirs, quiz et feedback pour mesurer vos progrès et consolider vos acquis.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-body">
+                <div>
+                    <span class="badge"><i class="fa-solid fa-headset"></i>&nbsp;&nbsp;Accompagnement</span>
+                    <h3 class="card-title" style="margin-top: 10px;">Support avant & après</h3>
+                    <p class="text-muted">Un cadre rassurant pour réussir : méthodologie, conseils et ressources utiles.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="temoignage" style="margin-top: 40px;">
+    <h2 class="section-title">Témoignages sur la qualité de nos cours</h2>
+
+    <div class="grid-testimonials">
+        
+        <div class="card" style="box-shadow: 0 8px 24px rgba(0,0,0,0.04); border: 1px solid rgba(0,0,0,0.05);">
+            <div class="card-body" style="padding: 25px; display: flex; flex-direction: row; gap: 20px; align-items: flex-start; justify-content: flex-start;">
+                <div style="flex-shrink: 0;">
+                    <div style="width: 80px; height: 80px; border-radius: 50%; background: #003366; display: flex; align-items: center; justify-content: center; border: 3px solid #A1D5B1; overflow: hidden; box-shadow: 0 4px 10px rgba(0,0,0,0.08);">
+                        <img src="{% static 'images/1V.jpg.jpeg' %}" alt="Amadou K." style="width: 100%; height: 100%; object-fit: cover;">
+                    </div>
+                </div>
+                <div style="flex: 1;">
+                    <span class="badge">★★★★★ 5/5</span>
+                    <h3 class="card-title" style="margin: 10px 0 8px 0; font-size: 1.15rem;">« J’ai vraiment progressé vite ! »</h3>
+                    <p class="text-muted" style="font-size: 0.95rem; margin-bottom: 12px;">
+                        Je m’attendais à des cours “théoriques”, mais j’ai été surpris : les explications sont claires,
+                        les exercices sont bien choisis et les formateurs répondent rapidement. En quelques semaines,
+                        j’ai pu monter un mini-projet.
+                    </p>
+                    <p style="color: #D18FB2; font-weight: bold; font-size: 0.85rem; margin: 0;">— Amadou K., apprenant</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="card" style="box-shadow: 0 8px 24px rgba(0,0,0,0.04); border: 1px solid rgba(0,0,0,0.05);">
+            <div class="card-body" style="padding: 25px; display: flex; flex-direction: row; gap: 20px; align-items: flex-start; justify-content: flex-start;">
+                <div style="flex-shrink: 0;">
+                    <div style="width: 80px; height: 80px; border-radius: 50%; background: #003366; display: flex; align-items: center; justify-content: center; border: 3px solid #A1D5B1; overflow: hidden; box-shadow: 0 4px 10px rgba(0,0,0,0.08);">
+                        <img src="{% static 'images/2V.jpg.jpeg' %}" alt="Safiatou M." style="width: 100%; height: 100%; object-fit: cover;">
+                    </div>
+                </div>
+                <div style="flex: 1;">
+                    <span class="badge">★★★★★ 5/5</span>
+                    <h3 class="card-title" style="margin: 10px 0 8px 0; font-size: 1.15rem;">« Je recommande à 100% ! »</h3>
+                    <p class="text-muted" style="font-size: 0.95rem; margin-bottom: 12px;">
+                        Les cours sont bien structurés et les formateurs sont vraiment à l’écoute.
+                        J’ai pu progresser rapidement grâce aux exercices pratiques et au suivi régulier.
+                        Aujourd’hui, je suis plus confiante pour mon avenir.
+                    </p>
+                    <p style="color: #D18FB2; font-weight: bold; font-size: 0.85rem; margin: 0;">— Safiatou M., apprenante</p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+<section id="valorisation-ecole" style="margin-top: 40px;">
+    <h2 class="section-title">Pourquoi choisir CPE Formation ?</h2>
+    <div class="grid-3">
+        <div class="card">
+            <div class="card-body">
+                <div>
+                    <span class="badge"><i class="fa-solid fa-flag"></i>&nbsp;&nbsp;Vision</span>
+                    <h3 class="card-title" style="margin-top: 10px;">Former pour l’emploi</h3>
+                    <p class="text-muted">Notre objectif : vous donner des compétences réellement utiles sur le terrain.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-body">
+                <div>
+                    <span class="badge"><i class="fa-solid fa-briefcase"></i>&nbsp;&nbsp;Professionnalisation</span>
+                    <h3 class="card-title" style="margin-top: 10px;">Des méthodes efficaces</h3>
+                    <p class="text-muted">Approches pédagogiques adaptées aux besoins des apprenants et aux exigences du secteur.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-body">
+                <div>
+                    <span class="badge"><i class="fa-solid fa-globe"></i>&nbsp;&nbsp;Ouverture</span>
+                    <h3 class="card-title" style="margin-top: 10px;">Culture de la réussite</h3>
+                    <p class="text-muted">Un environnement motivant, orienté résultats, et un accompagnement de qualité.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="partenaires" style="margin-top: 40px; padding: 10px 0;">
+    <h2 class="section-title">Les Entreprises & Écoles Partenaires</h2>
+    <p style="text-align:center; color:#64748b; margin: 0 0 22px 0;">Nos partenaires soutiennent la formation et contribuent à offrir de vraies opportunités aux apprenants.</p>
+    <div class="grid-4" style="background: white; border-radius: 12px; padding: 30px; align-items: center; border: 1px solid rgba(0,0,0,0.06); box-shadow: 0 10px 30px rgba(0,0,0,0.04)">
+        {% for partenaire in partenaires %}
+        <div class="partner-logo" style="min-height: 100px;">
+            {% if partenaire.logo %}
+                {% if partenaire.site_web %}
+                    <a href="{{ partenaire.site_web }}" target="_blank">
+                        <img src="{{ partenaire.logo.url }}" alt="{{ partenaire.nom }}">
+                    </a>
+                {% else %}
+                    <img src="{{ partenaire.logo.url }}" alt="{{ partenaire.nom }}">
+                {% endif %}
+            {% endif %}
+        </div>
+        {% empty %}
+        <p style="text-align: center; grid-column: 1/-1; color: #64748b;">Devenez notre premier partenaire entreprise.</p>
+        {% endfor %}
+    </div>
+</section>
+{% endblock %}
