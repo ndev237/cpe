@@ -1,0 +1,142 @@
+{% extends 'mon_app/baseA.html' %}
+{% load i18n %}
+
+{% block titre %}{% trans "Notifications" %} - Club-Prepa-Emploi{% endblock %}
+
+{% block content %}
+<style>
+    .notifications-container {
+        max-width: 800px;
+        margin: 1.5rem auto;
+    }
+
+    .page-header {
+        margin-bottom: 2rem;
+    }
+
+    .page-header h1 {
+        font-size: 1.75rem;
+        font-weight: 700;
+        color: var(--text-main);
+    }
+
+    /* --- CARTE DE NOTIFICATION --- */
+    .notification-card {
+        background: var(--bg-card);
+        border: 1px solid var(--border-color);
+        border-radius: 14px;
+        padding: 1.25rem 1.5rem;
+        margin-bottom: 1rem;
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        position: relative;
+        transition: transform 0.2s;
+    }
+
+    .notification-card:hover {
+        transform: translateX(4px);
+    }
+
+    .notification-card::before {
+        content: '';
+        position: absolute;
+        left: 0; top: 0; bottom: 0;
+        width: 4px;
+        background-color: #392d68; /* Couleur de ta charte */
+        border-top-left-radius: 14px;
+        border-bottom-left-radius: 14px;
+    }
+
+    .notification-header {
+        display: flex;
+        justify-content: space-between;
+        font-size: 0.85rem;
+        color: var(--text-muted);
+        border-bottom: 1px solid var(--border-color);
+        padding-bottom: 0.5rem;
+    }
+
+    .notif-title {
+        font-weight: 700;
+        color: var(--text-main);
+    }
+
+    .notif-details {
+        font-size: 0.9rem;
+        color: var(--text-main);
+        line-height: 1.5;
+    }
+
+    .notif-details ul {
+        list-style: none;
+        padding: 0;
+        margin: 0.5rem 0;
+    }
+
+    .notif-details li {
+        margin-bottom: 0.25rem;
+    }
+
+    .student-msg {
+        background: var(--bg-main);
+        padding: 0.5rem 0.75rem;
+        border-radius: 6px;
+        margin-top: 0.5rem;
+        font-style: italic;
+    }
+
+    /* --- ÉTAT VIDE --- */
+    .empty-notifications {
+        background: var(--bg-card);
+        border: 1px solid var(--border-color);
+        border-radius: 16px;
+        padding: 4rem 2rem;
+        text-align: center;
+        color: var(--text-muted);
+    }
+
+    .empty-notifications i {
+        font-size: 3rem;
+        color: var(--border-color);
+        margin-bottom: 1rem;
+    }
+</style>
+
+<div class="notifications-container">
+    <div class="page-header">
+        <h1>{% trans "Notifications de Formulaires" %}</h1>
+    </div>
+
+    {% if notifications %}
+        {% for notif in notifications %}
+            <div class="notification-card">
+                <div class="notification-header">
+                    <span class="notif-title"><i class="fas fa-file-alt"></i> {% trans "Nouvelle inscription reçue" %}</span>
+                    <span><strong>{{ notif.formation_titre }}</strong></span>
+                </div>
+                
+                <div class="notif-details">
+                    <ul>
+                        <li><strong>{% trans "Nom :" %}</strong> {{ notif.nom }}</li>
+                        <li><strong>{% trans "Email :" %}</strong> {{ notif.email }}</li>
+                        <li><strong>{% trans "Téléphone :" %}</strong> {{ notif.telephone }}</li>
+                    </ul>
+                    
+                    {% if notif.message %}
+                        <div class="student-msg">
+                            <strong>{% trans "Message :" %}</strong> {{ notif.message }}
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        {% endfor %}
+    {% else %}
+        <div class="empty-notifications">
+            <i class="fas fa-bell-slash"></i>
+            <p>{% trans "Aucune notification disponible pour le moment." %}</p>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

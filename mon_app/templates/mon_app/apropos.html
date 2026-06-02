@@ -1,12 +1,13 @@
 {% extends 'mon_app/base.html' %}
 {% load static %}
+{% load i18n %}
 {% block content %}
 <style>
     /* --- EN-TÊTE HERO --- */
     .page-hero {
-        background: linear-gradient(rgba(209, 143, 178, 0.85), rgba(209, 143, 178, 0.9)),
+        background: linear-gradient(rgba(142, 216, 178, 0.85), rgba(209, 143, 178, 0.9)),
                     url('https://picsum.photos/1400/450') no-repeat center center/cover;
-        color: white;
+        color: rgb(14, 13, 13);
         border-radius: 12px;
         padding: 50px 40px;
         margin: 10px 0 40px 0;
@@ -183,67 +184,58 @@
 </style>
 
 <div class="page-hero">
-    <h1>À propos de CPE Formation</h1>
+    <h1>{% trans "À propos de CPE Formation" %}</h1>
     <p>
-        CPE Formation est un centre de formation professionnelle orienté emploi, fondé sur l’expertise terrain.
-        Nous accompagnons les apprenants avec des formations structurées, encadrées et évaluées.
+        {% trans "CPE Formation est un centre de formation professionnelle orienté emploi, fondé sur l’expertise terrain. Nous accompagnons les apprenants avec des formations structurées, encadrées et évaluées." %}
     </p>
 </div>
 
-<h2 class="section-title">Historique</h2>
+<h2 class="section-title">{% trans "Historique" %}</h2>
 <div class="grid-2">
     <div class="card">
         <div class="card-body">
-            <div class="pill">CLUB-PREPA-EMPLOI</div>
+            <div class="pill">{% trans "CLUB-PREPA-EMPLOI" %}</div>
             <p class="content-muted">
-                Le centre de formation <strong>“CLUB-PREPA-EMPLOI”</strong> sous l’assistance technique de l’Institut Universitaire et Stratégique de l’Estuaire,
-                fort de plus de dix ans d’expérience dans les formations paramédicales, s’installe à Douala, Yaoundé et Bafoussam.
+                {% blocktrans %}Le centre de formation <strong>“CLUB-PREPA-EMPLOI”</strong> sous l’assistance technique de l’Institut Universitaire et Stratégique de l’Estuaire, fort de plus de dix ans d’expérience dans les formations paramédicales, s’installe à Douala, Yaoundé et Bafoussam.{% endblocktrans %}
             </p>
         </div>
     </div>
 
     <div class="card">
         <div class="card-body">
-            <div class="pill">Nos évaluations</div>
+            <div class="pill">{% trans "Nos évaluations" %}</div>
             <p class="content-muted">
-                Exemple : <strong>Examen CQP – phase de MSP (Mise en Situation Professionnelle)</strong>.
-                Cette étape permet de vérifier les compétences réelles des apprenants à travers des mises en situation proches du terrain.
+                {% blocktrans %}Exemple : <strong>Examen CQP – phase de MSP (Mise en Situation Professionnelle)</strong>. Cette étape permet de vérifier les compétences réelles des apprenants à travers des mises en situation proches du terrain.{% endblocktrans %}
             </p>
         </div>
     </div>
 </div>
 
-<h2 class="section-title">Mot du Promoteur</h2>
+<h2 class="section-title">{% trans "Mot du Promoteur" %}</h2>
 <div class="staff-banner-section">
     <div class="staff-founder-wrap">
         <div class="staff-image-container">
-            <img src="{% static 'images/Mr_foyet.png' %}" alt="Dr IGNACE FOYET">
+            <img src="{% static 'images/Mr_foyet.png' %}" alt="{% trans 'Dr IGNACE FOYET' %}">
         </div>
 
         <div class="staff-founder-text">
-            <h3>Dr IGNACE FOYET</h3>
+            <h3>{% trans "Dr IGNACE FOYET" %}</h3>
             <p>
-                Depuis 1993, nous travaillons à former les jeunes Camerounais en quête de connaissances, de compétences et de savoir-être.
-                Nous sommes un groupe de quatre institutions d’enseignement supérieur, basées à Douala, Yaoundé, Bafoussam, Mbouda, Libreville (au Gabon) et N’Djamena (au Tchad).
-                Spécialisés dans des domaines aussi variés que le commerce et la gestion, la communication et l'information, l’industrie et les nouvelles technologies, l’ingénierie et la formation médicale,
-                nos offres couvrent les cycles BTS, Ingénieur, Licence Professionnelle et Master Professionnel.
-                Toutes nos formations sont accompagnées de compléments de diplômes et certifications internationales afin de contribuer au développement d’un capital humain créatif, innovant et compétitif pour notre pays,
-                à travers des compétences flexibles et adaptables.
-                Ce programme fait de l'Institut Universitaire et Stratégique de l’Estuaire (IUEs Insam) une pépinière de compétences et de leaders au service du développement du Cameroun.
+                {% trans "Depuis 1993, nous travaillons à former les jeunes Camerounais en quête de connaissances, de compétences et de savoir-être. Nous sommes un groupe de quatre institutions d’enseignement supérieur, basées à Douala, Yaoundé, Bafoussam, Mbouda, Libreville (au Gabon) et N’Djamena (au Tchad). Spécialisés dans des domaines aussi variés que le commerce et la gestion, la communication et l'information, l’industrie et les nouvelles technologies, l’ingénierie et la formation médicale, nos offres couvrent les cycles BTS, Ingénieur, Licence Professionnelle et Master Professionnel. Toutes nos formations sont accompagnées de compléments de diplômes et certifications internationales afin de contribuer au développement d’un capital humain créatif, innovant et compétitif pour notre pays, à travers des compétences flexibles et adaptables. Ce programme fait de l'Institut Universitaire et Stratégique de l’Estuaire (IUEs Insam) une pépinière de compétences et de leaders au service du développement du Cameroun." %}
             </p>
         </div>
     </div>
 </div>
 
-<h2 class="section-title">Direction & encadrement</h2>
+<h2 class="section-title">{% trans "Direction & encadrement" %}</h2>
 <div class="grid-2">
     <div class="card">
         <div class="card-body">
             <div class="leader">
-                <div class="avatar">DG</div>
+                <div class="avatar">{% trans "DG" %}</div>
                 <div>
-                    <h3>Direction Générale</h3>
-                    <p>Vision de l’école, pilotage des formations et stratégie de partenariats institutionnels.</p>
+                    <h3>{% trans "Direction Générale" %}</h3>
+                    <p>{% trans "Vision de l’école, pilotage des formations et stratégie de partenariats institutionnels." %}</p>
                 </div>
             </div>
         </div>
@@ -252,10 +244,10 @@
     <div class="card">
         <div class="card-body">
             <div class="leader">
-                <div class="avatar">FO</div>
+                <div class="avatar">{% trans "FO" %}</div>
                 <div>
-                    <h3>Responsable Formation</h3>
-                    <p>Organisation des parcours, suivi pédagogique et mise à jour continue des programmes.</p>
+                    <h3>{% trans "Responsable Formation" %}</h3>
+                    <p>{% trans "Organisation des parcours, suivi pédagogique et mise à jour continue des programmes." %}</p>
                 </div>
             </div>
         </div>
@@ -264,10 +256,10 @@
     <div class="card">
         <div class="card-body">
             <div class="leader">
-                <div class="avatar">EV</div>
+                <div class="avatar">{% trans "EV" %}</div>
                 <div>
-                    <h3>Responsable Évaluation</h3>
-                    <p>Conception des évaluations et accompagnement personnalisé des apprenants vers la réussite de leur certification.</p>
+                    <h3>{% trans "Responsable Évaluation" %}</h3>
+                    <p>{% trans "Conception des évaluations et accompagnement personnalisé des apprenants vers la réussite de leur certification." %}</p>
                 </div>
             </div>
         </div>
@@ -276,10 +268,10 @@
     <div class="card">
         <div class="card-body">
             <div class="leader">
-                <div class="avatar">RH</div>
+                <div class="avatar">{% trans "RH" %}</div>
                 <div>
-                    <h3>Coordination Ressources Humaines</h3>
-                    <p>Gestion des inscriptions, communication interne et coordination globale des équipes d’encadrement.</p>
+                    <h3>{% trans "Coordination Ressources Humaines" %}</h3>
+                    <p>{% trans "Gestion des inscriptions, communication interne et coordination globale des équipes d’encadrement." %}</p>
                 </div>
             </div>
         </div>

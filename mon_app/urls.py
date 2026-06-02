@@ -12,7 +12,7 @@ urlpatterns = [
     path('notre_album/', views.notre_album, name='notre_album'),
    
 
-
+    
    # =============================== Admin==========================
 
    path('dashboard/formations/creer/', views.admin_creer_formation, name='admin_creer_formation'),
@@ -26,5 +26,8 @@ urlpatterns = [
    path('dashboard/album/publier/', views.admin_publie_photo, name='admin_publier_photo'),
    path('dashboard/album/', views.admin_liste_photos, name='admin_liste_photos'),
    path('dashboard/album/supprimer/<int:pk>/', views.admin_supprimer_photo, name='admin_supprimer_photo'),
+   path('actualites/', views.actualite_liste, name='actualite_liste'),
+   path('actualites/creer/', views.admin_actualite_creer, name='actualite_creer'),
+   path('notifications/admin/', views.notifications_page, name='notifications_page'),
 
 ]

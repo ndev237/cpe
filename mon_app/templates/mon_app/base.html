@@ -1,23 +1,28 @@
 {% load static %}
+{% load i18n %}
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="{{ LANGUAGE_CODE|default:'fr' }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CPE - École de Formation Professionnelle</title>
+    <title>{% trans "CPE - École de Formation Professionnelle" %}</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         /* CSS de base rapide pour structurer le site vitrine */
+        * { box-sizing: border-box; }
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 0; color: #333; background: #f9f9f9; }
         
-        /* Ajustements de la Barre de navigation - Couleur Rose Serpents */
+        
+        /* Ajustements de la Barre de navigation */
         .navbar { 
             display: flex; 
-            justify-content: flex-start; /* Garde le logo ancré à gauche */
+            justify-content: space-between; /* Modifié pour pousser le burger à droite sur mobile */
             align-items: center;
             background: #A1D5B1; /* vert pale */
             color: #003366;
             padding: 15px 20px;
+            position: relative;
+            z-index: 2000;
         }
 
         /* Dropdown menu */
@@ -27,12 +32,12 @@
         .navbar-brand {
             display: flex;
             align-items: center;
-            gap: 12px; /* Espace entre le logo et le texte */
+            gap: 12px;
             text-decoration: none;
             color: #080808; /* Modifié en bleu nuit */
         }
         .navbar-logo {
-            height: 55px; /* Logo plus visible */
+            height: 55px;
             width: auto;
             object-fit: contain;
         }
@@ -42,22 +47,44 @@
             font-weight: bold;
         }
         
-        /* Bloc des liens positionné au centre absolu */
-        .navbar > div {
+        /* Conteneur des liens de navigation */
+        .nav-menu {
             display: flex;
             align-items: center;
-            margin: 0 auto; /* Magie du CSS : centre automatiquement le bloc entre le logo et le bord droit */
+            margin: 0 auto; /* Centre automatiquement sur grand écran */
         }
 
         .navbar a.nav-link { 
             color: #090909; /* Modifié en bleu nuit */
             text-decoration: none; 
-            margin: 0 20px; /* Espace égal à gauche et à droite de chaque lien */
+            margin: 0 20px;
             font-weight: bold;
+            transition: color 0.2s ease, opacity 0.2s ease;
         }
         .navbar a.nav-link:hover {
-            color: #001122; /* Survol encore plus sombre pour le retour visuel */
+            color: #001122;
             opacity: 0.8;
+        }
+
+        /* Déclencheur Menu Burger (Masqué par défaut sur desktop) */
+        .menu-toggle {
+            display: none;
+            flex-direction: column;
+            justify-content: space-between;
+            width: 30px;
+            height: 21px;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            padding: 0;
+            z-index: 2100;
+        }
+        .menu-toggle .bar {
+            width: 100%;
+            height: 3px;
+            background-color: #003366;
+            border-radius: 10px;
+            transition: all 0.3s ease-in-out;
         }
         
         /* Footer - Harmonisé sur la couleur Rose Serpents */
@@ -68,12 +95,12 @@
 
         .footer-subtitle { opacity: 0.9; font-size: 0.95rem; margin-top: 2px; color: #101111; }
         .footer-links { display: flex; flex-direction: column; gap: 10px; min-width: 160px; }
-        .footer-links a { color: #020b14; text-decoration: none; font-weight: 700; } /* Modifié en bleu nuit */
+        .footer-links a { color: #020b14; text-decoration: none; font-weight: 700; }
         .footer-links a:hover { opacity: 0.8; }
         .footer-contact { flex: 1; min-width: 220px; display: flex; flex-direction: column; gap: 10px; }
         .contact-row { display: flex; gap: 10px; align-items: center; color: #003366; }
-        .contact-row i { color: #0a0a0a; width: 22px; text-align: center; } /* Icônes en bleu nuit pour ressortir sur le rose */
-        .contact-row a { color: #0b0b0b; text-decoration: none; font-weight: 800; } /* Modifié en bleu nuit */
+        .contact-row i { color: #0a0a0a; width: 22px; text-align: center; }
+        .contact-row a { color: #0b0b0b; text-decoration: none; font-weight: 800; }
         .contact-row a:hover { opacity: 0.8; }
         .footer-bottom { width: 85%; margin: 22px auto 0 auto; padding-top: 18px; border-top: 1px solid rgba(0, 51, 102, 0.2); text-align: center; opacity: 0.9; color: #003366; }
 
@@ -103,18 +130,17 @@
             justify-content: center;
             text-decoration: none;
             color: #003366;
+            cursor: pointer;
+            padding: 0;
             transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
         }
 
-        /* Bouton appel/contact basculé sur le bleu nuit pour contraster avec le fond du site */
         .side-btn.side-btn-contact { background: #003366; color: white; }
         .side-btn.side-btn-contact:hover { background: #002244; }
 
-        /* Bouton langue sur le vert du caducée */
         .side-btn.side-btn-lang { background: #A1D5B1; color: #003366; }
         .side-btn.side-btn-lang:hover { background: #8bc49c; }
 
-        /* Bouton WhatsApp officiel */
         .side-btn.side-btn-whatsapp { background: #25D366; color: white; }
         .side-btn.side-btn-whatsapp:hover { background: #1fb356; }
 
@@ -129,11 +155,6 @@
             margin-left: 10px;
         }
 
-        @media (max-width: 720px) {
-            .side-actions { right: 10px; }
-            .side-btn { width: 46px; height: 46px; border-radius: 12px; }
-        }
-
         /* Progression de scroll en cercle (top-right) */
         .scroll-progress {
             width: 56px;
@@ -144,30 +165,6 @@
 
         .side-actions {
             align-items: center;
-        }
-
-        /* Responsive footer & layout */
-        @media (max-width: 920px) {
-            .footer-inner { flex-direction: column; gap: 18px; }
-            .footer-brand { justify-content: center; }
-            .footer-links, .footer-contact { width: 100%; min-width: unset; align-items: center; }
-            .footer-links { flex-direction: row; flex-wrap: wrap; justify-content: center; }
-        }
-
-        @media (max-width: 720px) {
-            .navbar { padding: 12px 14px; flex-direction: column; gap: 15px; justify-content: center; }
-            .navbar-brand .logo-text { font-size: 18px; }
-            .navbar a.nav-link { margin: 0 10px; color: #003366; }
-            .navbar > div { margin: 0 auto; }
-
-            .footer { padding: 26px 0; }
-            .footer-links { justify-content: flex-start; }
-
-            .side-actions { right: 10px; top: 82%; }
-            .side-btn { width: 46px; height: 46px; border-radius: 12px; }
-
-            /* Scroll progress circle placement */
-            .scroll-progress { top: 92px; right: 10px; width: 50px; height: 50px; }
         }
 
         /* Animation continue sur le téléphone de la sidebar */
@@ -194,7 +191,7 @@
         }
 
         .scroll-progress .bar {
-            stroke: #25D366; /* Cercle de chargement */
+            stroke: #25D366;
             stroke-width: 6;
             fill: none;
             stroke-linecap: round;
@@ -203,7 +200,72 @@
             transition: stroke-dashoffset 0.05s linear;
         }
 
-        @media (max-width: 720px) {
+        /* Responsive Media Queries */
+        @media (max-width: 920px) {
+            .footer-inner { flex-direction: column; gap: 18px; }
+            .footer-brand { justify-content: center; }
+            .footer-links, .footer-contact { width: 100%; min-width: unset; align-items: center; }
+            .footer-links { flex-direction: row; flex-wrap: wrap; justify-content: center; }
+        }
+
+        @media (max-width: 768px) {
+            /* Mobile first: marges et largeur */
+            .container { width: 92%; padding: 16px 0; }
+            .navbar { padding: 12px 14px; flex-wrap: wrap; }
+            /* Activation et style du menu burger */
+            .menu-toggle {
+                display: flex;
+            }
+
+
+            /* Transformation des liens en tiroir vertical mobile */
+            .nav-menu {
+                position: absolute;
+                top: 100%;
+                left: 0;
+                width: 100%;
+                background: #A1D5B1;
+                flex-direction: column;
+                gap: 10px;
+                padding: 20px 0;
+                box-shadow: 0 10px 15px rgba(0,0,0,0.05);
+                opacity: 0;
+                visibility: hidden;
+                transform: translateY(-10px);
+                transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s ease;
+            }
+
+            /* Classe d'activation déclenchée par JS */
+            .nav-menu.active {
+                opacity: 1;
+                visibility: visible;
+                transform: translateY(0);
+            }
+
+            .navbar a.nav-link {
+                margin: 10px 0;
+                width: 100%;
+                text-align: center;
+                font-size: 1.1rem;
+            }
+
+            /* Animation des barres du bouton burger lors de l'ouverture */
+            .menu-toggle.active .bar:nth-child(1) {
+                transform: translateY(9px) rotate(45deg);
+            }
+            .menu-toggle.active .bar:nth-child(2) {
+                opacity: 0;
+            }
+            .menu-toggle.active .bar:nth-child(3) {
+                transform: translateY(-9px) rotate(-45deg);
+            }
+
+            /* Éléments annexes mobiles */
+            .navbar-brand .logo-text { font-size: 18px; }
+            .footer { padding: 26px 0; }
+            .footer-links { justify-content: flex-start; }
+            .side-actions { right: 10px; top: 82%; }
+            .side-btn { width: 46px; height: 46px; border-radius: 12px; }
             .scroll-progress { top: 92px; right: 10px; width: 50px; height: 50px; }
             .scroll-progress .bar, .scroll-progress .bg { stroke-width: 5; }
         }
@@ -211,6 +273,26 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
+            // Logique du menu burger
+            const menuToggle = document.getElementById('mobile-menu');
+            const navMenu = document.getElementById('nav-menu');
+
+            if (menuToggle && navMenu) {
+                menuToggle.addEventListener('click', () => {
+                    menuToggle.classList.toggle('active');
+                    navMenu.classList.toggle('active');
+                });
+
+                // Ferme le menu si on clique sur un lien
+                document.querySelectorAll('.nav-link').forEach(link => {
+                    link.addEventListener('click', () => {
+                        menuToggle.classList.remove('active');
+                        navMenu.classList.remove('active');
+                    });
+                });
+            }
+
+            // Logique de progression du scroll
             const bar = document.querySelector('.scroll-progress .bar');
             if (!bar) return;
 
@@ -235,15 +317,22 @@
 
     <nav class="navbar">
         <a href="/" class="navbar-brand">
-            <img src="{% static 'images/LOGO CPE.png' %}" alt="Logo CPE" class="navbar-logo">
-            <span class="logo-text">Club-Prepa-Emploi</span>
+            <img src="{% static 'images/LOGO CPE.png' %}" alt="{% trans 'Logo CPE' %}" class="navbar-logo">
+            <span class="logo-text">{% trans "Club-Prepa-Emploi" %}</span>
         </a>
-        <div>
-            <a href="/" class="nav-link">Accueil</a>
-            <a href="{% url 'a_propos' %}" class="nav-link">A propos</a>
-            <a href="{% url 'nos_formation' %}" class="nav-link">Nos formations</a>
-            <a href="{% url 'notre_album' %}" class="nav-link">Album</a>
-            <a href="#annonces" class="nav-link">Actualités</a>
+        
+        <button class="menu-toggle" id="mobile-menu" aria-label="{% trans 'Ouvrir le menu' %}">
+            <span class="bar"></span>
+            <span class="bar"></span>
+            <span class="bar"></span>
+        </button>
+
+        <div class="nav-menu" id="nav-menu">
+            <a href="/" class="nav-link">{% trans "Accueil" %}</a>
+            <a href="{% url 'a_propos' %}" class="nav-link">{% trans "A propos" %}</a>
+            <a href="{% url 'nos_formation' %}" class="nav-link">{% trans "Nos formations" %}</a>
+            <a href="{% url 'notre_album' %}" class="nav-link">{% trans "Album" %}</a>
+            <a href="#annonces" class="nav-link">{% trans "Actualités" %}</a>
         </div>
     </nav>
 
@@ -255,33 +344,33 @@
     <footer class="footer">
         <div class="footer-inner">
             <div class="footer-brand">
-                <img class="footer-logo" src="{% static 'images/LOGO CPE.png' %}" alt="Logo CPE">
+                <img class="footer-logo" src="{% static 'images/LOGO CPE.png' %}" alt="{% trans 'Logo CPE' %}">
                 <div>
-                    <div class="footer-title" style="font-weight: bold; font-size: 1.2rem;">Club-Prepa-Emploi</div>
-                    <div class="footer-subtitle">École de Formation Professionnelle</div>
+                    <div class="footer-title" style="font-weight: bold; font-size: 1.2rem;">{% trans "Club-Prepa-Emploi" %}</div>
+                    <div class="footer-subtitle">{% trans "École de Formation Professionnelle" %}</div>
                 </div>
             </div>
 
             <div class="footer-links">
-                <p style="color: #003366; font-weight: bold; margin-bottom: 5px;">Liens Rapides</p>
-                <a href="/">Accueil</a>
-                <a href="/nos-formation/">Nos formations</a>
-                <a href="/">Actualités</a>
-                <a href="/album/">Album</a>
-                <a href="/a-propos/">À propos</a>
+                <p style="color: #003366; font-weight: bold; margin-bottom: 5px;">{% trans "Liens Rapides" %}</p>
+                <a href="/">{% trans "Accueil" %}</a>
+                <a href="{% url 'nos_formation' %}">{% trans "Nos formations" %}</a>
+                <a href="#annonces">{% trans "Actualités" %}</a>
+                <a href="{% url 'notre_album' %}">{% trans "Album" %}</a>
+                <a href="{% url 'a_propos' %}">{% trans "À propos" %}</a>
             </div>
 
             <div class="footer-contact">
-                <p style="color: #003366; font-weight: bold; margin-bottom: 5px;">Nos Contacts</p>
+                <p style="color: #003366; font-weight: bold; margin-bottom: 5px;">{% trans "Nos Contacts" %}</p>
                 <div class="contact-row"><i class="fa-solid fa-phone"></i><a href="tel:+237600000000">+237 6 00 00 00 0</a></div>
                 <div class="contact-row"><i class="fa-regular fa-envelope"></i><a href="mailto:contact@cpeformation.com">contact@cpeformation.com</a></div>
-                <div class="contact-row"><i class="fa-brands fa-whatsapp"></i><a href="https://wa.me/237658034163" target="_blank" rel="noopener">WhatsApp</a></div>
-                <div class="contact-row"><i class="fa-brands fa-facebook-f"></i><a href="https://www.facebook.com/p/CPE-Officiel-61568542210162/" target="_blank" rel="noopener">Facebook</a></div>
+                <div class="contact-row"><i class="fa-brands fa-whatsapp"></i><a href="https://wa.me/237658034163" target="_blank" rel="noopener">{% trans "WhatsApp" %}</a></div>
+                <div class="contact-row"><i class="fa-brands fa-facebook-f"></i><a href="https://www.facebook.com/p/CPE-Officiel-61568542210162/" target="_blank" rel="noopener">{% trans "Facebook" %}</a></div>
             </div>
         </div>
 
         <div class="footer-bottom">
-            <p>&copy; 2026 CPE Formation - Tous droits réservés.</p>
+            <p>&copy; 2026 {% trans "CPE Formation - Tous droits réservés." %}</p>
         </div>
     </footer>
 
@@ -294,15 +383,20 @@
             </svg>
         </div>
 
-        <a class="side-btn side-btn-contact" href="{% url 'connexion_dashboard' %}" aria-label="Créer une formation">
+        <a class="side-btn side-btn-contact" href="{% url 'connexion_dashboard' %}" aria-label="{% trans 'Créer une formation' %}">
             <i class="fa-solid fa-user side-phone-icon" style="font-size:20px;"></i>
         </a>
 
-        <a class="side-btn side-btn-lang" href="?lang=en" aria-label="Switch language">
+        <form action="{% url 'set_language' %}" method="post" style="display: none;" id="lang-form">
+            {% csrf_token %}
+            <input name="next" type="hidden" value="{{ request.get_full_path }}">
+            <input name="language" type="hidden" value="{% if request.LANGUAGE_CODE == 'fr' %}en{% else %}fr{% endif %}">
+        </form>
+        <button class="side-btn side-btn-lang" onclick="document.getElementById('lang-form').submit();" aria-label="{% trans 'Switch language' %}">
             <i class="fa-solid fa-language" style="font-size:20px;"></i>
-        </a>
+        </button>
 
-        <a class="side-btn side-btn-whatsapp" href="https://wa.me/237600000000" target="_blank" rel="noopener" aria-label="Contacter via WhatsApp">
+        <a class="side-btn side-btn-whatsapp" href="https://wa.me/237600000000" target="_blank" rel="noopener" aria-label="{% trans 'Contacter via WhatsApp' %}">
             <i class="fa-brands fa-whatsapp side-whatsapp-icon" style="font-size:22px; color:white;"></i>
         </a>
 

@@ -1,19 +1,20 @@
 {% extends 'mon_app/base.html' %}
 {% load static %}
+{% load i18n %}
 
 {% block title %}
-<title>{{ formation.titre }} - CPE Formation</title>
+<title>{{ formation.titre }} - {% trans "CPE Formation" %}</title>
 {% endblock %}
 
 {% block content %}
 <style>
     /* --- VARIABLES DE COULEURS --- */
     :root {
-        --primary-rose: #D18FB2;        /* Rose Serpents */
-        --primary-rose-hover: #b87599;
-        --primary-dark-blue: #003366;   /* Bleu Nuit */
-        --text-gray-dark: #4b5563;
-        --text-gray-light: #9ca3af;
+        --primary-rose: #392d68;        /* Rose Serpents */
+        --primary-rose-hover: #36407c;
+        --primary-dark-blue: #6bc9a7;   /* Bleu Nuit */
+        --text-gray-dark: #0a0a0a;
+        --text-gray-light: #0b0b0b;
         --bg-light: #f8fafc;
         --border-color: #f1f5f9;
         --shadow-sm: 0 1px 3px rgba(0,0,0,0.05), 0 1px 2px rgba(0,0,0,0.02);
@@ -42,7 +43,7 @@
         font-weight: 500;
     }
     .flash-icon {
-        background-color: rgba(255, 255, 255, 0.2);
+        background-color: rgba(15, 14, 14, 0.2);
         padding: 6px;
         border-radius: 50%;
         display: flex;
@@ -68,7 +69,7 @@
         background-size: 16px 16px;
     }
     .hero-container {
-        max-w: 1280px;
+        max-width: 1280px;
         margin: 0 auto;
         position: relative;
         z-index: 10;
@@ -114,7 +115,7 @@
     @media (min-width: 768px) { .hero-title { font-size: 48px; } }
     .hero-desc {
         font-size: 16px;
-        color: #d1d5db;
+        color: #0a0b0b;
         max-width: 650px;
         font-weight: 300;
         line-height: 1.6;
@@ -185,7 +186,7 @@
         padding: 12px;
         border-radius: 12px;
         background-color: var(--bg-light);
-        color: var(--primary-dark-blue);
+        color: #392d68;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -207,10 +208,10 @@
     .feature-value {
         font-size: 14px;
         font-weight: 700;
-        color: var(--primary-dark-blue);
+        color: #392d68;
         margin: 2px 0 0 0;
     }
-    .feature-value.price { font-weight: 900; }
+    .feature-value.price { font-weight: 900; color: #392d68; }
 
     /* --- CONTENU DU PROGRAMME --- */
     .program-card {
@@ -237,16 +238,16 @@
     .program-title {
         font-size: 24px;
         font-weight: 700;
-        color: var(--primary-dark-blue);
+        color: #392d68;
         margin: 0;
     }
 
     /* Rendu HTML dynamique du programme */
-    .style-programme { line-layout: 1.6; }
+    .style-programme { line-height: 1.6; }
     .style-programme h2, .style-programme h3 {
         font-size: 20px;
         font-weight: 700;
-        color: var(--primary-dark-blue);
+        color: #392d68;
         margin-top: 24px;
         margin-bottom: 12px;
     }
@@ -286,7 +287,7 @@
     .form-title {
         font-size: 20px;
         font-weight: 700;
-        color: var(--primary-dark-blue);
+        color: #392d68;
         margin: 0 0 4px 0;
         display: flex;
         align-items: center;
@@ -302,7 +303,7 @@
         display: block;
         font-size: 11px;
         font-weight: 700;
-        color: #6b7280;
+        color: #121313;
         text-transform: uppercase;
         margin-bottom: 4px;
         letter-spacing: 0.05em;
@@ -310,7 +311,8 @@
     .input-icon-wrapper { position: relative; }
     .input-icon {
         position: absolute;
-        inset-y: 0; left: 0;
+        top: 50%; left: 0;
+        transform: translateY(-50%);
         display: flex;
         align-items: center;
         padding-left: 14px;
@@ -325,7 +327,7 @@
         border: 1px solid #e5e7eb;
         background-color: rgba(248, 250, 252, 0.5);
         font-size: 14px;
-        color: #374151;
+        color: #0c0c0c;
         transition: all 0.2s;
         box-sizing: border-box;
     }
@@ -391,7 +393,7 @@
         <div class="hero-text-side">
             <span class="badge-categorie">
                 <span class="badge-dot"></span>
-                Formation Professionnelle
+                {{ formation.get_categorie_display|default:_("Formation Professionnelle") }}
             </span>
             <h1 class="hero-title">{{ formation.titre }}</h1>
             <p class="hero-desc">{{ formation.description_courte }}</p>
@@ -422,8 +424,8 @@
                     <i class="far fa-clock"></i>
                 </div>
                 <div>
-                    <p class="feature-label">Durée</p>
-                    <p class="feature-value">{{ formation.duree|default:"6 mois" }}</p>
+                    <p class="feature-label">{% trans "Durée" %}</p>
+                    <p class="feature-value">{{ formation.duree|default:_("6 mois") }}</p>
                 </div>
             </div>
             
@@ -432,8 +434,8 @@
                     <i class="fas fa-graduation-cap"></i>
                 </div>
                 <div>
-                    <p class="feature-label">Niveau requis</p>
-                    <p class="feature-value">Baccalauréat</p>
+                    <p class="feature-label">{% trans "Niveau requis" %}</p>
+                    <p class="feature-value">{% trans "Baccalauréat" %}</p>
                 </div>
             </div>
 
@@ -442,8 +444,8 @@
                     <i class="far fa-file-alt"></i>
                 </div>
                 <div>
-                    <p class="feature-label">Certification</p>
-                    <p class="feature-value">Certifié CPE</p>
+                    <p class="feature-label">{% trans "Certification" %}</p>
+                    <p class="feature-value">{% trans "Certifié CPE" %}</p>
                 </div>
             </div>
 
@@ -452,17 +454,24 @@
                     <i class="fas fa-wallet"></i>
                 </div>
                 <div>
-                    <p class="feature-label">Tarif</p>
-                    <p class="feature-value price">{% if formation.prix %}{{ formation.prix }} FCFA{% else %}À venir{% endif %}</p>
+                    <p class="feature-label">{% trans "Coût" %}</p>
+                    <p class="feature-value price">
+                        {% if formation.prix %}
+                            {{ formation.prix }} {% trans "FCFA" %}
+                        {% else %}
+                            {% trans "Gratuit" %}
+                        {% endif %}
+                    </p>
                 </div>
             </div>
+
         </div>
 
         {# Corps du programme #}
         <div class="program-card">
             <div class="program-header">
                 <div class="program-indicator"></div>
-                <h2 class="program-title">Présentation du Programme</h2>
+                <h2 class="program-title">{% trans "Niveau requis et Débouché" %}</h2>
             </div>
             <div class="style-programme">
                 {{ formation.programme_detaille|safe }}
@@ -476,44 +485,48 @@
             <div class="form-top-line"></div>
             
             <h3 class="form-title">
-                <i class="fas fa-user-graduate" style="color: var(--primary-rose); font-size: 14px;"></i> Inscription Rapide
+                <i class="fas fa-user-graduate" style="color: var(--primary-rose); font-size: 14px;"></i> {% trans "Inscription Rapide" %}
             </h3>
-            <p class="form-subtitle">Un conseiller d'orientation CPE vous recontactera sous 24h.</p>
+            <p class="form-subtitle">{% trans "Un conseiller d'orientation CPE vous recontactera sous 24h." %}</p>
 
             <form method="POST">
                 {% csrf_token %}
                 
                 <div class="form-group">
-                    <label class="form-label">Nom complet</label>
+                    <label class="form-label">{% trans "Nom complet" %}</label>
                     <div class="input-icon-wrapper">
                         <span class="input-icon"><i class="far fa-user"></i></span>
-                        <input type="text" name="nom" required placeholder="Ex: Jean Paul" class="form-input">
+                        {% trans "Ex: Jean Paul" as placeholder_nom %}
+                        <input type="text" name="nom" required placeholder="{{ placeholder_nom }}" class="form-input">
                     </div>
                 </div>
 
                 <div class="form-group">
-                    <label class="form-label">Adresse Email</label>
+                    <label class="form-label">{% trans "Adresse Email" %}</label>
                     <div class="input-icon-wrapper">
                         <span class="input-icon"><i class="far fa-envelope"></i></span>
-                        <input type="email" name="email" required placeholder="exemple@mail.com" class="form-input">
+                        {% trans "exemple@mail.com" as placeholder_email %}
+                        <input type="email" name="email" required placeholder="{{ placeholder_email }}" class="form-input">
                     </div>
                 </div>
 
                 <div class="form-group">
-                    <label class="form-label">Numéro de Téléphone</label>
+                    <label class="form-label">{% trans "Numéro de Téléphone" %}</label>
                     <div class="input-icon-wrapper">
                         <span class="input-icon"><i class="fas fa-phone-alt"></i></span>
-                        <input type="tel" name="telephone" required placeholder="Ex: +237 6xx xx xx xx" class="form-input">
+                        {% trans "Ex: +237 6xx xx xx xx" as placeholder_tel %}
+                        <input type="tel" name="telephone" required placeholder="{{ placeholder_tel }}" class="form-input">
                     </div>
                 </div>
 
                 <div class="form-group">
-                    <label class="form-label">Votre message (Optionnel)</label>
-                    <textarea name="message" rows="3" placeholder="Avez-vous des questions particulières ?" class="form-input form-textarea"></textarea>
+                    <label class="form-label">{% trans "Votre message (Optionnel)" %}</label>
+                    {% trans "Avez-vous des questions particulières ?" as placeholder_msg %}
+                    <textarea name="message" rows="3" placeholder="{{ placeholder_msg }}" class="form-input form-textarea"></textarea>
                 </div>
 
                 <button type="submit" class="btn-submit-rose">
-                    <i class="fas fa-paper-plane btn-icon"></i> Envoyer ma Demande
+                    <i class="fas fa-paper-plane btn-icon"></i> {% trans "Envoyer ma Demande" %}
                 </button>
             </form>
         </div>

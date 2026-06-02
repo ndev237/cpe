@@ -1,123 +1,189 @@
 {% extends 'mon_app/baseA.html' %}
+{% load i18n %}
+{% load static %}
 
 {% block content %}
+<link href="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.snow.css" rel="stylesheet">
+
 <style>
-    /* Conteneur principal */
-    .form-container {
-        font-family: 'Poppins', sans-serif;
-        max-width: 800px;
-        margin: 0 auto;
-        padding: 10px;
+    /* --- STRUCTURATION DU CONTENEUR SPLIT --- */
+    .annonce-container {
+        width: 100%;
+        max-width: 1100px;
+        background-color: #ffffff;
+        border-radius: 20px;
+        box-shadow: 0 20px 40px rgba(74, 124, 89, 0.06);
+        border: 1px solid #e2e8f0;
+        display: grid;
+        grid-template-columns: 0.9fr 1.1fr;
+        overflow: hidden;
+        min-height: 650px;
+        margin: 20px auto;
     }
 
-    .page-header {
-        margin-bottom: 30px;
-    }
-
-    .page-header h1 {
-        font-size: 1.8rem;
-        color: #003366; /* Bleu Nuit */
-        margin: 0;
-        font-weight: 600;
-    }
-
-    .page-header p {
-        color: #64748b;
-        font-size: 0.9rem;
-        margin-top: 4px;
-    }
-
-    /* Carte du formulaire */
-    .form-card {
-        background: white;
-        border-radius: 12px;
-        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
-        border: 1px solid rgba(0,0,0,0.05);
-        padding: 30px;
-    }
-
-    [data-theme="dark"] .form-card {
-        background: #1e293b;
+    [data-theme="dark"] .annonce-container {
+        background-color: #1e293b;
         border-color: #334155;
     }
 
-    /* Organisation des lignes du formulaire */
+    /* --- COLONNE GAUCHE : VISUEL --- */
+    .annonce-sidebar {
+        background: linear-gradient(135deg, #4A7c59 0%, #2c4c35 100%);
+        padding: 3rem;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        position: relative;
+    }
+
+    .annonce-sidebar::before {
+        content: '';
+        position: absolute;
+        width: 300px;
+        height: 300px;
+        background: rgba(209, 143, 178, 0.15);
+        border-radius: 50%;
+        filter: blur(40px);
+    }
+
+    .annonce-hero-img {
+        width: 100%;
+        max-width: 340px;
+        height: auto;
+        display: block;
+        position: relative;
+        z-index: 1;
+    }
+
+    /* --- COLONNE DROITE : FORMULAIRE --- */
+    .annonce-form-area {
+        padding: 3rem;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+
+    .annonce-header {
+        margin-bottom: 1.5rem;
+    }
+
+    .annonce-header h1 {
+        font-size: 2rem;
+        font-weight: 800;
+        color: #4A7c59;
+        letter-spacing: -0.5px;
+    }
+
+    .annonce-header h1 span {
+        color: #D18FB2;
+    }
+
+    /* --- STEPPER (INDICATEUR D'ÉTAPE) --- */
+    .stepper {
+        display: flex;
+        gap: 15px;
+        margin-bottom: 1.5rem;
+    }
+
+    .step-indicator {
+        font-size: 0.8rem;
+        font-weight: 700;
+        color: #94a3b8;
+        padding-bottom: 5px;
+        border-bottom: 2px solid #e2e8f0;
+        flex: 1;
+        transition: all 0.3s ease;
+    }
+
+    .step-indicator.active {
+        color: #4A7c59;
+        border-bottom-color: #4A7c59;
+    }
+
+    /* --- GESTION DES ÉTAPES VIA JS --- */
+    .form-step {
+        display: none; /* Masqué par défaut */
+        flex-direction: column;
+        gap: 1.25rem;
+    }
+
+    .form-step.active {
+        display: flex; /* Affiché quand actif */
+    }
+
     .form-group {
-        margin-bottom: 24px;
+        display: flex;
+        flex-direction: column;
     }
 
     .form-group label {
-        display: block;
-        font-size: 0.9rem;
+        font-size: 0.875rem;
         font-weight: 600;
-        color: #334155;
-        margin-bottom: 8px;
+        color: #475569;
+        margin-bottom: 0.5rem;
     }
 
     [data-theme="dark"] .form-group label {
         color: #cbd5e1;
     }
 
-    /* Style des entrées de texte et zones de texte Django */
     .form-group input[type="text"],
     .form-group textarea {
         width: 100%;
-        padding: 12px 16px;
+        padding: 0.85rem 1.25rem;
+        font-family: 'Poppins', sans-serif;
+        font-size: 0.95rem;
         border: 1px solid #cbd5e1;
-        border-radius: 8px;
-        font-size: 0.9rem;
-        font-family: inherit;
+        border-radius: 12px;
+        background-color: #f8fafc;
+        color: #1e293b;
         outline: none;
-        transition: border-color 0.2s ease, box-shadow 0.2s ease;
-        background-color: #fff;
+        transition: all 0.2s ease-in-out;
     }
 
     [data-theme="dark"] .form-group input[type="text"],
     [data-theme="dark"] .form-group textarea {
         background-color: #0f172a;
         border-color: #334155;
-        color: #fff;
+        color: #ffffff;
     }
 
-    .form-group input:focus,
+    .form-group input[type="text"]:focus,
     .form-group textarea:focus {
-        border-color: #4A7c59; /* Vert de ta sidebar */
-        box-shadow: 0 0 0 3px rgba(74, 124, 89, 0.15);
+        border-color: #4A7c59;
+        background-color: #ffffff;
+        box-shadow: 0 0 0 4px rgba(74, 124, 89, 0.15);
     }
 
-    /* Interrupteurs / Checkboxes alignés horizontalement */
+    /* --- CHECKBOXES ALIGNÉS --- */
     .checkbox-group {
         display: flex;
-        gap: 30px;
+        gap: 24px;
         flex-wrap: wrap;
-        margin-top: 10px;
+        margin-top: 5px;
     }
 
     .checkbox-label {
         display: flex;
         align-items: center;
-        gap: 10px;
+        gap: 8px;
         cursor: pointer;
         font-size: 0.9rem;
         font-weight: 500;
-        color: #334155;
-    }
-
-    [data-theme="dark"] .checkbox-label {
-        color: #cbd5e1;
+        color: #475569;
     }
 
     .checkbox-label input[type="checkbox"] {
         width: 18px;
         height: 18px;
-        accent-color: #4A7c59; /* Vert de ta sidebar */
-        cursor: pointer;
+        accent-color: #4A7c59;
     }
 
-    /* Zone personnalisée pour l'image */
+    /* --- FILE DROP ZONE DESIGN --- */
     .file-drop-zone {
         border: 2px dashed #cbd5e1;
-        border-radius: 8px;
+        border-radius: 12px;
         padding: 20px;
         text-align: center;
         background: #f8fafc;
@@ -132,27 +198,26 @@
 
     .file-drop-zone:hover {
         border-color: #4A7c59;
-        background: rgba(74, 124, 89, 0.02);
+        background: rgba(74, 124, 89, 0.04);
     }
 
-    /* Prévisualisation de l'image */
     #imagePreview {
         max-width: 100%;
-        max-height: 200px;
-        border-radius: 6px;
-        margin-top: 15px;
+        max-height: 150px;
+        border-radius: 8px;
+        margin-top: 12px;
         display: none;
         object-fit: cover;
     }
 
-    /* Barre d'action finale (Boutons) */
+    /* --- ACTIONS / BOUTONS --- */
     .form-actions {
         display: flex;
         justify-content: flex-end;
         gap: 12px;
-        margin-top: 30px;
-        border-top: 1px solid #f1f5f9;
-        padding-top: 20px;
+        margin-top: 1.5rem;
+        border-top: 1px solid #e2e8f0;
+        padding-top: 1.5rem;
     }
 
     [data-theme="dark"] .form-actions {
@@ -160,16 +225,17 @@
     }
 
     .btn {
-        padding: 10px 24px;
-        border-radius: 8px;
-        font-size: 0.9rem;
-        font-weight: 600;
+        padding: 0.85rem 1.75rem;
+        border-radius: 12px;
+        font-size: 0.95rem;
+        font-weight: 700;
         cursor: pointer;
         transition: all 0.2s ease;
         text-decoration: none;
         display: inline-flex;
         align-items: center;
         gap: 8px;
+        font-family: 'Poppins', sans-serif;
     }
 
     .btn-secondary {
@@ -182,114 +248,225 @@
         background-color: #e2e8f0;
     }
 
-    [data-theme="dark"] .btn-secondary {
-        background-color: #334155;
-        color: #f1f5f9;
-        border-color: #475569;
-    }
-
-    [data-theme="dark"] .btn-secondary:hover {
-        background-color: #475569;
-    }
-
-    .btn-primary {
-        background-color: #4A7c59; /* Vert de ta sidebar */
-        color: white;
+    .btn-submit {
+        background-color: #4A7c59;
+        color: #ffffff;
         border: none;
+        box-shadow: 0 4px 14px rgba(74, 124, 89, 0.2);
     }
 
-    .btn-primary:hover {
+    .btn-submit:hover {
         background-color: #385f44;
-        box-shadow: 0 4px 12px rgba(74, 124, 89, 0.2);
+        transform: translateY(-1px);
+    }
+
+    /* --- INTEGRATION EDITEUR QUILL --- */
+    .quill-editor-wrapper {
+        background-color: #fff;
+        border-radius: 12px;
+        overflow: hidden;
+        border: 1px solid #cbd5e1;
+    }
+
+    [data-theme="dark"] .quill-editor-wrapper {
+        background-color: #0f172a;
+        border-color: #334155;
+    }
+
+    .ql-toolbar.ql-snow {
+        border: none !important;
+        border-bottom: 1px solid #cbd5e1 !important;
+        background: #f1f5f9;
+    }
+
+    .ql-container.ql-snow {
+        border: none !important;
+        min-height: 180px;
+        font-family: 'Poppins', sans-serif !important;
+    }
+
+    @media (max-width: 960px) {
+        .annonce-container { grid-template-columns: 1fr; max-width: 650px; }
+        .annonce-sidebar { display: none; }
+        .annonce-form-area { padding: 2.5rem 1.5rem; }
     }
 </style>
 
-<div class="form-container">
+<div class="annonce-container">
     
-    <div class="page-header">
-        <h1>Créer une Annonce / Actualité</h1>
-        <p>Remplissez le formulaire ci-dessous pour publier une nouvelle information sur le site public.</p>
+    <div class="annonce-sidebar" aria-hidden="true">
+        <img class="annonce-hero-img" src="{% static 'images/Mobile Marketing-bro.svg' %}" alt="Illustration" />
     </div>
 
-    <div class="form-card">
+    <div class="annonce-form-area">
+        
+        <div class="annonce-header">
+            <h1>{% trans "Nouvelle Annonce" %}<span>+</span></h1>
+        </div>
+
+        <div class="stepper">
+            <div class="step-indicator active" id="badgeStep1">1. {% trans "Contenu" %}</div>
+            <div class="step-indicator" id="badgeStep2">2. {% trans "Média & Options" %}</div>
+        </div>
+
         <form method="POST" enctype="multipart/form-data" id="annonceForm">
             {% csrf_token %}
 
-            <div class="form-group">
-                <label for="{{ form.titre.id_for_label }}">{{ form.titre.label }}</label>
-                {{ form.titre }}
-            </div>
+            <div class="form-step active" id="step1">
+                <div class="form-group">
+                    <label for="{{ form.titre.id_for_label }}">{{ form.titre.label }}</label>
+                    {{ form.titre }}
+                </div>
 
-            <div class="form-group">
-                <label for="{{ form.slug.id_for_label }}">{{ form.slug.label }}</label>
-                {{ form.slug }}
-            </div>
+                <div class="form-group">
+                    <label for="{{ form.slug.id_for_label }}">{{ form.slug.label }}</label>
+                    {{ form.slug }}
+                </div>
 
-            <div class="form-group">
-                <label for="{{ form.contenu.id_for_label }}">{{ form.contenu.label }}</label>
-                {{ form.contenu }}
-            </div>
-
-            <div class="form-group">
-                <label for="{{ form.image.id_for_label }}">{{ form.image.label }}</label>
-                <div class="file-drop-zone" onclick="document.getElementById('{{ form.image.id_for_label }}').click()">
-                    <i class="fas fa-cloud-upload-alt" style="font-size: 2rem; color: #94a3b8; margin-bottom: 8px; display: block;"></i>
-                    <span style="font-size: 0.85rem; color: #64748b;">Cliquez pour choisir une image d'illustration</span>
-                    <div style="display: none;">{{ form.image }}</div>
-                    
-                    <img id="imagePreview" src="#" alt="Aperçu de l'image">
+                <div class="form-group">
+                    <label for="{{ form.contenu.id_for_label }}">{{ form.contenu.label }}</label>
+                    <div style="display: none;">{{ form.contenu }}</div>
+                    <div class="quill-editor-wrapper">
+                        <div id="editor_contenu"></div>
+                    </div>
                 </div>
             </div>
 
-            <div class="form-group">
-                <label>Options de publication</label>
-                <div class="checkbox-group">
-                    <label class="checkbox-label">
-                        {{ form.est_epinglee }}
-                        <span>{{ form.est_epinglee.label }}</span>
-                    </label>
-                    <label class="checkbox-label">
-                        {{ form.est_active }}
-                        <span>{{ form.est_active.label }}</span>
-                    </label>
+            <div class="form-step" id="step2">
+                <div class="form-group">
+                    <label for="{{ form.image.id_for_label }}">{{ form.image.label }}</label>
+                    <div class="file-drop-zone" onclick="document.getElementById('{{ form.image.id_for_label }}').click()">
+                        <i class="fas fa-cloud-upload-alt" style="font-size: 2rem; color: #4A7c59; margin-bottom: 8px; display: block; opacity: 0.7;"></i>
+                        <span style="font-size: 0.85rem; color: #64748b;">{% trans "Cliquez pour choisir une image d'illustration" %}</span>
+                        <div style="display: none;">{{ form.image }}</div>
+                        <img id="imagePreview" src="#" alt="Aperçu">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>{% trans "Options de publication" %}</label>
+                    <div class="checkbox-group">
+                        <label class="checkbox-label">
+                            {{ form.est_epinglee }}
+                            <span>{{ form.est_epinglee.label }}</span>
+                        </label>
+                        <label class="checkbox-label">
+                            {{ form.est_active }}
+                            <span>{{ form.est_active.label }}</span>
+                        </label>
+                    </div>
                 </div>
             </div>
 
             <div class="form-actions">
-                <a href="{% url 'admin_list_anonces' %}" class="btn btn-secondary">
-                    Annuler
+                <a href="{% url 'admin_list_anonces' %}" class="btn btn-secondary" id="btnCancel">
+                    {% trans "Annuler" %}
                 </a>
-                <button type="submit" class="btn btn-primary">
-                    <i class="fas fa-paper-plane"></i> Publier l'annonce
+                <button type="button" class="btn btn-secondary" id="btnBack" style="display: none;">
+                    {% trans "Retour" %}
+                </button>
+                <button type="button" class="btn btn-submit" id="btnNext">
+                    {% trans "Suivant" %} <i class="fas fa-arrow-right" style="font-size: 0.8rem; margin-left: 4px;"></i>
+                </button>
+                <button type="submit" class="btn btn-submit" id="btnSubmit" style="display: none;">
+                    <i class="fas fa-paper-plane"></i> {% trans "Publier l'annonce" %}
                 </button>
             </div>
         </form>
+        
     </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.js"></script>
 <script>
     document.addEventListener("DOMContentLoaded", function() {
+        // Éléments du DOM pour le multi-étape
+        const step1 = document.getElementById("step1");
+        const step2 = document.getElementById("step2");
+        const badgeStep1 = document.getElementById("badgeStep1");
+        const badgeStep2 = document.getElementById("badgeStep2");
+        
+        const btnCancel = document.getElementById("btnCancel");
+        const btnBack = document.getElementById("btnBack");
+        const btnNext = document.getElementById("btnNext");
+        const btnSubmit = document.getElementById("btnSubmit");
+
         const titreInput = document.getElementById("{{ form.titre.id_for_label }}");
         const slugInput = document.getElementById("{{ form.slug.id_for_label }}");
         const imageInput = document.getElementById("{{ form.image.id_for_label }}");
         const previewImg = document.getElementById("imagePreview");
 
-        // 1. GÉNÉRATION DU SLUG AUTOMATIQUE EN TAPANT LE TITRE
+        // --- 1. SCRIPT DE NAVIGATION ENTRE ÉTAPES ---
+        btnNext.addEventListener("click", function() {
+            // Validation basique avant de passer à l'étape suivante (Titre obligatoire)
+            if (titreInput && titreInput.value.trim() === "") {
+                titreInput.focus();
+                titreInput.style.borderColor = "#b91c1c";
+                return;
+            }
+            titreInput.style.borderColor = "";
+
+            // Passage visuel à l'étape 2
+            step1.classList.remove("active");
+            step2.classList.add("active");
+            badgeStep1.classList.remove("active");
+            badgeStep2.classList.add("active");
+
+            // Gestion des boutons
+            btnCancel.style.display = "none";
+            btnNext.style.display = "none";
+            btnBack.style.display = "inline-flex";
+            btnSubmit.style.display = "inline-flex";
+        });
+
+        btnBack.addEventListener("click", function() {
+            // Retour à l'étape 1
+            step2.classList.remove("active");
+            step1.classList.add("active");
+            badgeStep2.classList.remove("active");
+            badgeStep1.classList.add("active");
+
+            // Gestion des boutons
+            btnCancel.style.display = "inline-flex";
+            btnNext.style.display = "inline-flex";
+            btnBack.style.display = "none";
+            btnSubmit.style.display = "none";
+        });
+
+
+        // --- 2. TEXTE RICHE (QUILL) ---
+        const textareaContenu = document.getElementById("{{ form.contenu.id_for_label }}") || document.querySelector("[name='contenu']");
+        let quillContenu;
+
+        if (textareaContenu) {
+            quillContenu = new Quill('#editor_contenu', {
+                modules: {
+                    toolbar: [
+                        [{ 'header': [1, 2, 3, false] }],
+                        ['bold', 'italic', 'underline', 'strike'],
+                        [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                        ['link', 'clean']
+                    ]
+                },
+                theme: 'snow',
+                placeholder: 'Rédigez votre annonce ici...'
+            });
+            quillContenu.root.innerHTML = textareaContenu.value;
+        }
+
+        // --- 3. AUTO SLUG ---
         if (titreInput && slugInput) {
             titreInput.addEventListener("input", function() {
                 let text = titreInput.value;
-                let slug = text.toLowerCase()
-                               .trim()
-                               .normalize('NFD') // Supprime les accents
-                               .replace(/[\u0300-\u036f]/g, '')
-                               .replace(/[^a-z0-9\s-]/g, '') // Supprime les caractères spéciaux
-                               .replace(/[\s_]+/g, '-') // Remplace les espaces par des tirets
-                               .replace(/-+/g, '-'); // Évite les tirets doubles
+                let slug = text.toLowerCase().trim()
+                               .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+                               .replace(/[^a-z0-9\s-]/g, '')
+                               .replace(/[\s_]+/g, '-').replace(/-+/g, '-');
                 slugInput.value = slug;
             });
         }
 
-        // 2. PRÉVISUALISATION DE L'IMAGE SÉLECTIONNÉE EN DIRECT
+        // --- 4. PREVIEW IMAGE ---
         if (imageInput && previewImg) {
             imageInput.addEventListener("change", function() {
                 const file = this.files[0];
@@ -305,6 +482,14 @@
                 }
             });
         }
+
+        // --- 5. SYNCHRONISATION AVANT ENVOI DU FORMULAIRE ---
+        const form = document.getElementById("annonceForm");
+        form.addEventListener("submit", function() {
+            if (textareaContenu && quillContenu) {
+                textareaContenu.value = quillContenu.root.innerHTML;
+            }
+        });
     });
 </script>
 {% endblock %}

@@ -9,6 +9,8 @@ from django.contrib.auth.hashers import check_password
 from . import models
 from .forms import FormationForm,AlbumPhotoForm
 from .models import AlbumPhoto
+from .models import Actualite
+from .forms import ActualiteForm
 
 
 def index(request):
@@ -71,6 +73,9 @@ def notre_album(request):
     return render(request, "mon_app/album.html", {'albums': albums})
 
 
+
+
+
 ### --- ESPACE ADMIN / DASHBOARD --- ###
 
 @csrf_exempt
@@ -102,7 +107,6 @@ def connexion_dashboard(request):
             
     return render(request, 'mon_app/admin/connexion.html')
 
-
 def admin_creer_formation(request):
     """Vue sécurisée manuellement via la session de la base de données brute"""
     
@@ -111,13 +115,12 @@ def admin_creer_formation(request):
         messages.error(request, "Veuillez vous connecter pour accéder au tableau de bord.")
         return redirect('connexion_dashboard')
         
-    # Le reste du traitement de ton formulaire reste inchangé
     if request.method == 'POST':
+        # request.FILES est essentiel ici pour intercepter l'image de la formation
         form = FormationForm(request.POST, request.FILES)
         if form.is_valid():
             formation = form.save()
             messages.success(request, f"La formation '{formation.titre}' a été créée avec succès !")
-            # Redirection vers la même page (ou une vue valide comme 'connexion_dashboard')
             return redirect('admin_creer_formation')
     else:
         form = FormationForm()
@@ -208,3 +211,30 @@ def admin_supprimer_photo(request, pk):
         photo.delete()
         messages.success(request, "La photo a été supprimée avec succès de l'album.")
     return redirect('admin_liste_photos')
+
+
+
+
+def actualite_liste(request):
+    """Affiche toutes les actualités publiées"""
+    actualites = Actualite.objects.filter(statut='Publie')
+    return render(request, 'mon_app/admin/Actualiter/list_actualiter.html', {'actualites': actualites})
+
+def admin_actualite_creer(request):
+    """Gère la création d'une nouvelle actualité"""
+    if request.method == 'POST':
+        form = ActualiteForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "L'actualité a été publiée avec succès !")
+            return redirect('actualite_liste') # Adapte le nom de ton URL
+    else:
+        form = ActualiteForm()
+    
+    return render(request, 'mon_app/admin/Actualiter/creer_actualiter.html', {'form': form})
+
+def notifications_page(request):
+    # On récupère les notifications stockées en session (ou une liste vide si rien n'existe)
+    notifications = request.session.get('liste_notifications', [])
+    
+    return render(request, 'mon_app/admin/notifications/list_notifications.html', {'notifications': notifications})

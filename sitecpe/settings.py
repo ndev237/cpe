@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 
 from pathlib import Path
 import os
+from django.utils.translation import gettext_lazy as _
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -44,6 +45,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.locale.LocaleMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -126,3 +128,21 @@ STATICFILES_DIRS = [BASE_DIR / 'static']
   
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+
+
+# 1. Définir les langues disponibles
+LANGUAGES = [
+    ('fr', _('French')),
+    ('en', _('English')),
+]
+
+# 2. Activer le système de traduction et définir la langue par défaut
+LANGUAGE_CODE = 'fr'
+USE_I18N = True
+USE_L10N = True
+
+# 3. Indiquer le dossier où seront stockés les fichiers de traduction (.po)
+LOCALE_PATHS = [
+    os.path.join(BASE_DIR, 'locale'),
+]

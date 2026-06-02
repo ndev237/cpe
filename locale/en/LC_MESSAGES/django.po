@@ -1,0 +1,804 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-05-29 12:40+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+#: .\mon_app\models.py:48
+msgid "Paramedical"
+msgstr "Paramedical"
+
+#: .\mon_app\models.py:49 .\mon_app\templates\mon_app\formation.html:172
+#: .\mon_app\templates\mon_app\formation.html:187
+#: .\mon_app\templates\mon_app\formation.html:202
+msgid "Industrielle"
+msgstr "Industrial"
+
+#: .\mon_app\templates\mon_app\admin\connexion.html:7
+msgid "Connexion Administration - CPE"
+msgstr "Administration Login - CPE"
+
+#: .\mon_app\templates\mon_app\admin\connexion.html:143
+msgid "Espace de gestion et supervision"
+msgstr "Management and Supervision Space"
+
+#: .\mon_app\templates\mon_app\admin\connexion.html:160
+msgid "Nom d'utilisateur"
+msgstr "Username"
+
+#: .\mon_app\templates\mon_app\admin\connexion.html:165
+msgid "Mot de passe"
+msgstr "Password"
+
+#: .\mon_app\templates\mon_app\admin\connexion.html:170
+msgid "Se connecter"
+msgstr "Log In"
+
+#: .\mon_app\templates\mon_app\album.html:91
+#: .\mon_app\templates\mon_app\base.html:246
+#: .\mon_app\templates\mon_app\base.html:271
+msgid "Album"
+msgstr "Album"
+
+#: .\mon_app\templates\mon_app\album.html:92
+msgid "Images et moments de la vie du CPE Formation."
+msgstr "Images and moments from life at CPE Formation."
+
+#: .\mon_app\templates\mon_app\album.html:95
+msgid "Galerie CPE"
+msgstr "CPE Gallery"
+
+#: .\mon_app\templates\mon_app\album.html:108
+msgid "Commentaire"
+msgstr "Comment"
+
+#: .\mon_app\templates\mon_app\album.html:113
+msgid "Aucun album publié pour le moment."
+msgstr "No albums published at the moment."
+
+#: .\mon_app\templates\mon_app\apropos.html:187
+msgid "À propos de CPE Formation"
+msgstr "About CPE Formation"
+
+#: .\mon_app\templates\mon_app\apropos.html:189
+msgid ""
+"CPE Formation est un centre de formation professionnelle orienté emploi, "
+"fondé sur l’expertise terrain. Nous accompagnons les apprenants avec des "
+"formations structurées, encadrées et évaluées."
+msgstr ""
+"CPE Formation is a job-oriented professional training center, founded on field "
+"expertise. We support learners with structured, supervised, and evaluated training."
+
+#: .\mon_app\templates\mon_app\apropos.html:193
+msgid "Historique"
+msgstr "History"
+
+#: .\mon_app\templates\mon_app\apropos.html:197
+msgid "CLUB-PREPA-EMPLOI"
+msgstr "CLUB-PREPA-EMPLOI"
+
+#: .\mon_app\templates\mon_app\apropos.html:199
+msgid ""
+"Le centre de formation <strong>“CLUB-PREPA-EMPLOI”</strong> sous "
+"l’assistance technique de l’Institut Universitaire et Stratégique de "
+"l’Estuaire, fort de plus de dix ans d’expérience dans les formations "
+"paramédicales, s’installe à Douala, Yaoundé et Bafoussam."
+msgstr ""
+"The <strong>“CLUB-PREPA-EMPLOI”</strong> training center, under the technical assistance "
+"of the Institut Universitaire et Stratégique de l’Estuaire, with over ten years of "
+"experience in paramedical training, is setting up in Douala, Yaoundé, and Bafoussam."
+
+#: .\mon_app\templates\mon_app\apropos.html:206
+msgid "Nos évaluations"
+msgstr "Our Evaluations"
+
+#: .\mon_app\templates\mon_app\apropos.html:208
+msgid ""
+"Exemple : <strong>Examen CQP – phase de MSP (Mise en Situation "
+"Professionnelle)</strong>. Cette étape permet de vérifier les compétences "
+"réelles des apprenants à travers des mises en situation proches du terrain."
+msgstr ""
+"Example: <strong>CQP Exam – MSP phase (Professional Situation Simulation)</strong>. "
+"This stage allows verifying the real skills of learners through hands-on scenarios close to the field."
+
+#: .\mon_app\templates\mon_app\apropos.html:214
+msgid "Mot du Promoteur"
+msgstr "Promoter's Message"
+
+#: .\mon_app\templates\mon_app\apropos.html:218
+#: .\mon_app\templates\mon_app\apropos.html:222
+msgid "Dr IGNACE FOYET"
+msgstr "Dr IGNACE FOYET"
+
+#: .\mon_app\templates\mon_app\apropos.html:224
+msgid ""
+"Depuis 1993, nous travaillons à former les jeunes Camerounais en quête de "
+"connaissances, de compétences et de savoir-être. Nous sommes un groupe de "
+"quatre institutions d’enseignement supérieur, basées à Douala, Yaoundé, "
+"Bafoussam, Mbouda, Libreville (au Gabon) et N’Djamena (au Tchad). "
+"Spécialisés dans des domaines aussi variés que le commerce et la gestion, la "
+"communication et l'information, l’industrie et les nouvelles technologies, "
+"l’ingénierie et la formation médicale, nos offres couvrent les cycles BTS, "
+"Ingénieur, Licence Professionnelle et Master Professionnel. Toutes nos "
+"formations sont accompagnées de compléments de diplômes et certifications "
+"internationales afin de contribuer au développement d’un capital humain "
+"créatif, innovant et compétitif pour notre pays, à travers des compétences "
+"flexibles et adaptables. Ce programme fait de l'Institut Universitaire et "
+"Stratégique de l’Estuaire (IUEs Insam) une pépinière de compétences et de "
+"leaders au service du développement du Cameroun."
+msgstr ""
+"Since 1993, we have been working to train young Cameroonians seeking knowledge, "
+"skills, and interpersonal attributes. We are a group of four higher education institutions, "
+"based in Douala, Yaoundé, Bafoussam, Mbouda, Libreville (Gabon), and N'Djamena (Chad). "
+"Specialized in fields as diverse as business and management, communication and information, "
+"industry and new technologies, engineering, and medical training, our offers cover "
+"BTS, Engineer, Professional Bachelor, and Professional Master cycles. All our training "
+"programs are accompanied by diploma supplements and international certifications in order "
+"to contribute to the development of a creative, innovative, and competitive human capital "
+"for our country, through flexible and adaptable skills. This program makes the "
+"Institut Universitaire et Stratégique de l’Estuaire (IUEs Insam) a breeding ground for "
+"skills and leaders at the service of Cameroon's development."
+
+#: .\mon_app\templates\mon_app\apropos.html:230
+msgid "Direction & encadrement"
+msgstr "Management & Supervision"
+
+#: .\mon_app\templates\mon_app\apropos.html:235
+msgid "DG"
+msgstr "GM"
+
+#: .\mon_app\templates\mon_app\apropos.html:237
+msgid "Direction Générale"
+msgstr "General Management"
+
+#: .\mon_app\templates\mon_app\apropos.html:238
+msgid ""
+"Vision de l’école, pilotage des formations et strategy de partenariats "
+"institutionnels."
+msgstr ""
+"School vision, training steering, and institutional partnership strategy."
+
+#: .\mon_app\templates\mon_app\apropos.html:247
+msgid "FO"
+msgstr "TM"
+
+#: .\mon_app\templates\mon_app\apropos.html:249
+msgid "Responsable Formation"
+msgstr "Training Manager"
+
+#: .\mon_app\templates\mon_app\apropos.html:250
+msgid ""
+"Organisation des parcours, suivi pédagogique et mise à jour continue des "
+"programmes."
+msgstr ""
+"Curriculum organization, pedagogical follow-up, and continuous update of programs."
+
+#: .\mon_app\templates\mon_app\apropos.html:259
+msgid "EV"
+msgstr "EM"
+
+#: .\mon_app\templates\mon_app\apropos.html:261
+msgid "Responsable Évaluation"
+msgstr "Evaluation Manager"
+
+#: .\mon_app\templates\mon_app\apropos.html:262
+msgid ""
+"Conception des évaluations et accompagnement personnalisé des apprenants "
+"vers la réussite de leur certification."
+msgstr ""
+"Design of evaluations and personalized support for learners towards the success of their certification."
+
+#: .\mon_app\templates\mon_app\apropos.html:271
+msgid "RH"
+msgstr "HR"
+
+#: .\mon_app\templates\mon_app\apropos.html:273
+msgid "Coordination Ressources Humaines"
+msgstr "Human Resources Coordination"
+
+#: .\mon_app\templates\mon_app\apropos.html:274
+msgid ""
+"Gestion des inscriptions, communication interne et coordination globale des "
+"équipes d’encadrement."
+msgstr ""
+"Enrollment management, internal communication, and global coordination of supervision teams."
+
+#: .\mon_app\templates\mon_app\base.html:8
+msgid "CPE - École de Formation Professionnelle"
+msgstr "CPE - Vocational Training School"
+
+#: .\mon_app\templates\mon_app\base.html:239
+#: .\mon_app\templates\mon_app\base.html:259
+msgid "Logo CPE"
+msgstr "CPE Logo"
+
+#: .\mon_app\templates\mon_app\base.html:240
+#: .\mon_app\templates\mon_app\base.html:261
+msgid "Club-Prepa-Emploi"
+msgstr "Club-Prepa-Emploi"
+
+#: .\mon_app\templates\mon_app\base.html:243
+#: .\mon_app\templates\mon_app\base.html:268
+msgid "Accueil"
+msgstr "Home"
+
+#: .\mon_app\templates\mon_app\base.html:244
+msgid "A propos"
+msgstr "About us"
+
+#: .\mon_app\templates\mon_app\base.html:245
+#: .\mon_app\templates\mon_app\base.html:269
+msgid "Nos formations"
+msgstr "Our Training Programs"
+
+#: .\mon_app\templates\mon_app\base.html:247
+#: .\mon_app\templates\mon_app\base.html:270
+msgid "Actualités"
+msgstr "News"
+
+#: .\mon_app\templates\mon_app\base.html:262
+msgid "École de Formation Professionnelle"
+msgstr "Vocational Training School"
+
+#: .\mon_app\templates\mon_app\base.html:267
+msgid "Liens Rapides"
+msgstr "Quick Links"
+
+#: .\mon_app\templates\mon_app\base.html:272
+msgid "À propos"
+msgstr "About"
+
+#: .\mon_app\templates\mon_app\base.html:276
+msgid "Nos Contacts"
+msgstr "Our Contacts"
+
+#: .\mon_app\templates\mon_app\base.html:279
+msgid "WhatsApp"
+msgstr "WhatsApp"
+
+#: .\mon_app\templates\mon_app\base.html:280
+msgid "Facebook"
+msgstr "Facebook"
+
+#: .\mon_app\templates\mon_app\base.html:285
+msgid "CPE Formation - Tous droits réservés."
+msgstr "CPE Formation - All rights reserved."
+
+#: .\mon_app\templates\mon_app\base.html:298
+msgid "Créer une formation"
+msgstr "Create a training program"
+
+#: .\mon_app\templates\mon_app\base.html:302
+msgid "Switch language"
+msgstr "Switch language"
+
+#: .\mon_app\templates\mon_app\base.html:306
+msgid "Contacter via WhatsApp"
+msgstr "Contact via WhatsApp"
+
+#: .\mon_app\templates\mon_app\detail_formation.html:6
+msgid "CPE Formation"
+msgstr "CPE Formation"
+
+#: .\mon_app\templates\mon_app\detail_formation.html:396
+msgid "Formation Professionnelle"
+msgstr "Vocational Training"
+
+#: .\mon_app\templates\mon_app\detail_formation.html:427
+msgid "Durée"
+msgstr "Duration"
+#: .\mon_app\templates\mon_app\detail_formation.html:428
+#: .\mon_app\templates\mon_app\formation.html:90
+#: .\mon_app\templates\mon_app\formation.html:118
+#: .\mon_app\templates\mon_app\formation.html:205
+msgid "6 mois"
+msgstr "6 months"
+
+#: .\mon_app\templates\mon_app\detail_formation.html:437
+msgid "Niveau requis"
+msgstr "Required Level"
+
+#: .\mon_app\templates\mon_app\detail_formation.html:438
+msgid "Baccalauréat"
+msgstr "High School Diploma / GCE A-Level"
+
+#: .\mon_app\templates\mon_app\detail_formation.html:447
+msgid "Certification"
+msgstr "Certification"
+
+#: .\mon_app\templates\mon_app\detail_formation.html:448
+msgid "Certifié CPE"
+msgstr "CPE Certified"
+
+#: .\mon_app\templates\mon_app\detail_formation.html:457
+msgid "Coût"
+msgstr "Cost"
+
+#: .\mon_app\templates\mon_app\detail_formation.html:460
+msgid "FCFA"
+msgstr "FCFA"
+
+#: .\mon_app\templates\mon_app\detail_formation.html:462
+#: .\mon_app\templates\mon_app\formation.html:150
+#: .\mon_app\templates\mon_app\formation.html:224
+msgid "Gratuit"
+msgstr "Free"
+
+#: .\mon_app\templates\mon_app\detail_formation.html:474
+msgid "Niveau requis et Débouché"
+msgstr "Required Level and Career Opportunities"
+
+#: .\mon_app\templates\mon_app\detail_formation.html:488
+msgid "Inscription Rapide"
+msgstr "Quick Registration"
+
+#: .\mon_app\templates\mon_app\detail_formation.html:490
+msgid "Un conseiller d'orientation CPE vous recontactera sous 24h."
+msgstr "A CPE guidance counselor will contact you within 24 hours."
+
+#: .\mon_app\templates\mon_app\detail_formation.html:496
+msgid "Nom complet"
+msgstr "Full Name"
+
+#: .\mon_app\templates\mon_app\detail_formation.html:499
+msgid "Ex: Jean Paul"
+msgstr "e.g., John Doe"
+
+#: .\mon_app\templates\mon_app\detail_formation.html:505
+msgid "Adresse Email"
+msgstr "Email Address"
+
+#: .\mon_app\templates\mon_app\detail_formation.html:508
+msgid "exemple@mail.com"
+msgstr "example@mail.com"
+
+#: .\mon_app\templates\mon_app\detail_formation.html:514
+msgid "Numéro de Téléphone"
+msgstr "Phone Number"
+
+#: .\mon_app\templates\mon_app\detail_formation.html:517
+msgid "Ex: +237 6xx xx xx xx"
+msgstr "e.g., +237 6xx xx xx xx"
+
+#: .\mon_app\templates\mon_app\detail_formation.html:523
+msgid "Votre message (Optionnel)"
+msgstr "Your Message (Optional)"
+
+#: .\mon_app\templates\mon_app\detail_formation.html:524
+msgid "Avez-vous des questions particulières ?"
+msgstr "Do you have any specific questions?"
+
+#: .\mon_app\templates\mon_app\detail_formation.html:529
+msgid "Envoyer ma Demande"
+msgstr "Submit My Request"
+
+#: .\mon_app\templates\mon_app\formation.html:44
+msgid "Nos Formations"
+msgstr "Our Training Programs"
+
+#: .\mon_app\templates\mon_app\formation.html:45
+msgid ""
+"Découvrez les formations proposées par CPE : choix, parcours et contact "
+"rapide."
+msgstr ""
+"Discover the training programs offered by CPE: choices, pathways, and quick contact."
+
+#: .\mon_app\templates\mon_app\formation.html:48
+msgid "Catalogue"
+msgstr "Catalog"
+
+#: .\mon_app\templates\mon_app\formation.html:51
+msgid "Formations Paramédicales"
+msgstr "Paramedical Training"
+
+#: .\mon_app\templates\mon_app\formation.html:56
+#: .\mon_app\templates\mon_app\formation.html:60
+msgid "VENDEUR EN PHARMACIE"
+msgstr "PHARMACY ASSISTANT"
+#: .\mon_app\templates\mon_app\formation.html:59
+#: .\mon_app\templates\mon_app\formation.html:73
+#: .\mon_app\templates\mon_app\formation.html:87
+#: .\mon_app\templates\mon_app\formation.html:101
+#: .\mon_app\templates\mon_app\formation.html:115
+#: .\mon_app\templates\mon_app\formation.html:129
+msgid "Paramédicale"
+msgstr "Paramedical"
+
+#: .\mon_app\templates\mon_app\formation.html:61
+msgid ""
+"Acquérez les bases du conseil client et de la gestion des produits en "
+"pharmacie."
+msgstr ""
+"Acquire the basics of customer advising and product management in pharmacies."
+
+#: .\mon_app\templates\mon_app\formation.html:62
+#: .\mon_app\templates\mon_app\formation.html:76
+#: .\mon_app\templates\mon_app\formation.html:90
+#: .\mon_app\templates\mon_app\formation.html:104
+#: .\mon_app\templates\mon_app\formation.html:118
+#: .\mon_app\templates\mon_app\formation.html:132
+#: .\mon_app\templates\mon_app\formation.html:148
+#: .\mon_app\templates\mon_app\formation.html:175
+#: .\mon_app\templates\mon_app\formation.html:190
+#: .\mon_app\templates\mon_app\formation.html:205
+#: .\mon_app\templates\mon_app\formation.html:222
+msgid "Durée :"
+msgstr "Duration:"
+
+#: .\mon_app\templates\mon_app\formation.html:62
+#: .\mon_app\templates\mon_app\formation.html:104
+#: .\mon_app\templates\mon_app\formation.html:175
+msgid "4 mois"
+msgstr "4 months"
+
+#: .\mon_app\templates\mon_app\formation.html:64
+#: .\mon_app\templates\mon_app\formation.html:78
+#: .\mon_app\templates\mon_app\formation.html:92
+#: .\mon_app\templates\mon_app\formation.html:106
+#: .\mon_app\templates\mon_app\formation.html:120
+#: .\mon_app\templates\mon_app\formation.html:134
+#: .\mon_app\templates\mon_app\index.html:160
+msgid "En savoir plus"
+msgstr "Learn more"
+
+#: .\mon_app\templates\mon_app\formation.html:70
+#: .\mon_app\templates\mon_app\formation.html:74
+msgid "AUXILIAIRE DE VIE"
+msgstr "CARE ASSISTANT"
+
+#: .\mon_app\templates\mon_app\formation.html:75
+msgid ""
+"Apprenez les gestes de soutien au quotidien et l’accompagnement pour les "
+"personnes dépendantes."
+msgstr ""
+"Learn daily support techniques and assistance for dependent individuals."
+
+#: .\mon_app\templates\mon_app\formation.html:76
+#: .\mon_app\templates\mon_app\formation.html:132
+#: .\mon_app\templates\mon_app\formation.html:190
+msgid "5 mois"
+msgstr "5 months"
+
+#: .\mon_app\templates\mon_app\formation.html:84
+#: .\mon_app\templates\mon_app\formation.html:88
+msgid "AIDE CHIMISTE BIOLOGISTE"
+msgstr "LABORATORY ASSISTANT"
+
+#: .\mon_app\templates\mon_app\formation.html:89
+msgid ""
+"Initiation aux analyses de laboratoire : préparation des réactifs et "
+"réalisation des tests."
+msgstr ""
+"Introduction to laboratory analysis: reagent preparation and conducting tests."
+
+#: .\mon_app\templates\mon_app\formation.html:98
+#: .\mon_app\templates\mon_app\formation.html:102
+msgid "SECRETAIRE MEDICALE"
+msgstr "MEDICAL SECRETARY"
+
+#: .\mon_app\templates\mon_app\formation.html:103
+msgid ""
+"Maîtrisez l’accueil, la gestion des dossiers et la prise de rendez-vous en "
+"milieu médical."
+msgstr ""
+"Master reception, record management, and appointment scheduling in medical environments."
+
+#: .\mon_app\templates\mon_app\formation.html:112
+#: .\mon_app\templates\mon_app\formation.html:116
+msgid "MASSOTHERAPIE"
+msgstr "MASSAGE THERAPY"
+#: .\mon_app\templates\mon_app\formation.html:117
+msgid ""
+"Apprenez les techniques de massage et l’accompagnement du bien-être avec "
+"méthode."
+msgstr ""
+"Learn massage techniques and wellness support with a structured method."
+
+#: .\mon_app\templates\mon_app\formation.html:126
+#: .\mon_app\templates\mon_app\formation.html:130
+msgid "ASSISTANT EN CABINET MEDICAL"
+msgstr "MEDICAL OFFICE ASSISTANT"
+
+#: .\mon_app\templates\mon_app\formation.html:131
+msgid ""
+"Contribuez au bon fonctionnement du cabinet : préparation des consultations "
+"et accueil."
+msgstr ""
+"Contribute to the smooth running of the clinic: consultation preparation and reception."
+
+#: .\mon_app\templates\mon_app\formation.html:152
+#: .\mon_app\templates\mon_app\formation.html:226
+msgid "Voir le détail"
+msgstr "View details"
+
+#: .\mon_app\templates\mon_app\formation.html:154
+#: .\mon_app\templates\mon_app\formation.html:228
+msgid "Bientôt dispo"
+msgstr "Coming soon"
+
+#: .\mon_app\templates\mon_app\formation.html:164
+msgid "Formations Industrielles"
+msgstr "Industrial Training"
+
+#: .\mon_app\templates\mon_app\formation.html:169
+#: .\mon_app\templates\mon_app\formation.html:173
+msgid "FORMATION INDUSTRIELLE 1"
+msgstr "INDUSTRIAL TRAINING 1"
+
+#: .\mon_app\templates\mon_app\formation.html:174
+msgid "Programme orienté industrie : bases, pratique et professionnalisation."
+msgstr "Industry-oriented program: basics, practice, and professionalization."
+
+#: .\mon_app\templates\mon_app\formation.html:177
+#: .\mon_app\templates\mon_app\formation.html:192
+#: .\mon_app\templates\mon_app\formation.html:207
+msgid "Prix à venir"
+msgstr "Price coming soon"
+
+#: .\mon_app\templates\mon_app\formation.html:178
+#: .\mon_app\templates\mon_app\formation.html:193
+#: .\mon_app\templates\mon_app\formation.html:208
+msgid "Bientôt disponible"
+msgstr "Coming soon"
+
+#: .\mon_app\templates\mon_app\formation.html:184
+#: .\mon_app\templates\mon_app\formation.html:188
+msgid "FORMATION INDUSTRIELLE 2"
+msgstr "INDUSTRIAL TRAINING 2"
+
+#: .\mon_app\templates\mon_app\formation.html:189
+msgid "Accompagnement et compétences techniques adaptées au terrain."
+msgstr "Support and technical skills adapted to the field."
+
+#: .\mon_app\templates\mon_app\formation.html:199
+#: .\mon_app\templates\mon_app\formation.html:203
+msgid "FORMATION INDUSTRIELLE 3"
+msgstr "INDUSTRIAL TRAINING 3"
+
+#: .\mon_app\templates\mon_app\formation.html:204
+msgid ""
+"Renforcement des savoir-faire et préparation à l’insertion professionnelle."
+msgstr ""
+"Strengthening expertise and preparing for professional integration."
+
+#: .\mon_app\templates\mon_app\index.html:102
+msgid "Propulsez votre avenir professionnel"
+msgstr "Boost your professional future"
+
+#: .\mon_app\templates\mon_app\index.html:103
+msgid ""
+"Découvrez nos formations d'excellence encadrées par des experts du secteur."
+msgstr ""
+"Discover our training programs of excellence supervised by sector experts."
+
+#: .\mon_app\templates\mon_app\index.html:104
+msgid "Explorer nos formations"
+msgstr "Explore our training programs"
+
+#: .\mon_app\templates\mon_app\index.html:108
+msgid "Dernières Annonces & Événements"
+msgstr "Latest Announcements & Events"
+
+#: .\mon_app\templates\mon_app\index.html:118
+msgid "IMPORTANT"
+msgstr "IMPORTANT"
+
+#: .\mon_app\templates\mon_app\index.html:122
+#, python-format
+msgid "Publié le %(date_pub)s"
+msgstr "Published on %(date_pub)s"
+#: .\mon_app\templates\mon_app\index.html:129
+msgid "Aucune annonce publiée pour le moment."
+msgstr "No announcements published at the moment."
+
+#: .\mon_app\templates\mon_app\index.html:135
+msgid "Nos Formations Professionnelles"
+msgstr "Our Vocational Training Programs"
+
+#: .\mon_app\templates\mon_app\index.html:137
+msgid "Voir plus"
+msgstr "See more"
+
+#: .\mon_app\templates\mon_app\index.html:146
+msgid "Placeholder"
+msgstr "Placeholder"
+
+#: .\mon_app\templates\mon_app\index.html:165
+msgid "Nos formations seront bientôt publiées."
+msgstr "Our training programs will be published soon."
+
+#: .\mon_app\templates\mon_app\index.html:171
+msgid "Avantages de nos cours"
+msgstr "Advantages of our courses"
+
+#: .\mon_app\templates\mon_app\index.html:176
+msgid "Cours encadrés"
+msgstr "Supervised courses"
+
+#: .\mon_app\templates\mon_app\index.html:177
+msgid "Apprentissage guidé"
+msgstr "Guided learning"
+
+#: .\mon_app\templates\mon_app\index.html:178
+msgid ""
+"Des formateurs disponibles pour expliquer, corriger et accompagner à chaque "
+"étape."
+msgstr ""
+"Trainers available to explain, correct, and support you at every stage."
+
+#: .\mon_app\templates\mon_app\index.html:186
+msgid "Mise en pratique"
+msgstr "Hands-on practice"
+
+#: .\mon_app\templates\mon_app\index.html:187
+msgid "Projets & exercices"
+msgstr "Projects & exercises"
+
+#: .\mon_app\templates\mon_app\index.html:188
+msgid ""
+"Vous travaillez sur des cas concrets pour transformer la théorie en "
+"compétences."
+msgstr ""
+"You work on concrete cases to transform theory into practical skills."
+
+#: .\mon_app\templates\mon_app\index.html:196
+msgid "Évaluation"
+msgstr "Evaluation"
+
+#: .\mon_app\templates\mon_app\index.html:197
+msgid "Suivi et progression"
+msgstr "Tracking and progress"
+
+#: .\mon_app\templates\mon_app\index.html:198
+msgid ""
+"Devoirs, quiz et feedback pour mesurer vos progrès et consolider vos acquis."
+msgstr ""
+"Assignments, quizzes, and feedback to measure your progress and consolidate your knowledge."
+
+#: .\mon_app\templates\mon_app\index.html:206
+msgid "Accompagnement"
+msgstr "Support"
+
+#: .\mon_app\templates\mon_app\index.html:207
+msgid "Support avant & après"
+msgstr "Before & after support"
+
+#: .\mon_app\templates\mon_app\index.html:208
+msgid ""
+"Un cadre rassurant pour réussir : méthodologie, conseils et ressources "
+"utiles."
+msgstr ""
+"A reassuring environment to succeed: methodology, advice, and useful resources."
+
+#: .\mon_app\templates\mon_app\index.html:216
+msgid "Témoignages sur la qualité de nos cours"
+msgstr "Testimonials on the quality of our courses"
+
+#: .\mon_app\templates\mon_app\index.html:224
+msgid "Amadou K."
+msgstr "Amadou K."
+
+#: .\mon_app\templates\mon_app\index.html:230
+msgid "« J’ai vraiment progressé vite ! »"
+msgstr "“I really progressed quickly!”"
+
+#: .\mon_app\templates\mon_app\index.html:232
+msgid ""
+"Je m’attendais à des cours “théoriques”, mais j’ai été surpris : les "
+"explications sont claires, les exercices sont bien choisis et les formateurs "
+"répondent rapidement. En quelques semaines, j’ai pu monter un mini-projet."
+msgstr ""
+"I was expecting “theoretical” courses, but I was surprised: the explanations are clear, "
+"the exercises are well chosen, and the trainers respond quickly. In a few weeks, "
+"I was able to set up a mini-project."
+#: .\mon_app\templates\mon_app\index.html:234
+msgid "— Amadou K., apprenant"
+msgstr "— Amadou K., learner"
+
+#: .\mon_app\templates\mon_app\index.html:243
+msgid "Safiatou M."
+msgstr "Safiatou M."
+
+#: .\mon_app\templates\mon_app\index.html:249
+#, python-format
+msgid "« Je recommande à 100%% ! »"
+msgstr "“I recommend 100%%!”"
+
+#: .\mon_app\templates\mon_app\index.html:251
+msgid ""
+"Les cours sont bien structurés et les formateurs sont vraiment à l’écoute. "
+"J’ai pu progresser rapidement grâce aux exercices pratiques et au suivi "
+"régulier. Aujourd’hui, je suis plus confiante pour mon avenir."
+msgstr ""
+"The courses are well-structured and the trainers are genuinely supportive. "
+"I was able to progress quickly thanks to practical exercises and regular follow-ups. "
+"Today, I feel more confident about my future."
+
+#: .\mon_app\templates\mon_app\index.html:253
+msgid "— Safiatou M., apprenante"
+msgstr "— Safiatou M., learner"
+
+#: .\mon_app\templates\mon_app\index.html:262
+msgid "Pourquoi choisir CPE Formation ?"
+msgstr "Why Choose CPE Formation?"
+
+#: .\mon_app\templates\mon_app\index.html:267
+msgid "Vision"
+msgstr "Vision"
+
+#: .\mon_app\templates\mon_app\index.html:268
+msgid "Former pour l’emploi"
+msgstr "Training for Employment"
+
+#: .\mon_app\templates\mon_app\index.html:269
+msgid ""
+"Notre objectif : vous donner des compétences réellement utiles sur le "
+"terrain."
+msgstr ""
+"Our goal: to provide you with skills that are truly useful in the field."
+
+#: .\mon_app\templates\mon_app\index.html:277
+msgid "Professionnalisation"
+msgstr "Professionalization"
+
+#: .\mon_app\templates\mon_app\index.html:278
+msgid "Des méthodes efficaces"
+msgstr "Effective Methods"
+
+#: .\mon_app\templates\mon_app\index.html:279
+msgid ""
+"Approches pédagogiques adaptées aux besoins des apprenants et aux exigences "
+"du secteur."
+msgstr ""
+"Pedagogical approaches adapted to learners' needs and industry requirements."
+
+#: .\mon_app\templates\mon_app\index.html:287
+msgid "Ouverture"
+msgstr "Openness"
+
+#: .\mon_app\templates\mon_app\index.html:288
+msgid "Culture de la réussite"
+msgstr "Culture of Success"
+
+#: .\mon_app\templates\mon_app\index.html:289
+msgid ""
+"Un environnement motivant, orienté résultats, et un accompagnement de "
+"qualité."
+msgstr ""
+"A motivating, results-oriented environment, and high-quality guidance."
+
+#: .\mon_app\templates\mon_app\index.html:297
+msgid "Les Entreprises & Écoles Partenaires"
+msgstr "Partner Companies & Schools"
+
+#: .\mon_app\templates\mon_app\index.html:298
+msgid ""
+"Nos partenaires soutiennent la formation et contribuent à offrir de vraies "
+"opportunités aux apprenants."
+msgstr ""
+"Our partners support the training and help provide real opportunities for learners."
+
+#: .\mon_app\templates\mon_app\index.html:313
+msgid "Devenez notre premier partenaire entreprise."
+msgstr "Become our first corporate partner."
+
+#: .\sitecpe\settings.py:136
+msgid "French"
+msgstr "French"
+
+#: .\sitecpe\settings.py:137
+msgid "English"
+msgstr "English"

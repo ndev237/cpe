@@ -5,24 +5,26 @@
     /* Style du conteneur de formulaire */
     .form-container {
         background: #ffffff;
-        border-radius: 16px;
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+        border-radius: 20px;
+        box-shadow: 0 20px 40px rgba(74, 124, 89, 0.06);
+        border: 1px solid #e2e8f0;
         padding: 2.5rem;
         max-width: 700px;
-        margin: 0 auto;
+        margin: 20px auto;
         transition: background 0.3s, color 0.3s;
     }
 
     [data-theme="dark"] .form-container {
         background: #1e293b;
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        border-color: #334155;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
     }
 
     .form-title {
         font-size: 1.5rem;
         font-weight: 700;
         margin-bottom: 1.5rem;
-        color: var(--primary-dark-blue);
+        color: #4A7c59; /* Vert Forêt */
     }
     [data-theme="dark"] .form-title {
         color: #f1f5f9;
@@ -39,6 +41,10 @@
         font-size: 0.875rem;
         font-weight: 600;
         margin-bottom: 0.5rem;
+        color: #4b5563;
+    }
+    [data-theme="dark"] .form-group label {
+        color: #cbd5e1;
     }
 
     /* Inputs et Textarea */
@@ -47,12 +53,13 @@
         padding: 0.75rem 1rem;
         font-family: 'Poppins', sans-serif;
         font-size: 0.9rem;
-        border: 1px solid #cbd5e1;
+        border: 1px solid #e2e8f0;
         border-radius: 10px;
-        background: #ffffff;
-        color: #333333;
+        background: #f8fafc;
+        color: #1e293b;
         outline: none;
-        transition: border-color 0.2s;
+        transition: all 0.2s ease;
+        box-sizing: border-box;
     }
     [data-theme="dark"] .form-control {
         background: #0f172a;
@@ -60,74 +67,99 @@
         color: #f1f5f9;
     }
 
+    /* Focus sur les inputs : Vert Forêt */
     .form-control:focus {
-        border-color: var(--sidebar-bg);
+        border-color: #4A7c59;
+        background-color: #ffffff;
+        box-shadow: 0 0 0 4px rgba(74, 124, 89, 0.15);
+    }
+    [data-theme="dark"] .form-control:focus {
+        background-color: #0f172a;
     }
 
     /* Style spécifique pour le champ fichier */
     .form-control-file {
-        padding: 0.5rem;
-        border: 2px dashed #cbd5e1;
+        padding: 0.75rem 1rem;
+        border: 2px dashed #e2e8f0;
         border-radius: 10px;
         cursor: pointer;
         background: #f8fafc;
+        color: #4b5563;
     }
     [data-theme="dark"] .form-control-file {
         background: #0f172a;
         border-color: #334155;
+        color: #94a3b8;
+    }
+    .form-control-file:focus {
+        border-color: #4A7c59;
+        border-style: dashed;
     }
 
     /* Actions bouton */
     .form-actions {
         display: flex;
         justify-content: flex-end;
-        gap: 1rem;
+        gap: 12px;
         margin-top: 2rem;
+        padding-top: 16px;
+        border-top: 1px solid #e2e8f0;
+    }
+    [data-theme="dark"] .form-actions {
+        border-top-color: #334155;
     }
 
     .btn-submit {
-        background: var(--bg-gradient);
+        background-color: #4A7c59; /* Vert Forêt */
         color: white;
         border: none;
         padding: 0.75rem 1.5rem;
         font-family: 'Poppins', sans-serif;
-        font-size: 0.9rem;
+        font-size: 14px;
         font-weight: 600;
         border-radius: 10px;
         cursor: pointer;
-        box-shadow: 0 4px 12px rgba(209, 143, 178, 0.4);
-        transition: transform 0.2s, opacity 0.2s;
+        box-shadow: 0 4px 12px rgba(74, 124, 89, 0.15); /* Ombre Verte corrigée */
+        transition: all 0.2s ease;
     }
 
     .btn-submit:hover {
-        transform: translateY(-2px);
-        opacity: 0.9;
+        background-color: #3b6347; /* Vert plus sombre au survol */
+        transform: translateY(-1px);
+        box-shadow: 0 6px 16px rgba(74, 124, 89, 0.25);
     }
 
     .btn-cancel {
-        background: transparent;
-        border: 1px solid #cbd5e1;
-        color: #64748b;
+        background: #f1f5f9;
+        border: 1px solid #e2e8f0;
+        color: #475569;
         padding: 0.75rem 1.5rem;
         font-family: 'Poppins', sans-serif;
-        font-size: 0.9rem;
+        font-size: 14px;
         font-weight: 500;
         border-radius: 10px;
         text-decoration: none;
         text-align: center;
-        transition: background 0.2s;
+        transition: all 0.2s ease;
     }
     [data-theme="dark"] .btn-cancel {
+        background: #1e293b;
         border-color: #334155;
         color: #94a3b8;
     }
     .btn-cancel:hover {
-        background: rgba(0, 0, 0, 0.05);
+        background: #e2e8f0;
+    }
+    [data-theme="dark"] .btn-cancel:hover {
+        background: #334155;
+        color: #f1f5f9;
     }
 </style>
 
 <div class="form-container">
-    <h2 class="form-title"><i class="fas fa-camera" style="margin-right: 10px; color: var(--sidebar-bg);"></i> Publier une nouvelle photo</h2>
+    <h2 class="form-title">
+        <i class="fas fa-camera" style="margin-right: 10px; color: #4A7c59;"></i> Publier une nouvelle photo <!-- Couleur fixée ici -->
+    </h2>
     
     <form method="POST" enctype="multipart/form-data">
         {% csrf_token %}

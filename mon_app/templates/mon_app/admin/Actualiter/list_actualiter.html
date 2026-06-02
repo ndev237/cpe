@@ -1,0 +1,331 @@
+{% extends 'mon_app/baseA.html' %}
+{% load i18n %}
+
+{% block titre %}{% trans "Liste des actualités" %} - Club-Prepa-Emploi{% endblock %}
+
+{% block content %}
+<style>
+    /* --- STRUCTURE DE LA PAGE --- */
+    .page-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 2rem;
+        gap: 1rem;
+    }
+
+    .page-header h1 {
+        font-size: 1.75rem;
+        font-weight: 700;
+        color: #4A7c59; /* Vert Forêt */
+    }
+
+    .btn-create {
+        background-color: #4A7c59; /* Vert Forêt */
+        color: white;
+        border: none;
+        padding: 12px 24px;
+        border-radius: 10px;
+        font-size: 14px;
+        font-weight: 600;
+        text-decoration: none;
+        box-shadow: 0 4px 12px rgba(74, 124, 89, 0.15);
+        transition: all 0.2s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .btn-create:hover {
+        background-color: #3b6347;
+        transform: translateY(-1px);
+        box-shadow: 0 6px 16px rgba(74, 124, 89, 0.25);
+    }
+
+    /* --- CONTENEUR DU TABLEAU & FILTRES --- */
+    .table-container {
+        background: #ffffff;
+        border: 1px solid #e2e8f0;
+        border-radius: 20px;
+        box-shadow: 0 20px 40px rgba(74, 124, 89, 0.04);
+        overflow: hidden;
+    }
+
+    .table-toolbar {
+        padding: 1.25rem 1.5rem;
+        border-bottom: 1px solid #e2e8f0;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    .search-box {
+        position: relative;
+        max-width: 320px;
+        width: 100%;
+    }
+
+    .search-box input {
+        width: 100%;
+        padding: 10px 16px 10px 2.5rem;
+        background-color: #f8fafc;
+        border: 1px solid #e2e8f0;
+        border-radius: 10px;
+        color: #1e293b;
+        font-size: 14px;
+        font-family: inherit;
+        transition: all 0.2s;
+        box-sizing: border-box;
+    }
+
+    .search-box input:focus {
+        border-color: #D18FB2; /* Focus Rose */
+        background-color: #ffffff;
+        outline: none;
+        box-shadow: 0 0 0 4px rgba(209, 143, 178, 0.15);
+    }
+
+    .search-box i {
+        position: absolute;
+        left: 0.9rem;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #94a3b8;
+        font-size: 0.9rem;
+    }
+
+    /* --- LE TABLEAU --- */
+    .custom-table {
+        width: 100%;
+        border-collapse: collapse;
+        text-align: left;
+    }
+
+    .custom-table th {
+        background-color: #f8fafc;
+        color: #64748b;
+        font-size: 12px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        padding: 1rem 1.5rem;
+        border-bottom: 1px solid #e2e8f0;
+    }
+
+    .custom-table td {
+        padding: 1rem 1.5rem;
+        border-bottom: 1px solid #e2e8f0;
+        color: #334155;
+        font-size: 14px;
+        vertical-align: middle;
+    }
+
+    .custom-table tbody tr:last-child td {
+        border-bottom: none;
+    }
+
+    .custom-table tbody tr:hover {
+        background-color: rgba(74, 124, 89, 0.02); /* Voile vert subtil au survol */
+    }
+
+    /* --- COMPOSANTS INTERNES --- */
+    .article-cell {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    .article-img {
+        width: 45px;
+        height: 45px;
+        border-radius: 8px;
+        object-fit: cover;
+        background-color: #f1f5f9;
+        border: 1px solid #e2e8f0;
+    }
+
+    .article-info .article-title {
+        font-weight: 600;
+        color: #1e293b;
+        margin-bottom: 0.15rem;
+    }
+
+    .article-info .article-author {
+        font-size: 12px;
+        color: #64748b;
+    }
+
+    .badge-status {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+        padding: 4px 10px;
+        border-radius: 50px;
+        font-size: 12px;
+        font-weight: 600;
+    }
+
+    .badge-published {
+        background-color: rgba(34, 197, 94, 0.1);
+        color: #166534;
+    }
+
+    .actions-group {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .btn-action {
+        width: 34px;
+        height: 34px;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid #e2e8f0;
+        background: #ffffff;
+        color: #475569;
+        text-decoration: none;
+        cursor: pointer;
+        transition: all 0.2s;
+        font-size: 13px;
+    }
+
+    .btn-action.edit:hover {
+        background-color: rgba(209, 143, 178, 0.1);
+        color: #316a40; /* Rose au survol */
+        border-color: #3c733f;
+    }
+
+    .btn-action.delete:hover {
+        background-color: rgba(239, 68, 68, 0.1);
+        color: #ef4444;
+        border-color: #ef4444;
+    }
+
+    /* --- EMPTY STATE --- */
+    .empty-state {
+        padding: 4rem 2rem;
+        text-align: center;
+        color: #64748b;
+    }
+
+    .empty-state i {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+        color: #cbd5e1;
+    }
+
+    @media (max-width: 768px) {
+        .page-header { flex-direction: column; align-items: flex-start; }
+        .btn-create { width: 100%; justify-content: center; }
+        .table-toolbar { flex-direction: column; align-items: flex-start; }
+        .search-box { max-width: 100%; }
+        .hide-mobile { display: none; }
+    }
+</style>
+
+<div class="page-header">
+    <div>
+        <h1>{% trans "Gestion des Actualités" %}</h1>
+    </div>
+    <a href="{% url 'actualite_creer' %}" class="btn-create">
+        <i class="fas fa-plus"></i> {% trans "Créer une actualité" %}
+    </a>
+</div>
+
+<div class="table-container">
+    <div class="table-toolbar">
+        <div class="search-box">
+            <i class="fas fa-search"></i>
+            <input type="text" id="tableSearch" placeholder="Rechercher un article...">
+        </div>
+    </div>
+
+    <table class="custom-table" id="actualitesTable">
+        <thead>
+            <tr>
+                <th>{% trans "Article" %}</th>
+                <th class="hide-mobile">{% trans "Date de publication" %}</th>
+                <th>{% trans "Statut" %}</th>
+                <th style="text-align: right;">{% trans "Actions" %}</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for actualite in actualites %}
+            <tr>
+                <td>
+                    <div class="article-cell">
+                        {% if actualite.image %}
+                            <img src="{{ actualite.image.url }}" alt="Image" class="article-img">
+                        {% else %}
+                            <div class="article-img" style="display: flex; align-items: center; justify-content: center; font-size: 1.1rem; color: #94a3b8;">
+                                <i class="fas fa-newspaper"></i>
+                            </div>
+                        {% endif %}
+                        <div class="article-info">
+                            <div class="article-title">{{ actualite.titre }}</div>
+                            <div class="article-author">Par {% if actualite.auteur %}{{ actualite.auteur }}{% else %}Administration{% endif %}</div>
+                        </div>
+                    </div>
+                </td>
+                <td class="hide-mobile">
+                    {{ actualite.date_publication|date:"d E Y" }} <span style="font-size: 12px; color: #64748b;">à {{ actualite.date_publication|date:"H:i" }}</span>
+                </td>
+                <td>
+                    <span class="badge-status badge-published">
+                        <i class="fas fa-check-circle"></i> {% trans "Publié" %}
+                    </span>
+                </td>
+                <td style="text-align: right;">
+                    <div class="actions-group" style="justify-content: flex-end;">
+                        <a href="#" class="btn-action edit" title="{% trans 'Modifier' %}">
+                            <i class="fas fa-pen"></i>
+                        </a>
+                        <a href="#" class="btn-action delete" title="{% trans 'Supprimer' %}" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette actualité ?');">
+                            <i class="fas fa-trash"></i>
+                        </a>
+                    </div>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="4">
+                    <div class="empty-state">
+                        <i class="fas fa-folder-open"></i>
+                        <p>{% trans "Aucune actualité n'a été publiée pour le moment." %}</p>
+                    </div>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const searchInput = document.getElementById("tableSearch");
+        const tableRows = document.querySelectorAll("#actualitesTable tbody tr");
+
+        searchInput.addEventListener("keyup", function(e) {
+            const text = e.target.value.toLowerCase();
+
+            tableRows.forEach(row => {
+                if(row.querySelector('.empty-state')) return;
+
+                const titleElement = row.querySelector(".article-title");
+                if (titleElement) {
+                    const titleText = titleElement.textContent.toLowerCase();
+                    if (titleText.includes(text)) {
+                        row.style.display = "";
+                    } else {
+                        row.style.display = "none";
+                    }
+                }
+            });
+        });
+    });
+</script>
+{% endblock %}

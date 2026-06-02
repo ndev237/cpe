@@ -1,24 +1,60 @@
 from django.db import models
+from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
+from django.utils.translation import gettext_lazy as _
+from django.utils.text import slugify
 
-  # class Categorie(models.Model):
-      # nom = models.CharField(max_length=100, verbose_name="Nom de la catégorie")
-     #  slug = models.SlugField(max_length=100, unique=True, help_text="Sert pour l'URL (ex: informatique-web)")
-      # icone = models.CharField(max_length=50, blank=True, help_text="Nom de l'icône (ex: fas fa-laptop)")
 
-      # class Meta:
-          # verbose_name = "Catégorie"
-          # verbose_name_plural = "Catégories"
+class UtilisateurManager(BaseUserManager):
+    def create_user(self, email, nom, password=None, **extra_fields):
+        if not email:
+            raise ValueError("L'adresse email est obligatoire")
+        email = self.normalize_email(email)
+        user = self.model(email=email, nom=nom, **extra_fields)
+        user.set_password(password) # Hache automatiquement le mot de passe
+        user.save(using=self._db)
+        return user
 
-      # def __str__(self):
-          # return self.nom
+    def create_superuser(self, email, nom, password=None, **extra_fields):
+        extra_fields.setdefault('is_admin', True)
+        return self.create_user(email, nom, password, **extra_fields)
+
+class utilisateur(AbstractBaseUser):
+    nom = models.CharField(max_length=200, verbose_name="Nom de l'utilisateur")
+    email = models.EmailField(unique=True, verbose_name="Adresse email")
+    telephone = models.CharField(max_length=20, blank=True, null=True)
+    
+    # Propriétés requises pour que Django accepte ce modèle comme User principal
+    is_active = models.BooleanField(default=True)
+    is_admin = models.BooleanField(default=False)
+
+    objects = UtilisateurManager()
+
+    USERNAME_FIELD = 'email'  # On se connectera avec l'email
+    REQUIRED_FIELDS = ['nom']  # Champs obligatoires lors du createsuperuser
+
+    def __str__(self):
+        return self.email
+
+    # Méthodes de permissions minimales requises par Django
+    def has_perm(self, perm, obj=None): return True
+    def has_module_perms(self, app_label): return True
+
+    @property
+    def is_staff(self):
+        return self.is_admin
 
 
 class Formation(models.Model):
-      #categorie = models.ForeignKey(Categorie, on_delete=models.CASCADE, related_name='formations', verbose_name="Catégorie")
+    class Categorie(models.TextChoices):
+        paramedical = 'Paramedical', _('Paramedical')
+        industrielle = 'Industrielle', _('Industrielle')
+             
+        
     titre = models.CharField(max_length=200, verbose_name="Titre de la formation")
     slug = models.SlugField(max_length=200, unique=True)
     description_courte = models.TextField(max_length=300, verbose_name="Description courte (pour les cartes)")
     programme_detaille = models.TextField(verbose_name="Programme détaillé")
+    categorie = models.CharField(max_length=50, choices=Categorie.choices, default=Categorie.paramedical)
     duree = models.CharField(max_length=50, verbose_name="Durée (ex: 3 mois / 120 heures)")
     prix = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Prix (FCFA / €)", blank=True, null=True)
     image = models.ImageField(upload_to='formations/', verbose_name="Image d'illustration", blank=True, null=True)
@@ -96,6 +132,35 @@ class AlbumPhoto(models.Model):
         verbose_name = "Album"
         verbose_name_plural = "Albums"
         ordering = ['titre']
+
+    def __str__(self):
+        return self.titre
+
+
+
+
+class Actualite(models.Model):
+    class Statut(models.TextChoices):
+        BROUILLON = 'Brouillon', _('Brouillon')
+        PUBLIE = 'Publie', _('Publié')
+
+    titre = models.CharField(max_length=250, verbose_name="Titre de l'actualité")
+    slug = models.SlugField(max_length=250, unique=True, blank=True)
+    image = models.ImageField(upload_to='actualites/', verbose_name="Image d'illustration", blank=True, null=True)
+    contenu = models.TextField(verbose_name="Contenu de l'article")
+    statut = models.CharField(max_length=20, choices=Statut.choices, default=Statut.PUBLIE)
+    date_publication = models.DateTimeField(auto_now_add=True, verbose_name="Date de publication")
+    date_modification = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = "Actualité"
+        verbose_name_plural = "Actualités"
+        ordering = ['-date_publication']
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.titre)
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return self.titre

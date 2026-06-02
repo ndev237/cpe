@@ -1,196 +1,246 @@
 {% extends 'mon_app/base.html' %}
 {% load static %}
+{% load i18n %}
+
 {% block content %}
 <style>
-    .formations-page { padding: 10px 0 40px 0; }
+    .formations-page { padding: 10px 0 40px 0; font-family: 'Poppins', sans-serif; }
     .page-hero {
-        background: linear-gradient(rgba(0, 51, 102, 0.85), rgba(209, 143, 178, 0.85)),
+        background: linear-gradient(rgba(113, 204, 172, 0.85), rgba(209, 143, 178, 0.85)),
                     url('https://picsum.photos/1400/420') no-repeat center center/cover;
-        color: white;
+        color: rgb(18, 17, 17);
         border-radius: 10px;
         padding: 40px 30px;
         margin-bottom: 30px;
     }
     .page-hero h1 { font-size: 2.6rem; margin: 0 0 10px 0; }
     .page-hero p { margin: 0; font-size: 1.05rem; opacity: 0.95; }
-    .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 22px; align-items: stretch; }
+    
+    .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 22px; align-items: stretch; margin-bottom: 40px; }
     .card { background: white; border-radius: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); overflow: hidden; border: 1px solid rgba(0,0,0,0.05); display: flex; flex-direction: column; min-height: 100%; }
     .card img { width: 100%; height: 170px; object-fit: cover; display: block; }
     .card-body { padding: 18px; display: flex; flex-direction: column; gap: 10px; flex: 1; }
-    .badge { background: #D18FB2; color: white; padding: 6px 10px; border-radius: 4px; font-size: 0.85rem; font-weight: bold; width: fit-content; }
+    
+    .badge { background: #D18FB2; color: white; padding: 4px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: bold; width: fit-content; text-transform: uppercase; }
+    .badge.industrielle { background: #392d68; }
+    
     .formation-title { margin: 0; font-size: 1.3rem; color: #003366; font-weight: 700; }
     .muted { color: #666; font-size: 0.95rem; margin: 0; }
-    .card-footer { margin-top: auto; display: flex; justify-content: space-between; gap: 12px; align-items: center; }
-    .btn { display: inline-block; background: #003366; color: white; padding: 10px 18px; text-decoration: none; border-radius: 6px; font-weight: bold; text-align: center; white-space: nowrap; transition: all 0.2s ease-in-out; }
+    .card-footer { margin-top: auto; display: flex; justify-content: space-between; gap: 12px; align-items: center; padding-top: 10px; }
+    
+    .btn { display: inline-block; background: #7dcfa1; color: white; padding: 10px 18px; text-decoration: none; border-radius: 6px; font-weight: bold; text-align: center; white-space: nowrap; transition: all 0.2s ease-in-out; border: none; }
     .btn:hover { background: #D18FB2; color: white; }
-    .price { font-weight: 800; color: #D18FB2; }
+    .price { font-weight: 800; color: #003366; font-size: 0.95rem; }
+    
     .section-title { text-align: center; margin: 40px 0 18px 0; color: #003366; font-size: 2rem; position: relative; }
     .section-title::after { content: ''; display: block; width: 60px; height: 3px; background: #D18FB2; margin: 10px auto 0 auto; }
+    .category-title { margin: 30px 0 18px 0; color:#003366; font-size: 1.6rem; text-align:center; font-weight: 600; }
+
+    @media (max-width: 768px) {
+        .page-hero { padding: 30px 20px; }
+        .page-hero h1 { font-size: 2rem; }
+        .page-hero p { font-size: 0.95rem; }
+        .section-title { font-size: 1.6rem; }
+        .category-title { font-size: 1.3rem; }
+        .grid-3 { grid-template-columns: 1fr; gap: 18px; }
+    }
 </style>
 
 <div class="formations-page">
+    
     <div class="page-hero">
-        <h1>Nos Formations</h1>
-        <p>Découvrez les formations proposées par CPE : choix, parcours et contact rapide.</p>
+        <h1>{% trans "Nos Formations" %}</h1>
+        <p>{% trans "Découvrez les formations proposées par CPE : choix, parcours et contact rapide." %}</p>
     </div>
 
-    <h2 class="section-title">Catalogue</h2>
+    <h2 class="section-title">{% trans "Catalogue" %}</h2>
 
-    {# ===================== PARAMÉDICALES ===================== #}
-    <h3 style="margin: 18px 0 12px 0; color:#003366; font-size: 1.4rem; text-align:center;">Formations Paramédicales</h3>
+    {# ===================== SECTION : PARAMÉDICALES ===================== #}
+    <h3 class="category-title">{% trans "Formations Paramédicales" %}</h3>
 
     <div class="grid-3">
-
-
-        {# --- Formation : VENDEUR EN PHARMACIE --- #}
-
+        {# --- Cartes fixes (Statiques) --- #}
         <div class="card">
-            <img src="{% static 'images/Vendeur en pharmacie.jpg' %}" alt="VENDEUR EN PHARMACIE">
+            {% trans "VENDEUR EN PHARMACIE" as alt_vendeur %}
+            <img src="{% static 'images/Vendeur en pharmacie.jpg' %}" alt="{{ alt_vendeur }}">
             <div class="card-body">
-                <h3 class="formation-title">VENDEUR EN PHARMACIE</h3>
-                <p class="muted">Acquérez les bases du conseil client et de la gestion des produits en pharmacie.</p>
-                <div class="muted"><strong>Durée :</strong> 4 mois</div>
-                <div class="muted price">120 000 FCFA</div>
+                <span class="badge">{% trans "Paramédicale" %}</span>
+                <h3 class="formation-title">{% trans "VENDEUR EN PHARMACIE" %}</h3>
+                <p class="muted">{% trans "Acquérez les bases du conseil client et de la gestion des produits en pharmacie." %}</p>
+                <div class="muted"><strong>{% trans "Durée :" %}</strong> {% trans "4 mois" %}</div>
                 <div class="card-footer">
-                    <a class="btn" href="{% url 'detail_formation' slug='vendeur-en-pharmacie' %}">En savoir plus</a>
+                    <a class="btn" href="{% url 'detail_formation' slug='vendeur-en-pharmacie' %}">{% trans "En savoir plus" %}</a>
                 </div>
             </div>
         </div>
 
-        {# --- Formation : AUXILIAIRE DE VIE --- #}
         <div class="card">
-            <img src="{% static 'images/auxiliaire de vie.jpg' %}" alt="AUXILIAIRE DE VIE">
+            {% trans "AUXILIAIRE DE VIE" as alt_auxiliaire %}
+            <img src="{% static 'images/auxiliaire de vie.jpg' %}" alt="{{ alt_auxiliaire }}">
             <div class="card-body">
-                <h3 class="formation-title">AUXILIAIRE DE VIE</h3>
-                <p class="muted">Apprenez les gestes de soutien au quotidien et l’accompagnement pour les personnes dépendantes.</p>
-                <div class="muted"><strong>Durée :</strong> 5 mois</div>
-                <div class="muted price">140 000 FCFA</div>
+                <span class="badge">{% trans "Paramédicale" %}</span>
+                <h3 class="formation-title">{% trans "AUXILIAIRE DE VIE" %}</h3>
+                <p class="muted">{% trans "Apprenez les gestes de soutien au quotidien et l’accompagnement pour les personnes dépendantes." %}</p>
+                <div class="muted"><strong>{% trans "Durée :" %}</strong> {% trans "5 mois" %}</div>
                 <div class="card-footer">
-                    <a class="btn" href="{% url 'detail_formation' slug='auxiliaire-de-vie' %}">En savoir plus</a>
+                    <a class="btn" href="{% url 'detail_formation' slug='auxiliaire-de-vie' %}">{% trans "En savoir plus" %}</a>
                 </div>
             </div>
         </div>
 
-        {# --- Formation : AIDE CHIMISTE BIOLOGISTE --- #}
         <div class="card">
-            <img src="{% static 'images/aide chimiste.jpg' %}" alt="AIDE CHIMISTE BIOLOGISTE">
+            {% trans "AIDE CHIMISTE BIOLOGISTE" as alt_chimiste %}
+            <img src="{% static 'images/aide chimiste.jpg' %}" alt="{{ alt_chimiste }}">
             <div class="card-body">
-                <h3 class="formation-title">AIDE CHIMISTE BIOLOGISTE</h3>
-                <p class="muted">Initiation aux analyses de laboratoire : préparation des réactifs et réalisation des tests.</p>
-                <div class="muted"><strong>Durée :</strong> 6 mois</div>
-                <div class="muted price">180 000 FCFA</div>
+                <span class="badge">{% trans "Paramédicale" %}</span>
+                <h3 class="formation-title">{% trans "AIDE CHIMISTE BIOLOGISTE" %}</h3>
+                <p class="muted">{% trans "Initiation aux analyses de laboratoire : préparation des réactifs et réalisation des tests." %}</p>
+                <div class="muted"><strong>{% trans "Durée :" %}</strong> {% trans "6 mois" %}</div>
                 <div class="card-footer">
-                    <a class="btn" href="{% url 'detail_formation' slug='aide-chimiste-biologiste' %}">En savoir plus</a>
+                    <a class="btn" href="{% url 'detail_formation' slug='aide-chimiste-biologiste' %}">{% trans "En savoir plus" %}</a>
                 </div>
             </div>
         </div>
 
-        {# --- Formation : SECRETAIRE MEDICALE --- #}
         <div class="card">
-            <img src="{% static 'images/secretaire medical.jpg' %}" alt="SECRETAIRE MEDICALE">
+            {% trans "SECRETAIRE MEDICALE" as alt_secretaire %}
+            <img src="{% static 'images/secretaire medical.jpg' %}" alt="{{ alt_secretaire }}">
             <div class="card-body">
-                <h3 class="formation-title">SECRETAIRE MEDICALE</h3>
-                <p class="muted">Maîtrisez l’accueil, la gestion des dossiers et la prise de rendez-vous en milieu médical.</p>
-                <div class="muted"><strong>Durée :</strong> 4 mois</div>
-                <div class="muted price">130 000 FCFA</div>
+                <span class="badge">{% trans "Paramédicale" %}</span>
+                <h3 class="formation-title">{% trans "SECRETAIRE MEDICALE" %}</h3>
+                <p class="muted">{% trans "Maîtrisez l’accueil, la gestion des dossiers et la prise de rendez-vous en milieu médical." %}</p>
+                <div class="muted"><strong>{% trans "Durée :" %}</strong> {% trans "4 mois" %}</div>
                 <div class="card-footer">
-                    <a class="btn" href="{% url 'detail_formation' slug='secretaire-medicale' %}">En savoir plus</a>
+                    <a class="btn" href="{% url 'detail_formation' slug='secretaire-medicale' %}">{% trans "En savoir plus" %}</a>
                 </div>
             </div>
         </div>
 
-        {# --- Formation : MASSOTHERAPIE --- #}
         <div class="card">
-            <img src="{% static 'images/massotherapie.jpg' %}" alt="MASSOTHERAPIE">
+            {% trans "MASSOTHERAPIE" as alt_masso %}
+            <img src="{% static 'images/massotherapie.jpg' %}" alt="{{ alt_masso }}">
             <div class="card-body">
-                <h3 class="formation-title">MASSOTHERAPIE</h3>
-                <p class="muted">Apprenez les techniques de massage et l’accompagnement du bien-être avec méthode.</p>
-                <div class="muted"><strong>Durée :</strong> 6 mois</div>
-                <div class="muted price">200 000 FCFA</div>
+                <span class="badge">{% trans "Paramédicale" %}</span>
+                <h3 class="formation-title">{% trans "MASSOTHERAPIE" %}</h3>
+                <p class="muted">{% trans "Apprenez les techniques de massage et l’accompagnement du bien-être avec méthode." %}</p>
+                <div class="muted"><strong>{% trans "Durée :" %}</strong> {% trans "6 mois" %}</div>
                 <div class="card-footer">
-                    <a class="btn" href="{% url 'detail_formation' slug='massotherapie' %}">En savoir plus</a>
+                    <a class="btn" href="{% url 'detail_formation' slug='massotherapie' %}">{% trans "En savoir plus" %}</a>
                 </div>
             </div>
         </div>
 
-        {# --- Formation : ASSISTANT EN CABINET MEDICAL --- #}
         <div class="card">
-            <img src="{% static 'images/Assistant en cabinet.jpg' %}" alt="ASSISTANT EN CABINET MEDICAL">
+            {% trans "ASSISTANT EN CABINET MEDICAL" as alt_assistant %}
+            <img src="{% static 'images/Assistant en cabinet.jpg' %}" alt="{{ alt_assistant }}">
             <div class="card-body">
-                <h3 class="formation-title">ASSISTANT EN CABINET MEDICAL</h3>
-                <p class="muted">Contribuez au bon fonctionnement du cabinet : préparation des consultations et accueil.</p>
-                <div class="muted"><strong>Durée :</strong> 5 mois</div>
-                <div class="muted price">160 000 FCFA</div>
+                <span class="badge">{% trans "Paramédicale" %}</span>
+                <h3 class="formation-title">{% trans "ASSISTANT EN CABINET MEDICAL" %}</h3>
+                <p class="muted">{% trans "Contribuez au bon fonctionnement du cabinet : préparation des consultations et accueil." %}</p>
+                <div class="muted"><strong>{% trans "Durée :" %}</strong> {% trans "5 mois" %}</div>
                 <div class="card-footer">
-                    <a class="btn" href="{% url 'detail_formation' slug='assistant-en-cabinet-medical' %}">En savoir plus</a>
+                    <a class="btn" href="{% url 'detail_formation' slug='assistant-en-cabinet-medical' %}">{% trans "En savoir plus" %}</a>
                 </div>
             </div>
         </div>
 
-        {# ================= BOUCLE DYNAMIQUE (BASE DE DONNÉES) ================= #}
+        {# --- Formations dynamiques : Filtrées sur la clé 'Paramedical' --- #}
         {% for f in formations %}
-        <div class="card">
-            <img src="{% if f.image %}{{ f.image.url }}{% else %}https://picsum.photos/700/280{% endif %}" alt="{{ f.titre }}">
-            <div class="card-body">
-                <h3 class="formation-title">{{ f.titre }}</h3>
-                <p class="muted">{{ f.description_courte }}</p>
-                <div class="muted"><strong>Durée :</strong> {{ f.duree }}</div>
-                <div class="muted price">{% if f.prix %}{{ f.prix }} FCFA{% else %}Prix à venir{% endif %}</div>
-                <div class="card-footer">
-                    {% if f.slug %}
-                        <a class="btn" href="{% url 'detail_formation' slug=f.slug %}">Voir le détail</a>
-                    {% else %}
-                        <a class="btn" href="#" style="opacity: 0.5; cursor: not-allowed;">Bientôt disponible</a>
-                    {% endif %}
+            {% if f.categorie == 'Paramedical' %}
+            <div class="card">
+                <img src="{% if f.image %}{{ f.image.url }}{% else %}https://picsum.photos/700/280{% endif %}" alt="{{ f.titre }}">
+                <div class="card-body">
+                    <span class="badge">{{ f.get_categorie_display }}</span>
+                    <h3 class="formation-title">{{ f.titre }}</h3>
+                    <p class="muted">{{ f.description_courte }}</p>
+                    <div class="muted"><strong>{% trans "Durée :" %}</strong> {{ f.duree }}</div>
+                    <div class="card-footer">
+                        <span class="price">{% if f.prix %}{{ f.prix }} FCFA{% else %}{% trans "Gratuit" %}{% endif %}</span>
+                        {% if f.slug %}
+                            <a class="btn" href="{% url 'detail_formation' slug=f.slug %}">{% trans "Voir le détail" %}</a>
+                        {% else %}
+                            <a class="btn" href="#" style="opacity: 0.5; cursor: not-allowed;">{% trans "Bientôt dispo" %}</a>
+                        {% endif %}
+                    </div>
                 </div>
             </div>
-        </div>
+            {% endif %}
         {% endfor %}
     </div>
+
+    {# ===================== SECTION : INDUSTRIELLES ===================== #}
+    <h3 class="category-title">{% trans "Formations Industrielles" %}</h3>
+
+    <div class="grid-3">
+        {# --- Cartes fixes (Statiques) --- #}
+        <div class="card">
+            {% trans "FORMATION INDUSTRIELLE 1" as alt_indus1 %}
+            <img src="{% static 'images/Exercice.jpeg' %}" alt="{{ alt_indus1 }}">
+            <div class="card-body">
+                <span class="badge industrielle">{% trans "Industrielle" %}</span>
+                <h3 class="formation-title">{% trans "FORMATION INDUSTRIELLE 1" %}</h3>
+                <p class="muted">{% trans "Programme orienté industrie : bases, pratique et professionnalisation." %}</p>
+                <div class="muted"><strong>{% trans "Durée :" %}</strong> {% trans "4 mois" %}</div>
+                <div class="card-footer">
+                    <span class="price" style="color: #cbd5e1; font-style: italic;">{% trans "Prix à venir" %}</span>
+                    <a class="btn" href="#" style="opacity: 0.5; cursor: not-allowed;">{% trans "Bientôt disponible" %}</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            {% trans "FORMATION INDUSTRIELLE 2" as alt_indus2 %}
+            <img src="{% static 'images/FormationAction.jpeg' %}" alt="{{ alt_indus2 }}">
+            <div class="card-body">
+                <span class="badge industrielle">{% trans "Industrielle" %}</span>
+                <h3 class="footer-title" style="font-weight: bold; font-size: 1.3rem; margin: 0; color: #003366;">{% trans "FORMATION INDUSTRIELLE 2" %}</h3>
+                <p class="muted">{% trans "Accompagnement et compétences techniques adaptées au terrain." %}</p>
+                <div class="muted"><strong>{% trans "Durée :" %}</strong> {% trans "5 mois" %}</div>
+                <div class="card-footer">
+                    <span class="price" style="color: #cbd5e1; font-style: italic;">{% trans "Prix à venir" %}</span>
+                    <a class="btn" href="#" style="opacity: 0.5; cursor: not-allowed;">{% trans "Bientôt disponible" %}</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            {% trans "FORMATION INDUSTRIELLE 3" as alt_indus3 %}
+            <img src="{% static 'images/2V.jpg.jpeg' %}" alt="{{ alt_indus3 }}">
+            <div class="card-body">
+                <span class="badge industrielle">{% trans "Industrielle" %}</span>
+                <h3 class="formation-title">{% trans "FORMATION INDUSTRIELLE 3" %}</h3>
+                <p class="muted">{% trans "Renforcement des savoir-faire et préparation à l’insertion professionnelle." %}</p>
+                <div class="muted"><strong>{% trans "Durée :" %}</strong> {% trans "6 mois" %}</div>
+                <div class="card-footer">
+                    <span class="price" style="color: #cbd5e1; font-style: italic;">{% trans "Prix à venir" %}</span>
+                    <a class="btn" href="#" style="opacity: 0.5; cursor: not-allowed;">{% trans "Bientôt disponible" %}</a>
+                </div>
+            </div>
+        </div>
+
+        {# --- Formations dynamiques : Filtrées sur la clé 'Industrielle' --- #}
+        {% for f in formations %}
+            {% if f.categorie == 'Industrielle' %}
+            <div class="card">
+                <img src="{% if f.image %}{{ f.image.url }}{% else %}https://picsum.photos/700/280{% endif %}" alt="{{ f.titre }}">
+                <div class="card-body">
+                    <span class="badge industrielle">{{ f.get_categorie_display }}</span>
+                    <h3 class="formation-title">{{ f.titre }}</h3>
+                    <p class="muted">{{ f.description_courte }}</p>
+                    <div class="muted"><strong>{% trans "Durée :" %}</strong> {{ f.duree }}</div>
+                    <div class="card-footer">
+                        <span class="price">{% if f.prix %}{{ f.prix }} FCFA{% else %}{% trans "Gratuit" %}{% endif %}</span>
+                        {% if f.slug %}
+                            <a class="btn" href="{% url 'detail_formation' slug=f.slug %}">{% trans "Voir le détail" %}</a>
+                        {% else %}
+                            <a class="btn" href="#" style="opacity: 0.5; cursor: not-allowed;">{% trans "Bientôt dispo" %}</a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+        {% endfor %}
+    </div>
+
 </div>
-
-{# ===================== INDUSTRIELLES ===================== #}
-<h3 style="margin: 50px 0 12px 0; color:#003366; font-size: 1.4rem; text-align:center;">Formations Industrielles</h3>
-
-<div class="grid-3">
-    <div class="card">
-        <img src="{% static 'images/Exercice.jpeg' %}" alt="FORMATION INDUSTRIELLE 1">
-        <div class="card-body">
-            <h3 class="formation-title">FORMATION INDUSTRIELLE 1</h3>
-            <p class="muted">Programme orienté industrie : bases, pratique et professionnalisation.</p>
-            <div class="muted"><strong>Durée :</strong> 4 mois</div>
-            <div class="muted price">Prix à venir</div>
-            <div class="card-footer">
-                <a class="btn" href="#" style="opacity: 0.5; cursor: not-allowed;">Bientôt disponible</a>
-            </div>
-        </div>
-    </div>
-
-    <div class="card">
-        <img src="{% static 'images/FormationAction.jpeg' %}" alt="FORMATION INDUSTRIELLE 2">
-        <div class="card-body">
-            <h3 class="formation-title">FORMATION INDUSTRIELLE 2</h3>
-            <p class="muted">Accompagnement et compétences techniques adaptées au terrain.</p>
-            <div class="muted"><strong>Durée :</strong> 5 mois</div>
-            <div class="muted price">Prix à venir</div>
-            <div class="card-footer">
-                <a class="btn" href="#" style="opacity: 0.5; cursor: not-allowed;">Bientôt disponible</a>
-            </div>
-        </div>
-    </div>
-
-    <div class="card">
-        <img src="{% static 'images/2V.jpg.jpeg' %}" alt="FORMATION INDUSTRIELLE 3">
-        <div class="card-body">
-            <h3 class="formation-title">FORMATION INDUSTRIELLE 3</h3>
-            <p class="muted">Renforcement des savoir-faire et préparation à l’insertion professionnelle.</p>
-            <div class="muted"><strong>Durée :</strong> 6 mois</div>
-            <div class="muted price">Prix à venir</div>
-            <div class="card-footer">
-                <a class="btn" href="#" style="opacity: 0.5; cursor: not-allowed;">Bientôt disponible</a>
-            </div>
-        </div>
-    </div>
-</div>
-
 {% endblock %}

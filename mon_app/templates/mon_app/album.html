@@ -1,4 +1,6 @@
 {% extends 'mon_app/base.html' %}
+{% load static %}
+{% load i18n %}
 
 {% block content %}
 <style>
@@ -6,9 +8,9 @@
 
     /* Harmonisation du Hero : Rose Serpents appliqué */
     .page-hero {
-        background: linear-gradient(rgba(209, 143, 178, 0.9), rgba(209, 143, 178, 0.9)),
+        background: linear-gradient(rgba(126, 193, 162, 0.9), rgba(209, 143, 178, 0.9)),
                     url('https://picsum.photos/1400/420') no-repeat center center/cover;
-        color: white;
+        color: rgb(21, 20, 20);
         border-radius: 10px;
         padding: 40px 30px;
         margin-bottom: 30px;
@@ -30,7 +32,7 @@
         display: block;
         width: 60px;
         height: 3px;
-        background: #A1D5B1;
+        background: #7bb98e;
         margin: 10px auto 0 auto;
     }
 
@@ -86,11 +88,11 @@
 
 <div class="album-page">
     <div class="page-hero">
-        <h1>Album</h1>
-        <p>Images et moments de la vie du CPE Formation.</p>
+        <h1>{% trans "Album" %}</h1>
+        <p>{% trans "Images et moments de la vie du CPE Formation." %}</p>
     </div>
 
-    <h2 class="section-title">Galerie CPE</h2>
+    <h2 class="section-title">{% trans "Galerie CPE" %}</h2>
 
     <div class="grid-gallery">
         {% for album in albums %}
@@ -103,12 +105,12 @@
 
             <div class="gallery-caption">{{ album.titre }}</div>
             <div class="gallery-comment">
-                <span class="badge-comment">Commentaire</span>
+                <span class="badge-comment">{% trans "Commentaire" %}</span>
                 {{ album.contenu }}
             </div>
         </div>
         {% empty %}
-        <p style="text-align:center; color:#888; grid-column: 1/-1;">Aucun album publié pour le moment.</p>
+        <p style="text-align:center; color:#888; grid-column: 1/-1;">{% trans "Aucun album publié pour le moment." %}</p>
         {% endfor %}
     </div>
 </div>

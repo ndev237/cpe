@@ -1,0 +1,307 @@
+{% extends 'mon_app/baseA.html' %} 
+{% load i18n %}
+{% load static %}
+
+{% block titre %}{% trans "Créer une actualité" %} - Club-Prepa-Emploi{% endblock %}
+
+{% block content %}
+<link href="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.snow.css" rel="stylesheet">
+
+<style>
+    /* --- STRUCTURATION DU CONTENEUR SPLIT --- */
+    .formation-container {
+        width: 100%;
+        max-width: 1100px;
+        background-color: #ffffff;
+        border-radius: 20px;
+        box-shadow: 0 20px 40px rgba(74, 124, 89, 0.06);
+        border: 1px solid #e2e8f0;
+        display: grid;
+        grid-template-columns: 0.9fr 1.1fr;
+        overflow: hidden;
+        min-height: 650px;
+        margin: 20px auto;
+    }
+
+    /* --- COLONNE GAUCHE : VISUEL (DÉGRADÉ VERT & HALO ROSE) --- */
+    .formation-sidebar {
+        background: linear-gradient(135deg, #4A7c59 0%, #2c4c35 100%);
+        padding: 3rem;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        position: relative;
+    }
+
+    .formation-sidebar::before {
+        content: '';
+        position: absolute;
+        width: 300px;
+        height: 300px;
+        background: rgba(209, 143, 178, 0.15);
+        border-radius: 50%;
+        filter: blur(40px);
+    }
+
+    .formation-hero-img {
+        width: 100%;
+        max-width: 340px;
+        height: auto;
+        display: block;
+        position: relative;
+        z-index: 1;
+    }
+
+    /* --- COLONNE DROITE : FORMULAIRE --- */
+    .formation-form-area {
+        padding: 3rem;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+    
+    .form-title { 
+        color: #4A7c59; 
+        margin-bottom: 6px; 
+        font-size: 26px; 
+        font-weight: 700; 
+        letter-spacing: -0.5px; 
+    }
+
+    .form-subtitle {
+        font-size: 0.9rem;
+        color: #4b5563;
+        margin-bottom: 28px;
+    }
+    
+    .form-field { 
+        margin-bottom: 24px; 
+    }
+    
+    .form-field label { 
+        display: block; 
+        font-weight: 600; 
+        margin-bottom: 8px; 
+        color: #4b5563; 
+        font-size: 14px; 
+    }
+    
+    /* Ciblage automatique des inputs générés par Django */
+    .form-field input[type="text"], 
+    .form-field input[type="number"], 
+    .form-field input[type="email"], 
+    .form-field textarea, 
+    .form-field select { 
+        width: 100%; 
+        padding: 12px; 
+        border: 1px solid #e2e8f0; 
+        border-radius: 10px; 
+        background-color: #f8fafc;
+        box-sizing: border-box; 
+        transition: all 0.2s ease;
+        font-family: inherit;
+        color: #1e293b;
+    }
+    
+    /* Effet focus avec ton rose de charte */
+    .form-field input:focus, 
+    .form-field textarea:focus, 
+    .form-field select:focus { 
+        outline: none; 
+        border-color: #D18FB2; 
+        background-color: #fff;
+        box-shadow: 0 0 0 4px rgba(209, 143, 178, 0.15); 
+    }
+
+    .form-field input[type="file"] {
+        padding: 8px 0;
+        color: #4b5563;
+        font-size: 14px;
+    }
+
+    .form-field input[type="checkbox"] {
+        width: 18px;
+        height: 18px;
+        accent-color: #D18FB2;
+        cursor: pointer;
+    }
+
+    /* --- BOUTONS / ACTIONS --- */
+    .form-actions { 
+        display: flex; 
+        justify-content: flex-end; 
+        gap: 12px;
+        padding-top: 16px; 
+        border-top: 1px solid #e2e8f0; 
+    }
+
+    .btn {
+        padding: 14px 28px; 
+        border-radius: 10px; 
+        font-weight: 600; 
+        cursor: pointer; 
+        transition: all 0.2s;
+        font-size: 14px;
+        font-family: inherit;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        text-decoration: none;
+    }
+
+    .btn-secondary {
+        background-color: #f1f5f9;
+        color: #475569;
+        border: 1px solid #e2e8f0;
+    }
+
+    .btn-secondary:hover {
+        background-color: #e2e8f0;
+    }
+
+    .btn-primary { 
+        background-color: #4A7c59; 
+        color: white; 
+        border: none;
+    }
+    
+    .btn-primary:hover { 
+        background-color: #3b6347; 
+        transform: translateY(-1px); 
+    }
+
+    /* --- EDITEUR DE TEXTE --- */
+    .quill-editor-wrapper {
+        background-color: #f8fafc;
+        border-radius: 10px;
+        overflow: hidden;
+        border: 1px solid #e2e8f0;
+    }
+    .ql-toolbar.ql-snow {
+        border: none !important;
+        border-bottom: 1px solid #e2e8f0 !important;
+        background: #f1f5f9;
+    }
+    .ql-container.ql-snow {
+        border: none !important;
+        min-height: 250px;
+        font-family: 'Poppins', sans-serif !important;
+        font-size: 14px;
+        color: #1e293b;
+    }
+
+    .error-text {
+        color: #ef4444;
+        font-size: 0.8rem;
+        margin-top: 0.25rem;
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+    }
+
+    @media (max-width: 960px) {
+        .formation-container {
+            grid-template-columns: 1fr;
+            max-width: 650px;
+        }
+        .formation-sidebar {
+            display: none;
+        }
+        .formation-form-area {
+            padding: 2.5rem 1.5rem;
+        }
+    }
+</style>
+
+<div class="formation-container">
+    
+    <!-- Colonne Visuelle Gauche - Identique au formulaire formation -->
+    <div class="formation-sidebar" aria-hidden="true">
+        <!-- Tu peux remplacer l'image si tu as un SVG spécifique pour les actualités -->
+        <img class="formation-hero-img" src="{% static 'images/Blog post-bro.svg' %}" alt="Illustration actualité" />
+    </div>
+
+    <!-- Colonne Droite - Formulaire d'actualité -->
+    <div class="formation-form-area">
+        <h2 class="form-title">{% trans "Nouvelle Actualité" %}</h2>
+        <p class="form-subtitle">{% trans "Rédigez et publiez un article mis en forme pour l'école." %}</p>
+        
+        <form id="actualiteForm" method="POST" enctype="multipart/form-data" novalidate>
+            {% csrf_token %}
+            
+            {% for field in form %}
+                <div class="form-field">
+                    {% if field.field.widget.input_type == "checkbox" %}
+                        <div class="flex items-center gap-3 mt-2">
+                            {{ field }}
+                            <label for="{{ field.id_for_label }}" class="!mb-0 cursor-pointer">{{ field.label }}</label>
+                        </div>
+                    {% else %}
+                        <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                        
+                        {% if field.name == 'contenu' or field.name == 'texte' %}
+                            <!-- Gestion Quill pour le champ texte de l'article -->
+                            <div style="display:none;">{{ field }}</div>
+                            <div class="quill-editor-wrapper">
+                                <div id="editor-container">{{ field.value|default_if_none:""|safe }}</div>
+                            </div>
+                        {% else %}
+                            {{ field }}
+                        {% endif %}
+                    {% endif %}
+                    
+                    {% if field.help_text %}
+                       <small style="color: #94a3b8; font-size: 0.8rem; display: block; margin-top: 4px;">{{ field.help_text }}</small>
+                    {% endif %}
+                    
+                    {% if field.errors %}
+                        <span class="error-text">
+                            <i class="fas fa-exclamation-circle text-xs"></i> {{ field.errors.0 }}
+                        </span>
+                    {% endif %}
+                </div>
+            {% endfor %}
+            
+            <div class="form-actions">
+                <a href="{% url 'actualite_liste' %}" class="btn btn-secondary">
+                    {% trans "Annuler" %}
+                </a>
+                <button type="submit" class="btn btn-primary shadow-md shadow-green-900/10">
+                    <i class="fas fa-paper-plane"></i> {% trans "Publier l'actualité" %}
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Inclusion du script de l'éditeur Quill -->
+<script src="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.js"></script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const toolbarOptions = [
+            [{ 'header': [1, 2, 3, false] }],
+            ['bold', 'italic', 'underline', 'strike'],        
+            [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+            ['link', 'blockquote', 'clean']                                             
+        ];
+
+        const quill = new Quill('#editor-container', {
+            modules: { toolbar: toolbarOptions },
+            theme: 'snow',
+            placeholder: "Rédigez le contenu de votre article ici..."
+        });
+
+        const form = document.getElementById('actualiteForm');
+        const djangoTextarea = form.querySelector('textarea[name="contenu"]') || form.querySelector('textarea[name="texte"]');
+
+        form.addEventListener('submit', function(e) {
+            if (djangoTextarea) {
+                djangoTextarea.value = quill.root.innerHTML;
+            }
+        });
+    });
+</script>
+{% endblock %}

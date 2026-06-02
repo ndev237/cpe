@@ -7,94 +7,110 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
-        /* --- VARIABLES GLOBALES --- */
+        /* --- VARIABLES GLOBALES ET THÈMES --- */
         :root {
-            --primary-rose: #D18FB2;        /* Rose Serpents */
-            --primary-dark-blue: #003366;   /* Bleu Nuit */
-            --sidebar-bg: #4A7c59;          /* Vert pâle / Sauge élégant */
-            --sidebar-width: 280px;
+            --primary-rose: #D18FB2;
+            --primary-dark-blue: #003366;
             --bg-gradient: linear-gradient(135deg, #D18FB2 0%, #b87599 100%);
             --top-navbar-height: 70px;
+            --sidebar-width: 280px;
+            --transition-speed: 0.25s;
+
+            /* Mode Clair par défaut */
+            --bg-main: #f8fafc;
+            --bg-card: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --sidebar-bg: #1e3f20; /* Vert forêt profond haut de gamme */
+            --sidebar-text: rgba(255, 255, 255, 0.8);
+            --sidebar-hover: rgba(255, 255, 255, 0.12);
+            --border-color: #e2e8f0;
         }
 
-        /* --- STYLES DE BASE & THÈMES --- */
+        [data-theme="dark"] {
+            --bg-main: #0f172a;
+            --bg-card: #1e293b;
+            --text-main: #f1f5f9;
+            --text-muted: #94a3b8;
+            --sidebar-bg: #090d16; /* Sidebar ultra sombre en mode dark */
+            --sidebar-text: rgba(241, 245, 249, 0.8);
+            --sidebar-hover: rgba(241, 245, 249, 0.08);
+            --border-color: #334155;
+        }
+
+        /* --- STYLES DE BASE --- */
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
         }
 
-        [data-theme="light"] body {
-            font-family: 'Poppins', sans-serif;
-            background-color: #f9f9f9;
-            color: #333333;
-        }
-        
-        [data-theme="dark"] body {
-            font-family: 'Poppins', sans-serif;
-            background-color: #0f172a;
-            color: #f1f5f9;
-        }
-
         body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--bg-main);
+            color: var(--text-main);
             display: flex;
-            min-h: 100vh;
+            min-height: 100vh;
             overflow-x: hidden;
+            transition: background-color var(--transition-speed), color var(--transition-speed);
         }
 
         /* --- SIDEBAR --- */
         #sidebar {
             width: var(--sidebar-width);
             background: var(--sidebar-bg);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            z-index: 50;
             color: #ffffff;
             display: flex;
             flex-direction: column;
             position: sticky;
             top: 0;
             height: 100vh;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            z-index: 50;
+            box-shadow: 4px 0 24px rgba(0, 0, 0, 0.15);
+            transition: transform var(--transition-speed) cubic-bezier(0.4, 0, 0.2, 1), background var(--transition-speed);
         }
 
         .sidebar-header {
             padding: 1.5rem;
             text-align: center;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
         }
 
         .logo-text {
-            color: white;
             font-weight: 800;
-            font-size: 1.5rem;
+            font-size: 1.6rem;
             letter-spacing: -0.5px;
+            color: #ffffff;
+        }
+        
+        .logo-text span {
+            color: var(--primary-rose);
         }
 
         .sidebar-subtitle {
-            document-font-size: 10px;
-            font-size: 10px;
-            font-weight: 700;
-            tracking-letter-spacing: 0.2em;
-            letter-spacing: 0.2em;
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 0.15em;
             margin-top: 0.25rem;
             text-transform: uppercase;
+            color: var(--primary-rose);
             opacity: 0.9;
         }
 
         .sidebar-content {
             flex: 1;
-            margin-top: 1rem;
+            padding: 1rem 0;
             overflow-y: auto;
         }
 
-        /* --- LIENS DE NAVIGATION --- */
+        /* Liens de navigation */
         .nav-link {
             display: flex;
             align-items: center;
-            padding: 0.8rem 1.2rem;
+            padding: 0.75rem 1.2rem;
             margin: 0.2rem 1rem;
-            border-radius: 10px;
-            color: rgba(255, 255, 255, 0.8);
+            border-radius: 8px;
+            color: var(--sidebar-text);
             font-weight: 500;
             font-size: 0.9rem;
             text-decoration: none;
@@ -102,14 +118,14 @@
             cursor: pointer;
         }
 
-        .nav-link i {
+        .nav-link i:first-child {
             width: 28px;
             font-size: 1.1rem;
             opacity: 0.9;
         }
 
         .nav-link:hover {
-            background: rgba(255, 255, 255, 0.15);
+            background: var(--sidebar-hover);
             color: #ffffff;
             transform: translateX(4px);
         }
@@ -117,20 +133,20 @@
         .nav-link.active {
             background: var(--bg-gradient);
             color: white;
-            box-shadow: 0 4px 12px rgba(209, 143, 178, 0.4);
+            box-shadow: 0 4px 14px rgba(209, 143, 178, 0.35);
         }
 
         .sidebar-section-title {
             color: #ffffff;
-            font-size: 0.7rem;
+            font-size: 0.75rem;
             font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 1.5px;
             padding: 1.5rem 1.5rem 0.5rem;
-            opacity: 0.7;
+            opacity: 0.5;
         }
 
-        /* --- SECTIONS ACCORDÉONS DÉROULANTS --- */
+        /* --- ACCORDÉONS DÉROULANTS --- */
         .dropdown-container {
             position: relative;
         }
@@ -145,22 +161,28 @@
         }
 
         .nav-link.has-dropdown .arrow {
-            font-size: 0.7rem;
-            transition: transform 0.3s ease;
+            font-size: 0.75rem;
+            transition: transform var(--transition-speed) ease;
+            opacity: 0.7;
         }
 
         .dropdown-menu {
             max-height: 0;
             overflow: hidden;
-            transition: max-height 0.3s ease-out, opacity 0.3s ease;
+            transition: max-height var(--transition-speed) cubic-bezier(0, 1, 0, 1), opacity var(--transition-speed);
             opacity: 0;
             display: flex;
             flex-direction: column;
+            background: rgba(0, 0, 0, 0.15);
+            margin: 0 1rem;
+            border-radius: 6px;
         }
 
         .dropdown-container.open .dropdown-menu {
-            max-height: 200px;
+            max-height: 500px; /* Valeur haute sécure pour contenir tous les éléments */
+            transition: max-height var(--transition-speed) cubic-bezier(1, 0, 1, 0);
             opacity: 1;
+            padding: 0.25rem 0;
         }
 
         .dropdown-container.open .nav-link.has-dropdown .arrow {
@@ -171,9 +193,9 @@
             display: flex;
             align-items: center;
             padding: 0.6rem 1.2rem;
-            margin: 0.1rem 1rem 0.1rem 2.2rem;
-            border-radius: 8px;
-            color: rgba(255, 255, 255, 0.75);
+            margin: 0.1rem 0.5rem 0.1rem 1.2rem;
+            border-radius: 6px;
+            color: var(--sidebar-text);
             font-size: 0.85rem;
             font-weight: 400;
             text-decoration: none;
@@ -181,43 +203,45 @@
         }
         
         .dropdown-item i {
-            font-size: 10px;
-            margin-right: 8px;
+            font-size: 11px;
+            margin-right: 10px;
+            opacity: 0.7;
         }
 
         .dropdown-item:hover {
-            background: rgba(255, 255, 255, 0.1);
+            background: var(--sidebar-hover);
             color: white;
             transform: translateX(4px);
         }
 
-        /* --- CARTE PROFIL COMPTE & STATUT --- */
+        /* --- PIED DE SIDEBAR (PROFIL & LOGOUT) --- */
         .sidebar-footer {
             padding: 1rem;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            background: rgba(0, 0, 0, 0.1);
         }
 
         .user-profile-card {
-            background: rgba(255, 255, 255, 0.08);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            border-radius: 16px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
             padding: 0.75rem;
             display: flex;
             align-items: center;
         }
 
         .user-avatar {
-            width: 2.5rem;
-            height: 2.5rem;
-            border-radius: 12px;
+            width: 2.4rem;
+            height: 2.4rem;
+            border-radius: 8px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-weight: bold;
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            background: rgba(255, 255, 255, 0.2);
+            font-weight: 700;
+            background: var(--bg-gradient);
             color: white;
             flex-shrink: 0;
+            font-size: 1rem;
         }
 
         .user-info {
@@ -226,7 +250,7 @@
         }
 
         .user-name {
-            font-size: 0.875rem;
+            font-size: 0.85rem;
             font-weight: 600;
             color: white;
             white-space: nowrap;
@@ -236,10 +260,10 @@
 
         .user-role {
             font-size: 10px;
-            font-weight: 500;
+            font-weight: 600;
             text-transform: uppercase;
-            letter-spacing: -0.3px;
-            color: rgba(255, 255, 255, 0.8);
+            letter-spacing: 0.5px;
+            color: var(--primary-rose);
         }
 
         .btn-logout {
@@ -249,37 +273,34 @@
             justify-content: center;
             gap: 0.5rem;
             width: 100%;
-            padding: 0.6rem;
-            color: white;
-            background: rgba(239, 68, 68, 0.2);
-            border: 1px solid rgba(239, 68, 68, 0.3);
-            border-radius: 12px;
-            font-size: 0.75rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
+            padding: 0.65rem;
+            color: #ef4444;
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.2);
+            border-radius: 8px;
+            font-size: 0.8rem;
+            font-weight: 600;
             cursor: pointer;
             transition: all 0.2s;
         }
 
         .btn-logout:hover {
-            background: rgba(239, 68, 68, 0.3);
+            background: #ef4444;
+            color: white;
         }
 
-        /* --- BLOC DROIT DE LA PAGE (MAIN CONTAINER) --- */
+        /* --- MAIN WRAPPER & TOP NAVBAR --- */
         .main-wrapper {
             flex: 1;
             display: flex;
             flex-direction: column;
-            min-w: 0;
+            min-width: 0;
         }
 
-        /* --- NAVBAR SUPÉRIEURE VERT PÂLE --- */
         .top-navbar {
-            background: var(--sidebar-bg);
-            backdrop-filter: blur(12px);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.15);
-            padding: 1rem 2rem;
+            background: var(--bg-card);
+            border-bottom: 1px solid var(--border-color);
+            padding: 0 2rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -287,6 +308,7 @@
             top: 0;
             z-index: 40;
             height: var(--top-navbar-height);
+            transition: background var(--transition-speed), border-color var(--transition-speed);
         }
 
         .navbar-left, .navbar-right {
@@ -295,91 +317,96 @@
         }
 
         .top-navbar h2 {
-            font-size: 1.25rem;
+            font-size: 1.2rem;
             font-weight: 700;
-            margin-left: 1rem;
-            color: #ffffff !important;
+            color: var(--text-main);
         }
 
         .top-navbar p {
-            font-size: 0.875rem;
+            font-size: 0.85rem;
             font-weight: 500;
-            color: #ffffff !important;
+            color: var(--text-muted);
         }
 
         .navbar-btn {
-            padding: 0.5rem;
-            border-radius: 0.5rem;
+            height: 40px;
+            width: 40px;
+            border-radius: 8px;
             background: transparent;
             border: none;
             cursor: pointer;
-            transition: all 0.2s;
-            color: rgba(255, 255, 255, 0.9) !important;
+            color: var(--text-main);
             display: flex;
             align-items: center;
             justify-content: center;
+            transition: all 0.2s;
         }
 
         .navbar-btn:hover {
-            background: rgba(255, 255, 255, 0.15) !important;
-            color: #ffffff !important;
+            background: var(--border-color);
         }
 
         #menuBtn {
-            display: none; /* Masqué sur PC */
+            display: none;
+            margin-right: 1rem;
         }
 
         .separator-line {
             width: 1px;
-            height: 2rem;
-            background-color: rgba(255, 255, 255, 0.25);
-            margin: 0 1.5rem;
+            height: 1.5rem;
+            background-color: var(--border-color);
+            margin: 0 1.2rem;
         }
 
-        /* --- MODE SOMBRE DE LA NAVBAR --- */
-        [data-theme="dark"] .top-navbar {
-            background: #1e293b;
-            border-bottom: 1px solid #334155;
-        }
-        [data-theme="dark"] .top-navbar h2,
-        [data-theme="dark"] .top-navbar p {
-            color: #f1f5f9 !important;
-        }
-        [data-theme="dark"] .top-navbar .separator-line {
-            background-color: #334155;
+        /* Solution pour cacher/montrer les icônes de thème */
+        html[data-theme="light"] .sun-icon,
+        html[data-theme="dark"] .moon-icon {
+            display: none;
         }
 
-        /* --- SYSTÈME DE NOTIFICATIONS/MESSAGES --- */
+        /* --- FLASH MESSAGES / SYSTEM --- */
         .messages-container {
-            padding: 1rem 2rem 0;
+            padding: 1.5rem 2rem 0;
         }
 
         .alert-message {
-            padding: 1rem;
-            border-radius: 12px;
-            font-size: 0.875rem;
+            padding: 1rem 1.25rem;
+            border-radius: 8px;
+            font-size: 0.9rem;
             font-weight: 500;
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.75rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
         }
 
         .alert-success {
-            background-color: #dcfce7;
+            background-color: #f0fdf4;
             color: #166534;
             border: 1px solid #bbf7d0;
         }
+        [data-theme="dark"] .alert-success {
+            background-color: rgba(22, 101, 52, 0.2);
+            color: #4ade80;
+            border-color: rgba(34, 197, 94, 0.3);
+        }
 
         .alert-error {
-            background-color: #fee2e2;
+            background-color: #fef2f2;
             color: #991b1b;
             border: 1px solid #fecaca;
         }
-
-        /* --- ZONE DE CONTENU PRINCIPALE --- */
-        .content-body {
-            padding: 2rem;
+        [data-theme="dark"] .alert-error {
+            background-color: rgba(153, 27, 27, 0.2);
+            color: #f87171;
+            border-color: rgba(239, 68, 68, 0.3);
         }
 
-        /* --- DESIGN ADAPTATIF (RESPONSIVE TABLETTE/MOBILE) --- */
+        /* --- CONTENU --- */
+        .content-body {
+            padding: 2rem;
+            flex: 1;
+        }
+
+        /* --- RESPONSIVE ADAPTATIF --- */
         @media (max-width: 1024px) {
             #sidebar {
                 transform: translateX(-100%);
@@ -392,10 +419,21 @@
                 transform: translateX(0);
             }
             #menuBtn {
-                display: block; /* Visible sur mobile */
+                display: flex;
             }
+        }
+        @media (max-width: 576px) {
             .top-navbar h2 {
-                display: none; /* Cache l'écriture du titre pour gagner de l'espace */
+                font-size: 1rem;
+            }
+            .top-navbar p {
+                display: none;
+            }
+            .separator-line {
+                display: none;
+            }
+            .content-body {
+                padding: 1.25rem;
             }
         }
     </style>
@@ -403,23 +441,28 @@
 </head>
 <body>
 
+    <!-- SIDEBAR REORGANISÉE PAR ORDRE DE PRIORITÉ PROFESSIONNELLE -->
     <aside id="sidebar">
         <div class="sidebar-header">
-            <h2 class="logo-text">CPE<span style="color: white;">+</span></h2> 
+            <h2 class="logo-text">CPE<span>+</span></h2> 
             <p class="sidebar-subtitle">Administration</p>
         </div>
 
         <div class="sidebar-content">
-            <a href="{% url 'index' %}" class="nav-link" style="margin-bottom: 1rem;">
-                <i class="fas fa-globe"></i> <span>Site Public</span>
+            
+            <!-- PRIORITÉ 1 : ANALYSE & APERÇU GLOBAL -->
+            <a href="{% url 'dashboard_admin' %}" class="nav-link {% if request.resolver_match.url_name == 'dashboard_admin' %}active{% endif %}" style="margin-bottom: 0.5rem;">
+                <i class="fas fa-chart-pie"></i> <span>Dashboard</span>
             </a>
 
-            <a href="{% url 'dashboard_admin' %}" class="nav-link {% if request.resolver_match.url_name == 'dashboard_admin' %}active{% endif %}" style="margin-bottom: 1rem;">
-                <i class="fas fa-chart-pie"></i> <span>Dashboard</span>
+            <!-- PRIORITÉ 2 : CRITIQUE / TRAITEMENT DES PROSPECTS -->
+            <a href="{% url 'notifications_page' %}" class="nav-link {% if request.resolver_match.url_name == 'notifications_page' %}active{% endif %}" style="margin-bottom: 1rem;">
+                <i class="fas fa-bell"></i> <span>Notifications</span>
             </a>
 
             <div class="sidebar-section-title">Menu Principal</div>
 
+            <!-- PRIORITÉ 3 : CŒUR DE MÉTIER (L'OFFRE DE FORMATION) -->
             <div class="dropdown-container">
                 <a class="nav-link has-dropdown">
                     <div class="nav-title-block">
@@ -427,7 +470,6 @@
                     </div>
                     <i class="fas fa-chevron-down arrow"></i>
                 </a>
-                
                 <div class="dropdown-menu">
                     <a href="{% url 'admin_creer_formation' %}" class="dropdown-item">
                         <i class="fas fa-plus"></i> Créer une formation
@@ -438,6 +480,7 @@
                 </div>
             </div>
 
+            <!-- PRIORITÉ 4 : COMMUNICATON INTERNE / ANNONCES -->
             <div class="dropdown-container">
                 <a class="nav-link has-dropdown">
                     <div class="nav-title-block">
@@ -445,7 +488,6 @@
                     </div>
                     <i class="fas fa-chevron-down arrow"></i>
                 </a>
-                
                 <div class="dropdown-menu">
                     <a href="{% url 'admin_creer_annonce' %}" class="dropdown-item">
                         <i class="fas fa-plus"></i> Créer une annonce
@@ -456,6 +498,25 @@
                 </div>
             </div>
 
+            <!-- PRIORITÉ 5 : ANIMATION / FIL D'ACTUALITÉS -->
+            <div class="dropdown-container">
+                <a class="nav-link has-dropdown">
+                    <div class="nav-title-block">
+                        <i class="fas fa-newspaper"></i> <span>Gérer les Actualités</span>
+                    </div>
+                    <i class="fas fa-chevron-down arrow"></i>
+                </a>
+                <div class="dropdown-menu">
+                   <a href="{% url 'actualite_creer' %}" class="dropdown-item">
+                        <i class="fas fa-plus"></i> Publier une Actualité
+                    </a>
+                   <a href="{% url 'actualite_liste' %}" class="dropdown-item">
+                         <i class="fas fa-list"></i> Liste des Actualités
+                    </a>
+                </div>
+            </div>
+
+            <!-- PRIORITÉ 6 : MÉDIAS, VITRINE & PREUVE SOCIALE -->
             <div class="dropdown-container">
                 <a class="nav-link has-dropdown">
                     <div class="nav-title-block">
@@ -463,7 +524,6 @@
                     </div>
                     <i class="fas fa-chevron-down arrow"></i>
                 </a>
-                
                 <div class="dropdown-menu">
                    <a href="{% url 'admin_publier_photo' %}" class="dropdown-item">
                         <i class="fas fa-plus"></i> Publier une photo
@@ -474,33 +534,19 @@
                 </div>
             </div>
 
-            <div class="dropdown-container">
-                <a class="nav-link has-dropdown">
-                    <div class="nav-title-block">
-                        <i class="fas fa-images"></i> <span>Gérer Notifications</span>
-                    </div>
-                    <i class="fas fa-chevron-down arrow"></i>
-                </a>
-                
-                <div class="dropdown-menu">
-                   <a href="#" class="dropdown-item">
-                        <i class="fas fa-plus"></i> Publier une information
-                    </a>
-                    <a href="#" class="dropdown-item">
-                         <i class="fas fa-list"></i> Liste des notifications
-                    </a>
-                </div>
-            </div>
-
-
-            <a href="#" class="nav-link">
+            <a href="#" class="nav-link" style="margin-bottom: 1rem;">
                 <i class="fas fa-handshake"></i> <span>Gérer les Partenaires</span>
             </a>
 
-            <div class="sidebar-section-title">Sécurité</div>
+            <!-- PRIORITÉ 7 : SÉCURITÉ, ACCÈS SYSTEME & CONTRÔLE EXTERNE -->
+            <div class="sidebar-section-title">Sécurité & Liens</div>
 
-            <a href="#" class="nav-link">
+            <a href="#" class="nav-link" style="margin-bottom: 0.5rem;">
                 <i class="fas fa-users"></i> <span>Utilisateurs</span>
+            </a>
+
+            <a href="{% url 'index' %}" target="_blank" class="nav-link">
+                <i class="fas fa-globe"></i> <span>Voir le Site Public</span>
             </a>
         </div>
 
@@ -516,7 +562,7 @@
             </div>
             
             {% if request.session.admin_brut_id %}
-            <form action="{% url 'deconnexion' %}" method="POST" style="display: inline; width: 100%;">
+            <form action="{% url 'deconnexion' %}" method="POST" style="width: 100%;">
                 {% csrf_token %}
                 <button type="submit" class="btn-logout">
                     <i class="fas fa-power-off"></i> Déconnexion
@@ -528,18 +574,19 @@
 
     <div class="main-wrapper">
 
+        <!-- TOP NAVBAR -->
         <nav class="top-navbar">
             <div class="navbar-left">
                 <button id="menuBtn" class="navbar-btn">
-                    <i class="fas fa-bars style-icon-size" style="font-size: 1.25rem;"></i>
+                    <i class="fas fa-bars" style="font-size: 1.2rem;"></i>
                 </button>
                 <h2>Espace Administration</h2>
             </div>
 
             <div class="navbar-right">
-                <button id="themeToggle" class="navbar-btn">
-                    <i class="fas fa-moon block dark:hidden" style="font-size: 1.15rem;"></i>
-                    <i class="fas fa-sun hidden dark:block" style="font-size: 1.15rem;"></i>
+                <button id="themeToggle" class="navbar-btn" aria-label="Changer le thème">
+                    <i class="fas fa-moon moon-icon" style="font-size: 1.15rem;"></i>
+                    <i class="fas fa-sun sun-icon" style="font-size: 1.15rem;"></i>
                 </button>
                 
                 <div class="separator-line"></div>
@@ -547,6 +594,7 @@
             </div>
         </nav>
 
+        <!-- ZONE DE NOTIFICATION FLASH SYSTEME -->
         {% if messages %}
         <div class="messages-container">
             {% for message in messages %}
@@ -557,6 +605,7 @@
         </div>
         {% endif %}
 
+        <!-- BLOC DE CONTENU ENFANT DYNAMIQUE -->
         <main class="content-body">
             {% block content %}
             {% endblock %}
@@ -564,12 +613,13 @@
 
     </div>
 
+    <!-- SCRIPTS ENGINES -->
     <script>
         const menuBtn = document.getElementById("menuBtn");
         const sidebar = document.getElementById("sidebar");
         const themeToggle = document.getElementById("themeToggle");
 
-        // 1. GESTION DE L'ACCORDÉON DES MENUS
+        // 1. ACCORDÉONS NAVIGATION SÉCURISÉS (Gestion exclusive d'ouverture d'un menu à la fois)
         const dropdowns = document.querySelectorAll(".dropdown-container");
         
         dropdowns.forEach(dropdown => {
@@ -588,8 +638,9 @@
             });
         });
 
-        // 2. GESTION DU REPLI MOBILE DE LA SIDEBAR
-        menuBtn.addEventListener("click", () => {
+        // 2. RESPONSIVE MOBILE SIDEBAR TOGGLE
+        menuBtn.addEventListener("click", (e) => {
+            e.stopPropagation();
             sidebar.classList.toggle("open");
         });
 
@@ -599,18 +650,16 @@
             }
         });
 
-        // 3. GESTION DU MODE CLAIR / SOMBRE
-        if (themeToggle) {
-            const savedTheme = localStorage.getItem('adminTheme') || 'light';
-            document.documentElement.setAttribute('data-theme', savedTheme);
-            
-            themeToggle.addEventListener('click', () => {
-                const currentTheme = document.documentElement.getAttribute('data-theme');
-                const newTheme = currentTheme === 'light' ? 'dark' : 'light';
-                document.documentElement.setAttribute('data-theme', newTheme);
-                localStorage.setItem('adminTheme', newTheme);
-            });
-        }
+        // 3. DARK MODE ENGINE VIA LOCALSTORAGE
+        const savedTheme = localStorage.getItem('adminTheme') || 'light';
+        document.documentElement.setAttribute('data-theme', savedTheme);
+        
+        themeToggle.addEventListener('click', () => {
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+            document.documentElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('adminTheme', newTheme);
+        });
     </script>
 </body>
 </html>

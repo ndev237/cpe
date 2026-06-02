@@ -22,7 +22,7 @@
 
     .page-header h1 {
         font-size: 1.8rem;
-        color: #003366; /* Bleu Nuit */
+        color: #4A7c59; /* Vert Forêt à la place du Bleu Nuit */
         margin: 0;
         font-weight: 600;
     }
@@ -53,7 +53,8 @@
     }
 
     .search-box input:focus {
-        border-color: #D18FB2; /* Rose Serpents */
+        border-color: #4A7c59; /* Focus Vert Forêt à la place du Rose */
+        box-shadow: 0 0 0 4px rgba(74, 124, 89, 0.15);
     }
 
     .search-box i {
@@ -66,7 +67,7 @@
     .table-responsive {
         background: white;
         border-radius: 12px;
-        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+        box-shadow: 0 4px 166px rgba(74, 124, 89, 0.04);
         border: 1px solid rgba(0,0,0,0.05);
         overflow-x: auto;
     }
@@ -112,7 +113,7 @@
     }
 
     .formation-table tr:hover {
-        background-color: #f8fafc;
+        background-color: rgba(74, 124, 89, 0.02); /* Léger voile vert au survol */
     }
 
     [data-theme="dark"] .formation-table tr:hover {
@@ -138,8 +139,8 @@
     }
 
     .status-active {
-        background-color: rgba(161, 213, 177, 0.2);
-        color: #1e6b36;
+        background-color: rgba(74, 124, 89, 0.15); /* Vert de la charte plus doux en opacité */
+        color: #4A7c59;
     }
 
     .status-inactive {
@@ -168,11 +169,11 @@
     }
 
     .btn-edit {
-        background-color: rgba(0, 51, 102, 0.08);
-        color: #003366;
+        background-color: rgba(74, 124, 89, 0.08); /* Fond vert transparent */
+        color: #4A7c59;
     }
     .btn-edit:hover {
-        background-color: #003366;
+        background-color: #4A7c59; /* Vert uni au survol */
         color: white;
     }
 
@@ -233,12 +234,13 @@
                         {% endif %}
                     </td>
                     <td class="formation-title" style="font-weight: 500;">{{ formation.titre }}</td>
-                    <td><span style="color: #64748b;">paramedicale</span></td>
+                    
+                    <td><span style="color: #64748b;">{{ formation.get_categorie_display }}</span></td>
 
                     <td>{{ formation.duree }}</td>
                     <td>
                         {% if formation.prix %}
-                            <span style="font-weight: 600; color: #003366;">{{ formation.prix }} FCFA</span>
+                            <span style="font-weight: 600; color: #4A7c59;">{{ formation.prix }} FCFA</span> <!-- Vert Forêt pour le prix -->
                         {% else %}
                             <span style="color: #94a3b8; font-style: italic;">Gratuit</span>
                         {% endif %}
@@ -284,14 +286,13 @@
                     const titleText = row.querySelector(".formation-title").textContent.toLowerCase();
                     
                     if (titleText.includes(filter)) {
-                        row.style.display = ""; // Reste visible
+                        row.style.display = ""; 
                     } else {
-                        row.style.display = "none"; // Masqué
+                        row.style.display = "none"; 
                     }
                 });
             });
         }
     });
 </script>
-
 {% endblock %}

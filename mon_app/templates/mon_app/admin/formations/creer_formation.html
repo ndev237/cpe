@@ -1,13 +1,116 @@
 {% extends 'mon_app/baseA.html' %} 
+{% load i18n %}
+{% load static %}
 
 {% block content %}
+<link href="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.snow.css" rel="stylesheet">
+
 <style>
-    .form-container { max-width: 800px; margin: 20px auto; padding: 32px; background: white; border-radius: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.02); }
-    .form-title { color: #003366; margin-bottom: 28px; font-size: 26px; font-weight: 700; letter-spacing: -0.5px; }
-    .form-field { margin-bottom: 24px; }
-    .form-field label { display: block; font-weight: 600; margin-bottom: 8px; color: #4b5563; font-size: 14px; }
+    /* --- STRUCTURATION DU CONTENEUR SPLIT --- */
+    .formation-container {
+        width: 100%;
+        max-width: 1100px;
+        background-color: #ffffff;
+        border-radius: 20px;
+        box-shadow: 0 20px 40px rgba(74, 124, 89, 0.06);
+        border: 1px solid #e2e8f0;
+        display: grid;
+        grid-template-columns: 0.9fr 1.1fr;
+        overflow: hidden;
+        min-height: 650px;
+        margin: 20px auto;
+    }
+
+    /* --- COLONNE GAUCHE : VISUEL (DÉGRADÉ VERT & HALO ROSE) --- */
+    .formation-sidebar {
+        background: linear-gradient(135deg, #4A7c59 0%, #2c4c35 100%);
+        padding: 3rem;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        position: relative;
+    }
+
+    .formation-sidebar::before {
+        content: '';
+        position: absolute;
+        width: 300px;
+        height: 300px;
+        background: rgba(209, 143, 178, 0.15);
+        border-radius: 50%;
+        filter: blur(40px);
+    }
+
+    .formation-hero-img {
+        width: 100%;
+        max-width: 340px;
+        height: auto;
+        display: block;
+        position: relative;
+        z-index: 1;
+    }
+
+    /* --- COLONNE DROITE : FORMULAIRE --- */
+    .formation-form-area {
+        padding: 3rem;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
     
-    /* Ciblage automatique des inputs générés par Django pour conserver ton design */
+    .form-title { 
+        color: #4A7c59; 
+        margin-bottom: 12px; 
+        font-size: 26px; 
+        font-weight: 700; 
+        letter-spacing: -0.5px; 
+    }
+
+    /* --- STEPPER (INDICATEUR D'ÉTAPE) --- */
+    .stepper {
+        display: flex;
+        gap: 15px;
+        margin-bottom: 28px;
+    }
+
+    .step-indicator {
+        font-size: 13px;
+        font-weight: 700;
+        color: #94a3b8;
+        padding-bottom: 8px;
+        border-bottom: 2px solid #e2e8f0;
+        flex: 1;
+        transition: all 0.3s ease;
+    }
+
+    .step-indicator.active {
+        color: #4A7c59;
+        border-bottom-color: #4A7c59;
+    }
+
+    /* --- GESTION DES ÉTAPES --- */
+    .form-step {
+        display: none;
+    }
+
+    .form-step.active {
+        display: block;
+    }
+    
+    .form-field { 
+        margin-bottom: 24px; 
+    }
+    
+    .form-field label { 
+        display: block; 
+        font-weight: 600; 
+        margin-bottom: 8px; 
+        color: #4b5563; 
+        font-size: 14px; 
+    }
+    
+    /* Ciblage automatique des inputs générés par Django */
     .form-field input[type="text"], 
     .form-field input[type="number"], 
     .form-field input[type="email"], 
@@ -21,24 +124,25 @@
         box-sizing: border-box; 
         transition: all 0.2s ease;
         font-family: inherit;
+        color: #1e293b;
     }
     
-    /* Effet focus élégant avec ton rose de charte */
-    .form-field input:focus, .form-field textarea:focus, .form-field select:focus { 
+    /* Effet focus avec ton rose de charte */
+    .form-field input:focus, 
+    .form-field textarea:focus, 
+    .form-field select:focus { 
         outline: none; 
         border-color: #D18FB2; 
         background-color: #fff;
         box-shadow: 0 0 0 4px rgba(209, 143, 178, 0.15); 
     }
 
-    /* Style spécifique pour le champ d'upload de fichier (Image) */
     .form-field input[type="file"] {
         padding: 8px 0;
         color: #4b5563;
         font-size: 14px;
     }
 
-    /* Style pour la case à cocher (est_active) */
     .form-field input[type="checkbox"] {
         width: 18px;
         height: 18px;
@@ -46,42 +150,260 @@
         cursor: pointer;
     }
 
-    .btn-submit { background-color: #003366; color: white; border: none; padding: 14px 28px; border-radius: 10px; font-weight: 600; cursor: pointer; transition: all 0.2s; }
-    .btn-submit:hover { background-color: #002244; transform: translateY(-1px); }
+    /* --- BOUTONS / ACTIONS --- */
+    .form-actions { 
+        display: flex; 
+        justify-content: flex-end; 
+        gap: 12px;
+        padding-top: 16px; 
+        border-top: 1px solid #e2e8f0; 
+    }
+
+    .btn {
+        padding: 14px 28px; 
+        border-radius: 10px; 
+        font-weight: 600; 
+        cursor: pointer; 
+        transition: all 0.2s;
+        font-size: 14px;
+        font-family: inherit;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        text-decoration: none;
+    }
+
+    .btn-secondary {
+        background-color: #f1f5f9;
+        color: #475569;
+        border: 1px solid #e2e8f0;
+    }
+
+    .btn-secondary:hover {
+        background-color: #e2e8f0;
+    }
+
+    .btn-primary { 
+        background-color: #4A7c59; 
+        color: white; 
+        border: none;
+    }
+    
+    .btn-primary:hover { 
+        background-color: #3b6347; 
+        transform: translateY(-1px); 
+    }
+
+    /* --- EDITEUR DE TEXTE --- */
+    .quill-editor-wrapper {
+        background-color: #f8fafc;
+        border-radius: 10px;
+        overflow: hidden;
+        border: 1px solid #e2e8f0;
+    }
+    .ql-toolbar.ql-snow {
+        border: none !important;
+        border-bottom: 1px solid #e2e8f0 !important;
+        background: #f1f5f9;
+    }
+    .ql-container.ql-snow {
+        border: none !important;
+        min-height: 150px;
+        font-family: 'Poppins', sans-serif !important;
+        font-size: 14px;
+        color: #1e293b;
+    }
+
+    @media (max-width: 960px) {
+        .formation-container {
+            grid-template-columns: 1fr;
+            max-width: 650px;
+        }
+        .formation-sidebar {
+            display: none;
+        }
+        .formation-form-area {
+            padding: 2.5rem 1.5rem;
+        }
+    }
 </style>
 
-<div class="form-container border border-gray-100">
-    <h2 class="form-title">{% firstof titre_page "Créer une nouvelle formation" %}</h2>
+<div class="formation-container">
     
-    <form method="POST" enctype="multipart/form-data" class="space-y-2">
-        {% csrf_token %}
+    <div class="formation-sidebar" aria-hidden="true">
+        <img class="formation-hero-img" src="{% static 'images/college project-bro.svg' %}" alt="Illustration de création de formation" />
+    </div>
+
+    <div class="formation-form-area">
+        <h2 class="form-title">{% firstof titre_page "Créer une nouvelle formation" %}</h2>
         
-        {% for field in form %}
-            <div class="form-field">
-                {% if field.field.widget.input_type == "checkbox" %}
-                    <div class="flex items-center gap-3 mt-2">
-                        {{ field }}
-                        <label for="{{ field.id_for_label }}" class="!mb-0 cursor-pointer">{{ field.label }}</label>
-                    </div>
-                {% else %}
-                    <label for="{{ field.id_for_label }}">{{ field.label }}</label>
-                    {{ field }}
-                {% endif %}
-                
-                {% if field.errors %}
-                    <div class="mt-1.5 flex items-center gap-1.5 text-red-600">
-                        <i class="fas fa-exclamation-circle text-xs"></i>
-                        <span class="font-medium text-xs">{{ field.errors|striptags }}</span>
-                    </div>
-                {% endif %}
-            </div>
-        {% endfor %}
-        
-        <div class="pt-4 border-t border-gray-100 flex justify-end">
-            <button type="submit" class="btn-submit shadow-md shadow-blue-900/10">
-                <i class="fas fa-save mr-2"></i> Publier la formation
-            </button>
+        <div class="stepper">
+            <div class="step-indicator active" id="badgeStep1">1. {% trans "Contenu & Descriptions" %}</div>
+            <div class="step-indicator" id="badgeStep2">2. {% trans "Tarification & Configuration" %}</div>
         </div>
-    </form>
+        
+        <form id="formationForm" method="POST" enctype="multipart/form-data" class="space-y-2">
+            {% csrf_token %}
+            
+            <div class="form-step active" id="step1">
+                {% for field in form %}
+                    {% if field.field.widget.input_type != "checkbox" and field.field.widget.input_type != "file" and field.field.widget.input_type != "number" and field.name != "categorie" and field.name != "enseignant" and field.name != "professeur" %}
+                        
+                        <div class="form-field">
+                            <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                            
+                            {% if field.name == "description_courte" or field.id_for_label == "id_description_courte" %}
+                                <div style="display: none;">{{ field }}</div>
+                                <div class="quill-editor-wrapper">
+                                    <div id="editor_description_courte"></div>
+                                </div>
+                            {% elif field.name == "programme_detaille" or field.id_for_label == "id_programme_detaille" %}
+                                <div style="display: none;">{{ field }}</div>
+                                <div class="quill-editor-wrapper">
+                                    <div id="editor_programme_detaille"></div>
+                                </div>
+                            {% else %}
+                                {{ field }}
+                            {% endif %}
+                            
+                            {% if field.errors %}
+                                <div class="mt-1.5 flex items-center gap-1.5 text-red-600">
+                                    <i class="fas fa-exclamation-circle text-xs"></i>
+                                    <span class="font-medium text-xs">{{ field.errors|striptags }}</span>
+                                </div>
+                            {% endif %}
+                        </div>
+
+                    {% endif %}
+                {% endfor %}
+            </div>
+            
+            <div class="form-step" id="step2">
+                {% for field in form %}
+                    {% if field.field.widget.input_type == "checkbox" or field.field.widget.input_type == "file" or field.field.widget.input_type == "number" or field.name == "categorie" or field.name == "enseignant" or field.name == "professeur" %}
+                        
+                        <div class="form-field">
+                            {% if field.field.widget.input_type == "checkbox" %}
+                                <div class="flex items-center gap-3 mt-2">
+                                    {{ field }}
+                                    <label for="{{ field.id_for_label }}" class="!mb-0 cursor-pointer">{{ field.label }}</label>
+                                </div>
+                            {% else %}
+                                <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                                {{ field }}
+                            {% endif %}
+                            
+                            {% if field.errors %}
+                                <div class="mt-1.5 flex items-center gap-1.5 text-red-600">
+                                    <i class="fas fa-exclamation-circle text-xs"></i>
+                                    <span class="font-medium text-xs">{{ field.errors|striptags }}</span>
+                                </div>
+                            {% endif %}
+                        </div>
+
+                    {% endif %}
+                {% endfor %}
+            </div>
+            
+            <div class="form-actions">
+                <button type="button" class="btn btn-secondary" id="btnBack" style="display: none;">
+                    <i class="fas fa-arrow-left"></i> {% trans "Retour" %}
+                </button>
+                <button type="button" class="btn btn-primary" id="btnNext">
+                    {% trans "Suivant" %} <i class="fas fa-arrow-right"></i>
+                </button>
+                <button type="submit" class="btn btn-primary shadow-md shadow-green-900/10" id="btnSubmit" style="display: none;">
+                    <i class="fas fa-save"></i> {% trans "Publier la formation" %}
+                </button>
+            </div>
+        </form>
+    </div>
 </div>
+
+<script src="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        // --- MULTI-STEPS VARIABLES ---
+        const step1 = document.getElementById("step1");
+        const step2 = document.getElementById("step2");
+        const badgeStep1 = document.getElementById("badgeStep1");
+        const badgeStep2 = document.getElementById("badgeStep2");
+        
+        const btnBack = document.getElementById("btnBack");
+        const btnNext = document.getElementById("btnNext");
+        const btnSubmit = document.getElementById("btnSubmit");
+
+        // Vers l'étape 2
+        btnNext.addEventListener("click", function() {
+            step1.classList.remove("active");
+            step2.classList.add("active");
+            badgeStep1.classList.remove("active");
+            badgeStep2.classList.add("active");
+
+            btnNext.style.display = "none";
+            btnBack.style.display = "inline-flex";
+            btnSubmit.style.display = "inline-flex";
+        });
+
+        // Retour à l'étape 1
+        btnBack.addEventListener("click", function() {
+            step2.classList.remove("active");
+            step1.classList.add("active");
+            badgeStep2.classList.remove("active");
+            badgeStep1.classList.add("active");
+
+            btnNext.style.display = "inline-flex";
+            btnBack.style.display = "none";
+            btnSubmit.style.display = "none";
+        });
+
+        // --- CONFIGURATION INITIALE DE QUILL ---
+        const toolbarOptions = [
+            ['bold', 'italic', 'underline', 'strike'],
+            [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+            ['clean']
+        ];
+
+        const textareaShort = document.getElementById("id_description_courte") || document.querySelector("[name='description_courte']");
+        const textareaFull  = document.getElementById("id_programme_detaille") || document.querySelector("[name='programme_detaille']");
+
+        let quillShort, quillFull;
+
+        if (textareaShort) {
+            quillShort = new Quill('#editor_description_courte', {
+                modules: { toolbar: toolbarOptions },
+                theme: 'snow',
+                placeholder: 'Rédigez une description courte et percutante...'
+            });
+            quillShort.root.innerHTML = textareaShort.value;
+        }
+
+        if (textareaFull) {
+            quillFull = new Quill('#editor_programme_detaille', {
+                modules: { 
+                    toolbar: [
+                        [{ 'header': [1, 2, 3, false] }],
+                        ['bold', 'italic', 'underline'],
+                        [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                        ['link', 'clean']
+                    ] 
+                },
+                theme: 'snow',
+                placeholder: 'Détaillez le programme étape par étape...'
+            });
+            quillFull.root.innerHTML = textareaFull.value;
+        }
+
+        // --- SYNCHRONISATION AVANT ENVOI DU POST ---
+        const form = document.getElementById("formationForm");
+        form.addEventListener("submit", function(e) {
+            if (textareaShort && quillShort) {
+                textareaShort.value = quillShort.root.innerHTML;
+            }
+            if (textareaFull && quillFull) {
+                textareaFull.value = quillFull.root.innerHTML;
+            }
+        });
+    });
+</script>
 {% endblock %}

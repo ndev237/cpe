@@ -1,13 +1,13 @@
 from django import forms
-from .models import Formation,  Annonce, AlbumPhoto
+from .models import Formation,  Annonce, AlbumPhoto,  Actualite
 from django.utils.text import slugify
 
 
 class FormationForm(forms.ModelForm):
     class Meta:
         model = Formation
-        # On liste tous les champs SAUF le slug et la date de création
-        fields = ['titre', 'description_courte', 'programme_detaille', 'duree', 'prix', 'image', 'est_active']
+        # On ajoute 'categorie' dans la liste des champs affichés
+        fields = ['titre', 'categorie', 'description_courte', 'programme_detaille', 'duree', 'prix', 'image', 'est_active']
         widgets = {
             'description_courte': forms.Textarea(attrs={'rows': 3, 'placeholder': 'Résumé de la formation...'}),
             'programme_detaille': forms.Textarea(attrs={'rows': 6, 'placeholder': 'Détails des modules...'}),
@@ -42,3 +42,15 @@ class AlbumPhotoForm(forms.ModelForm):
     class Meta:
         model = AlbumPhoto
         fields = ['titre', 'contenu', 'image']
+
+
+class ActualiteForm(forms.ModelForm):
+    class Meta:
+        model = Actualite
+        fields = ['titre', 'image', 'contenu', 'statut']
+        widgets = {
+            'titre': forms.TextInput(attrs={'class': 'form-input', 'placeholder': 'Ex: Cérémonie de remise des diplômes...'}),
+            'contenu': forms.Textarea(attrs={'class': 'form-input textarea', 'rows': 6, 'placeholder': 'Rédigez le contenu de l\'article ici...'}),
+            'statut': forms.Select(attrs={'class': 'form-input'}),
+            'image': forms.FileInput(attrs={'class': 'form-file'}),
+        }

@@ -4,8 +4,8 @@
 <style>
     /* Configuration et reset global pour le contenu du tableau de bord */
     .dashboard-container {
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        color: #333;
+        font-family: 'Poppins', sans-serif;
+        color: #334155;
         padding: 20px;
         max-width: 1200px;
         margin: 0 auto;
@@ -22,12 +22,14 @@
     }
     .dash-header h1 {
         font-size: 2rem;
-        color: #003366; /* Bleu Foncé principal */
+        color: #4A7c59; /* Vert pâle dominant */
         margin: 0;
+        font-weight: 600;
     }
     .dash-header .date {
-        color: #666;
+        color: #64748b;
         font-size: 0.95rem;
+        margin-top: 4px;
     }
 
     /* Grille des cartes de statistiques */
@@ -40,12 +42,16 @@
     .stat-card {
         background: white;
         padding: 20px;
-        border-radius: 10px;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        border-radius: 12px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.04);
         border: 1px solid rgba(0,0,0,0.05);
         display: flex;
         align-items: center;
         gap: 15px;
+        transition: transform 0.2s ease;
+    }
+    .stat-card:hover {
+        transform: translateY(-2px);
     }
     .stat-icon {
         width: 50px;
@@ -54,26 +60,27 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 1.5rem;
+        font-size: 1.4rem;
     }
     .stat-info h3 {
         margin: 0;
-        font-size: 0.9rem;
-        color: #777;
+        font-size: 0.85rem;
+        color: #64748b;
         text-transform: uppercase;
         letter-spacing: 0.5px;
+        font-weight: 600;
     }
     .stat-info .number {
         font-size: 1.8rem;
-        font-weight: bold;
-        color: #111;
-        margin-top: 5px;
+        font-weight: 700;
+        color: #1e293b;
+        margin-top: 2px;
     }
 
     /* Variations de couleurs pour les icônes des stats */
-    .icon-blue { background: rgba(0, 51, 102, 0.1); color: #003366; }
-    .icon-pink { background: rgba(209, 143, 178, 0.1); color: #D18FB2; }
-    .icon-green { background: rgba(161, 213, 177, 0.2); color: #2E7D32; }
+    .icon-green-pale { background: rgba(74, 124, 89, 0.15); color: #4A7c59; }
+    .icon-pink { background: rgba(209, 143, 178, 0.15); color: #D18FB2; }
+    .icon-emerald { background: rgba(16, 185, 129, 0.15); color: #10b981; }
 
     /* Section principale : Grille 2 colonnes (Tableau + Actions) */
     .main-grid {
@@ -85,18 +92,19 @@
     .content-box {
         background: white;
         padding: 25px;
-        border-radius: 10px;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        border-radius: 12px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.04);
         border: 1px solid rgba(0,0,0,0.05);
     }
     .content-box h2 {
-        font-size: 1.3rem;
-        color: #333;
+        font-size: 1.25rem;
+        color: #1e293b;
         margin-top: 0;
         margin-bottom: 20px;
         display: flex;
         align-items: center;
         gap: 10px;
+        font-weight: 600;
     }
 
     /* Tableau des données */
@@ -106,12 +114,13 @@
         text-align: left;
     }
     .custom-table th, .custom-table td {
-        padding: 12px 15px;
-        border-bottom: 1px solid #edf2f7;
+        padding: 14px 15px;
+        border-bottom: 1px solid #f1f5f9;
+        font-size: 0.9rem;
     }
     .custom-table th {
         background-color: #f8fafc;
-        color: #4a5568;
+        color: #475569;
         font-weight: 600;
     }
     .custom-table tr:hover {
@@ -120,12 +129,12 @@
 
     /* Badges d'état */
     .status-badge {
-        padding: 4px 8px;
-        border-radius: 4px;
+        padding: 5px 10px;
+        border-radius: 6px;
         font-size: 0.8rem;
-        font-weight: bold;
+        font-weight: 600;
     }
-    .status-active { background-color: #A1D5B1; color: #003366; }
+    .status-active { background-color: rgba(74, 124, 89, 0.15); color: #385f44; }
     .status-pending { background-color: #fef3c7; color: #d97706; }
 
     /* Raccourcis d'actions */
@@ -141,20 +150,33 @@
         padding: 14px;
         background: #f8fafc;
         text-decoration: none;
-        color: #333;
+        color: #334155;
         border-radius: 8px;
         font-weight: 500;
         transition: all 0.2s ease;
         border: 1px solid transparent;
+        font-size: 0.9rem;
     }
     .action-btn:hover {
         background: white;
-        border-color: #D18FB2;
-        color: #D18FB2;
+        border-color: #4A7c59;
+        color: #4A7c59;
         transform: translateX(4px);
+        box-shadow: 0 4px 12px rgba(74, 124, 89, 0.08);
     }
     .action-btn i {
         font-size: 1.1rem;
+    }
+
+    /* Style du Badge d'en-tête */
+    .role-badge {
+        background: #4A7c59;
+        color: white;
+        padding: 6px 14px;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        letter-spacing: 0.5px;
     }
 
     /* Responsive */
@@ -172,12 +194,12 @@
             <h1>Tableau de bord</h1>
             <p class="date">Bienvenue dans votre espace d'administration</p>
         </div>
-        <span class="badge" style="background: #003366; color: white; padding: 8px 15px;">Admin</span>
+        <span class="role-badge">Admin</span>
     </header>
 
     <section class="stats-grid">
         <div class="stat-card">
-            <div class="stat-icon icon-blue">
+            <div class="stat-icon icon-green-pale">
                 <i class="fa-solid fa-graduation-cap"></i>
             </div>
             <div class="stat-info">
@@ -188,16 +210,16 @@
 
         <div class="stat-card">
             <div class="stat-icon icon-pink">
-                <i class="fa-solid fa-users"></i>
+                <i class="fa-solid fa-shield-halved"></i>
             </div>
             <div class="stat-info">
-                <h3>Apprenants</h3>
-                <div class="number">148</div>
+                <h3>Rôles & Accès</h3>
+                <div class="number">4</div>
             </div>
         </div>
 
         <div class="stat-card">
-            <div class="stat-icon icon-green">
+            <div class="stat-icon icon-emerald">
                 <i class="fa-solid fa-bullhorn"></i>
             </div>
             <div class="stat-info">
@@ -210,14 +232,14 @@
     <div class="main-grid">
         
         <section class="content-box">
-            <h2><i class="fa-solid fa-list-check" style="color: #003366;"></i> Suivi des dernières inscriptions</h2>
+            <h2><i class="fa-solid fa-list-check" style="color: #4A7c59;"></i> Demandes d'inscription à valider</h2>
             <div style="overflow-x: auto;">
                 <table class="custom-table">
                     <thead>
                         <tr>
                             <th>Nom & Prénom</th>
-                            <th>Formation</th>
-                            <th>Date</th>
+                            <th>Formation demandée</th>
+                            <th>Date de soumission</th>
                             <th>Statut</th>
                         </tr>
                     </thead>
@@ -257,12 +279,12 @@
                     <span>Publier une annonce</span>
                 </a>
                 <a href="#" class="action-btn">
-                    <i class="fa-solid fa-user-plus"></i>
-                    <span>Inscrire un élève</span>
+                    <i class="fa-solid fa-users-gear"></i>
+                    <span>Gérer les accès rôles</span>
                 </a>
                 <a href="#" class="action-btn">
                     <i class="fa-solid fa-gear"></i>
-                    <span>Configuration</span>
+                    <span>Configuration générale</span>
                 </a>
             </div>
         </section>
