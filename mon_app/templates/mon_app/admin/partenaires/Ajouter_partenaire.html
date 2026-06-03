@@ -1,0 +1,328 @@
+{% extends 'mon_app/baseA.html' %} 
+{% load i18n %}
+{% load static %}
+
+{% block content %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<style>
+    /* --- STRUCTURATION DU CONTENEUR SPLIT --- */
+    .partenaire-container {
+        width: 100%;
+        max-width: 1100px;
+        background-color: #ffffff;
+        border-radius: 20px;
+        box-shadow: 0 20px 40px rgba(74, 124, 89, 0.06);
+        border: 1px solid #e2e8f0;
+        display: grid;
+        grid-template-columns: 0.9fr 1.1fr;
+        overflow: hidden;
+        min-height: 600px;
+        margin: 20px auto;
+    }
+
+    /* --- COLONNE GAUCHE : VISUEL (DÉGRADÉ VERT & HALO ROSE) --- */
+    .partenaire-sidebar {
+        background: linear-gradient(135deg, #4A7c59 0%, #2c4c35 100%);
+        padding: 3rem;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        position: relative;
+    }
+
+    .partenaire-sidebar::before {
+        content: '';
+        position: absolute;
+        width: 300px;
+        height: 300px;
+        background: rgba(209, 143, 178, 0.15);
+        border-radius: 50%;
+        filter: blur(40px);
+    }
+
+    .partenaire-hero-img {
+        width: 100%;
+        max-width: 320px;
+        height: auto;
+        display: block;
+        position: relative;
+        z-index: 1;
+    }
+
+    /* --- COLONNE DROITE : FORMULAIRE --- */
+    .partenaire-form-area {
+        padding: 3rem;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+    
+    .form-title { 
+        color: #4A7c59; 
+        margin-bottom: 12px; 
+        font-size: 26px; 
+        font-weight: 700; 
+        letter-spacing: -0.5px; 
+    }
+
+    /* --- STEPPER (INDICATEUR D'ÉTAPE) --- */
+    .stepper {
+        display: flex;
+        gap: 15px;
+        margin-bottom: 28px;
+    }
+
+    .step-indicator {
+        font-size: 13px;
+        font-weight: 700;
+        color: #94a3b8;
+        padding-bottom: 8px;
+        border-bottom: 2px solid #e2e8f0;
+        flex: 1;
+        transition: all 0.3s ease;
+    }
+
+    .step-indicator.active {
+        color: #4A7c59;
+        border-bottom-color: #4A7c59;
+    }
+
+    /* --- GESTION DES ÉTAPES --- */
+    .form-step {
+        display: none;
+    }
+
+    .form-step.active {
+        display: block;
+    }
+    
+    .form-field { 
+        margin-bottom: 24px; 
+    }
+    
+    .form-field label { 
+        display: block; 
+        font-weight: 600; 
+        margin-bottom: 8px; 
+        color: #4b5563; 
+        font-size: 14px; 
+    }
+    
+    /* Ciblage des inputs générés par Django et votre PartenaireForm */
+    .form-field input[type="text"], 
+    .form-field input[type="number"], 
+    .form-field input[type="url"],
+    .form-field input[type="file"] { 
+        width: 100%; 
+        padding: 12px; 
+        border: 1px solid #e2e8f0; 
+        border-radius: 10px; 
+        background-color: #f8fafc;
+        box-sizing: border-box; 
+        transition: all 0.2s ease;
+        font-family: inherit;
+        color: #1e293b;
+    }
+    
+    /* Effet focus rose */
+    .form-field input:focus { 
+        outline: none; 
+        border-color: #D18FB2; 
+        background-color: #fff;
+        box-shadow: 0 0 0 4px rgba(209, 143, 178, 0.15); 
+    }
+
+    .form-field input[type="file"] {
+        padding: 8px;
+        background-color: #f8fafc;
+        font-size: 14px;
+    }
+
+    /* Erreurs de champs */
+    .error-msg {
+        margin-top: 6px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        color: #dc2626;
+        font-size: 13px;
+        font-weight: 500;
+    }
+
+    /* --- BOUTONS / ACTIONS --- */
+    .form-actions { 
+        display: flex; 
+        justify-content: flex-end; 
+        gap: 12px;
+        padding-top: 16px; 
+        border-top: 1px solid #e2e8f0; 
+    }
+
+    .btn {
+        padding: 14px 28px; 
+        border-radius: 10px; 
+        font-weight: 600; 
+        cursor: pointer; 
+        transition: all 0.2s;
+        font-size: 14px;
+        font-family: inherit;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        text-decoration: none;
+    }
+
+    .btn-secondary {
+        background-color: #f1f5f9;
+        color: #475569;
+        border: 1px solid #e2e8f0;
+    }
+
+    .btn-secondary:hover {
+        background-color: #e2e8f0;
+    }
+
+    .btn-primary { 
+        background-color: #4A7c59; 
+        color: white; 
+        border: none;
+    }
+    
+    .btn-primary:hover { 
+        background-color: #3b6347; 
+        transform: translateY(-1px); 
+    }
+
+    @media (max-width: 960px) {
+        .partenaire-container {
+            grid-template-columns: 1fr;
+            max-width: 650px;
+        }
+        .partenaire-sidebar {
+            display: none;
+        }
+        .partenaire-form-area {
+            padding: 2.5rem 1.5rem;
+        }
+    }
+</style>
+
+<div class="partenaire-container">
+    
+    <div class="partenaire-sidebar" aria-hidden="true">
+        <img class="partenaire-hero-img" src="{% static 'images/Shared goals-cuate (1).svg' %}" alt="Illustration Partenaire" onerror="this.src='https://illustrations.popsy.co/white/cooperation.svg'"/>
+    </div>
+
+    <div class="partenaire-form-area">
+        <h2 class="form-title">{% firstof titre_page "Ajouter un nouveau partenaire" %}</h2>
+        
+        <div class="stepper">
+            <div class="step-indicator active" id="badgeStep1">1. {% trans "Informations générales" %}</div>
+            <div class="step-indicator" id="badgeStep2">2. {% trans "Lien & Affichage" %}</div>
+        </div>
+        
+        <form id="partenaireForm" method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            
+            <div class="form-step active" id="step1">
+                <div class="form-field">
+                    <label for="{{ form.nom.id_for_label }}">{{ form.nom.label }}</label>
+                    {{ form.nom }}
+                    {% if form.nom.errors %}
+                        <div class="error-msg">
+                            <i class="fas fa-exclamation-circle"></i>
+                            <span>{{ form.nom.errors|striptags }}</span>
+                        </div>
+                    {% endif %}
+                </div>
+
+                <div class="form-field">
+                    <label for="{{ form.logo.id_for_label }}">{{ form.logo.label }}</label>
+                    {{ form.logo }}
+                    {% if form.logo.errors %}
+                        <div class="error-msg">
+                            <i class="fas fa-exclamation-circle"></i>
+                            <span>{{ form.logo.errors|striptags }}</span>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <div class="form-step" id="step2">
+                <div class="form-field">
+                    <label for="{{ form.site_web.id_for_label }}">{{ form.site_web.label }}</label>
+                    {{ form.site_web }}
+                    {% if form.site_web.errors %}
+                        <div class="error-msg">
+                            <i class="fas fa-exclamation-circle"></i>
+                            <span>{{ form.site_web.errors|striptags }}</span>
+                        </div>
+                    {% endif %}
+                </div>
+
+                <div class="form-field">
+                    <label for="{{ form.ordre_affichage.id_for_label }}">{{ form.ordre_affichage.label }}</label>
+                    {{ form.ordre_affichage }}
+                    {% if form.ordre_affichage.errors %}
+                        <div class="error-msg">
+                            <i class="fas fa-exclamation-circle"></i>
+                            <span>{{ form.ordre_affichage.errors|striptags }}</span>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <div class="form-actions">
+                <button type="button" class="btn btn-secondary" id="btnBack" style="display: none;">
+                    <i class="fas fa-arrow-left"></i> {% trans "Retour" %}
+                </button>
+                <button type="button" class="btn btn-primary" id="btnNext">
+                    {% trans "Suivant" %} <i class="fas fa-arrow-right"></i>
+                </button>
+                <button type="submit" class="btn btn-primary" id="btnSubmit" style="display: none;">
+                    <i class="fas fa-save"></i> {% trans "Enregistrer le partenaire" %}
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const step1 = document.getElementById("step1");
+        const step2 = document.getElementById("step2");
+        const badgeStep1 = document.getElementById("badgeStep1");
+        const badgeStep2 = document.getElementById("badgeStep2");
+        
+        const btnBack = document.getElementById("btnBack");
+        const btnNext = document.getElementById("btnNext");
+        const btnSubmit = document.getElementById("btnSubmit");
+
+        // Bouton Suivant (Étape 1 -> Étape 2)
+        btnNext.addEventListener("click", function() {
+            step1.classList.remove("active");
+            step2.classList.add("active");
+            badgeStep1.classList.remove("active");
+            badgeStep2.classList.add("active");
+
+            btnNext.style.display = "none";
+            btnBack.style.display = "inline-flex";
+            btnSubmit.style.display = "inline-flex";
+        });
+
+        // Bouton Retour (Étape 2 -> Étape 1)
+        btnBack.addEventListener("click", function() {
+            step2.classList.remove("active");
+            step1.classList.add("active");
+            badgeStep2.classList.remove("active");
+            badgeStep1.classList.add("active");
+
+            btnNext.style.display = "inline-flex";
+            btnBack.style.display = "none";
+            btnSubmit.style.display = "none";
+        });
+    });
+</script>
+{% endblock %}

@@ -7,10 +7,13 @@ from django.db import connection
 from django.views.decorators.csrf import csrf_exempt 
 from django.contrib.auth.hashers import check_password
 from . import models
-from .forms import FormationForm,AlbumPhotoForm
-from .models import AlbumPhoto
+from .forms import FormationForm,AlbumPhotoForm, PartenaireForm
+from .models import AlbumPhoto, Partenaire
 from .models import Actualite
 from .forms import ActualiteForm
+from django.views.generic import ListView
+from .models import Actualite
+
 
 
 def index(request):
@@ -38,16 +41,27 @@ def detail_formation(request, slug):
         email = request.POST.get('email')
         telephone = request.POST.get('telephone')
         message = request.POST.get('message')
-        
-        # Enregistrement de la demande en base de données via le module models
-        models.DemandeContact.objects.create(
+
+        # Enregistrement en base
+        demande = models.DemandeContact.objects.create(
             nom_complet=nom,
             email=email,
             telephone=telephone,
             formation_interet=formation,
             message=message
         )
-        
+
+        # Copie en session pour alimenter la page admin notifications (si elle utilise seulement session)
+        notifications = request.session.get('liste_notifications', [])
+        notifications.append({
+            'formation_titre': formation.titre,
+            'nom': demande.nom_complet,
+            'email': demande.email,
+            'telephone': demande.telephone,
+            'message': demande.message,
+        })
+        request.session['liste_notifications'] = notifications
+
         messages.success(request, "Votre demande d'inscription a bien été envoyée !")
         return redirect('detail_formation', slug=slug)
 
@@ -71,6 +85,12 @@ def notre_album(request):
     # Ajout du préfixe models.
     albums = models.AlbumPhoto.objects.all().order_by('titre')
     return render(request, "mon_app/album.html", {'albums': albums})
+
+def ActualitePublicListView(request):
+    actualites = Actualite.objects.filter(statut='Publie')
+    
+    # On les passe au template via le dictionnaire de contexte
+    return render(request, 'mon_app/actualiter.html', {'actualites': actualites})
 
 
 
@@ -238,3 +258,37 @@ def notifications_page(request):
     notifications = request.session.get('liste_notifications', [])
     
     return render(request, 'mon_app/admin/notifications/list_notifications.html', {'notifications': notifications})
+
+
+
+def admin_list_partenaires(request):
+    partenaires = Partenaire.objects.all()
+    query = request.GET.get('search')
+    if query:
+        partenaires = partenaires.filter(nom__icontains=query)
+        
+    context = {
+        'partenaires': partenaires,
+        'search_query': query,
+    }
+    return render(request, 'mon_app/admin/partenaires/list_partenaire.html', context)
+
+
+
+def admin_creer_partenaire(request):
+    if request.method == 'POST':
+        form = PartenaireForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Le partenaire a été ajouté avec succès !")
+            return redirect('admin_list_partenaires')
+        else:
+            messages.error(request, "Une erreur est survenue lors de la validation du formulaire.")
+    else:
+        form = PartenaireForm()
+        
+    context = {
+        'form': form,
+        'titre_page': "Ajouter un nouveau partenaire",
+    }
+    return render(request, 'mon_app/admin/partenaires/Ajouter_partenaire.html', context)

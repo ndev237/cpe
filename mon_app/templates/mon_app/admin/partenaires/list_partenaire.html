@@ -1,0 +1,303 @@
+{% extends 'mon_app/baseA.html' %}
+{% load i18n %}
+{% load static %}
+
+{% block content %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<style>
+    /* Conteneur principal */
+    .liste-partenaires-container {
+        font-family: 'Poppins', sans-serif;
+        padding: 10px;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    /* Barre d'action supérieure (Titre + Recherche) */
+    .page-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 20px;
+        margin-bottom: 30px;
+    }
+
+    .page-header h1 {
+        font-size: 1.8rem;
+        color: #4A7c59; /* Vert Forêt */
+        margin: 0;
+        font-weight: 600;
+    }
+
+    /* Zone de recherche */
+    .search-box {
+        position: relative;
+        display: flex;
+        align-items: center;
+    }
+
+    .search-box input {
+        padding: 10px 15px;
+        padding-left: 40px;
+        width: 300px;
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+        font-size: 0.9rem;
+        outline: none;
+        transition: border-color 0.2s ease;
+        background-color: white;
+    }
+
+    [data-theme="dark"] .search-box input {
+        background-color: #1e293b;
+        border-color: #334155;
+        color: white;
+    }
+
+    .search-box input:focus {
+        border-color: #4A7c59; 
+        box-shadow: 0 0 0 4px rgba(74, 124, 89, 0.15);
+    }
+
+    .search-box i {
+        position: absolute;
+        left: 15px;
+        color: #94a3b8;
+    }
+
+    /* Conteneur de tableau responsive */
+    .table-responsive {
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 4px 166px rgba(74, 124, 89, 0.04);
+        border: 1px solid rgba(0,0,0,0.05);
+        overflow-x: auto;
+    }
+
+    [data-theme="dark"] .table-responsive {
+        background: #1e293b;
+        border-color: #334155;
+    }
+
+    /* Style du Tableau */
+    .partenaire-table {
+        width: 100%;
+        border-collapse: collapse;
+        text-align: left;
+        min-width: 700px;
+    }
+
+    .partenaire-table th, 
+    .partenaire-table td {
+        padding: 16px 20px;
+        border-bottom: 1px solid #f1f5f9;
+        font-size: 0.9rem;
+        vertical-align: middle;
+    }
+
+    [data-theme="dark"] .partenaire-table th,
+    [data-theme="dark"] .partenaire-table td {
+        border-bottom: 1px solid #334155;
+    }
+
+    .partenaire-table th {
+        background-color: #f8fafc;
+        color: #475569;
+        font-weight: 600;
+        text-transform: uppercase;
+        font-size: 0.75rem;
+        letter-spacing: 0.5px;
+    }
+
+    [data-theme="dark"] .partenaire-table th {
+        background-color: #151f32;
+        color: #94a3b8;
+    }
+
+    .partenaire-table tr:hover {
+        background-color: rgba(74, 124, 89, 0.02); /* Léger voile vert au survol */
+    }
+
+    [data-theme="dark"] .partenaire-table tr:hover {
+        background-color: #243249;
+    }
+
+    /* Miniatures des logos partenaires */
+    .partenaire-img {
+        width: 50px;
+        height: 50px;
+        border-radius: 8px;
+        object-fit: contain; /* Idéal pour les logos pour ne pas les déformer */
+        background-color: #f8fafc;
+        border: 1px solid #e2e8f0;
+        padding: 4px;
+    }
+
+    [data-theme="dark"] .partenaire-img {
+        background-color: #334155;
+        border-color: #475569;
+    }
+
+    /* Boutons d'action */
+    .action-btn-group {
+        display: flex;
+        gap: 8px;
+    }
+
+    .action-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 32px;
+        height: 32px;
+        border-radius: 6px;
+        text-decoration: none;
+        font-size: 0.85rem;
+        transition: all 0.2s ease;
+        border: none;
+        cursor: pointer;
+    }
+
+    .btn-edit {
+        background-color: rgba(74, 124, 89, 0.08); 
+        color: #4A7c59;
+    }
+    .btn-edit:hover {
+        background-color: #4A7c59; 
+        color: white;
+    }
+
+    .btn-link {
+        background-color: rgba(209, 143, 178, 0.15); /* Teinte rose issue de votre charte */
+        color: #D18FB2;
+    }
+    .btn-link:hover {
+        background-color: #D18FB2;
+        color: white;
+    }
+
+    /* Message si vide */
+    .empty-message {
+        padding: 40px;
+        text-align: center;
+        color: #64748b;
+        font-size: 0.95rem;
+    }
+
+    @media (max-width: 640px) {
+        .page-header {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+        .search-box {
+            width: 100%;
+        }
+        .search-box input {
+            width: 100%;
+        }
+    }
+</style>
+
+<div class="liste-partenaires-container">
+    
+    <div class="page-header">
+        <h1>{% trans "Liste des Partenaires" %} ({{ partenaires|length }})</h1>
+        
+        <div class="search-box">
+            <i class="fas fa-search"></i>
+            <input type="text" id="searchInput" placeholder="{% trans 'Rechercher un partenaire...' %}">
+        </div>
+    </div>
+
+    <div class="table-responsive">
+        <table class="partenaire-table" id="partenairesTable">
+            <thead>
+                <tr>
+                    <th style="width: 80px;">Logo</th>
+                    <th>{% trans "Nom du Partenaire" %}</th>
+                    <th>{% trans "Site Web" %}</th>
+                    <th style="width: 150px; text-align: center;">{% trans "Ordre d'affichage" %}</th>
+                    <th style="width: 120px;">{% trans "Actions" %}</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for partenaire in partenaires %}
+                <tr class="partenaire-row">
+                    <td>
+                        {% if partenaire.logo %}
+                            <img src="{{ partenaire.logo.url }}" alt="{{ partenaire.nom }}" class="partenaire-img">
+                        {% else %}
+                            <div class="partenaire-img" style="display: flex; align-items: center; justify-content: center; background: #e2e8f0; color: #94a3b8;">
+                                <i class="fas fa-handshake"></i>
+                            </div>
+                        {% endif %}
+                    </td>
+                    <td class="partenaire-name" style="font-weight: 500;">{{ partenaire.nom }}</td>
+                    
+                    <td>
+                        {% if partenaire.site_web %}
+                            <a href="{{ partenaire.site_web }}" target="_blank" style="color: #64748b; text-decoration: none; transition: color 0.2s;" onmouseover="this.style.color='#4A7c59'" onmouseout="this.style.color='#64748b'">
+                                {{ partenaire.site_web }} <i class="fas fa-external-link-alt" style="font-size: 0.75rem; margin-left: 4px;"></i>
+                            </a>
+                        {% else %}
+                            <span style="color: #94a3b8; font-style: italic;">{% trans "Non renseigné" %}</span>
+                        {% endif %}
+                    </td>
+
+                    <td style="text-align: center;">
+                        <span style="font-weight: 600; background-color: #f1f5f9; padding: 4px 10px; border-radius: 6px; color: #475569;">
+                            {{ partenaire.ordre_affichage }}
+                        </span>
+                    </td>
+                    
+                    <td>
+                        <div class="action-btn-group">
+                            {% if partenaire.site_web %}
+                            <a href="{{ partenaire.site_web }}" target="_blank" class="action-btn btn-link" title="{% trans 'Visiter le site' %}">
+                                <i class="fas fa-globe"></i>
+                            </a>
+                            {% endif %}
+                            <a href="#" class="action-btn btn-edit" title="{% trans 'Modifier' %}">
+                                <i class="fas fa-pen"></i>
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="5" class="empty-message">
+                        <i class="fas fa-handshake-slash" style="font-size: 2rem; margin-bottom: 10px; display: block; color: #cbd5e1;"></i>
+                        {% trans "Aucun partenaire n'a été trouvé dans la base de données." %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const searchInput = document.getElementById("searchInput");
+        
+        if (searchInput) {
+            searchInput.addEventListener("keyup", function() {
+                const filter = searchInput.value.toLowerCase();
+                const rows = document.querySelectorAll(".partenaire-row");
+                
+                rows.forEach(function(row) {
+                    const nameText = row.querySelector(".partenaire-name").textContent.toLowerCase();
+                    
+                    if (nameText.includes(filter)) {
+                        row.style.display = ""; 
+                    } else {
+                        row.style.display = "none"; 
+                    }
+                });
+            });
+        }
+    });
+</script>
+{% endblock %}

@@ -36,15 +36,16 @@
     }
 
     .notification-card:hover {
-        transform: translateX(4px);
+        transform: translateY(-2px);
+        box-shadow: 0 12px 28px rgba(0,0,0,0.12);
     }
 
     .notification-card::before {
         content: '';
         position: absolute;
         left: 0; top: 0; bottom: 0;
-        width: 4px;
-        background-color: #392d68; /* Couleur de ta charte */
+        width: 5px;
+        background: linear-gradient(180deg, #392d68 0%, var(--primary-rose) 100%);
         border-top-left-radius: 14px;
         border-bottom-left-radius: 14px;
     }
@@ -52,40 +53,66 @@
     .notification-header {
         display: flex;
         justify-content: space-between;
-        font-size: 0.85rem;
+        align-items: center;
+        gap: 12px;
+        font-size: 0.9rem;
         color: var(--text-muted);
         border-bottom: 1px solid var(--border-color);
-        padding-bottom: 0.5rem;
+        padding-bottom: 0.75rem;
+        margin-bottom: 0.75rem;
     }
 
     .notif-title {
-        font-weight: 700;
+        font-weight: 800;
         color: var(--text-main);
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .notif-badge {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0.35rem 0.65rem;
+        border-radius: 999px;
+        background: rgba(255,255,255,0.06);
+        border: 1px solid rgba(255,255,255,0.12);
+        color: var(--text-main);
+        font-weight: 700;
+        white-space: nowrap;
     }
 
     .notif-details {
-        font-size: 0.9rem;
+        font-size: 0.95rem;
         color: var(--text-main);
-        line-height: 1.5;
+        line-height: 1.6;
     }
 
     .notif-details ul {
         list-style: none;
         padding: 0;
-        margin: 0.5rem 0;
+        margin: 0.25rem 0 0;
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 8px;
     }
 
     .notif-details li {
-        margin-bottom: 0.25rem;
+        display: flex;
+        gap: 8px;
+        align-items: baseline;
     }
 
     .student-msg {
-        background: var(--bg-main);
-        padding: 0.5rem 0.75rem;
-        border-radius: 6px;
-        margin-top: 0.5rem;
+        background: rgba(255,255,255,0.06);
+        padding: 0.7rem 0.85rem;
+        border-radius: 12px;
+        margin-top: 0.75rem;
+        border: 1px solid rgba(255,255,255,0.12);
         font-style: italic;
     }
+
 
     /* --- ÉTAT VIDE --- */
     .empty-notifications {

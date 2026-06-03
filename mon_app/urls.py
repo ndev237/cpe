@@ -1,7 +1,7 @@
 from django.urls import path
 from . import views
 from django.contrib.auth import views as auth_views
-from .views import admin_publie_photo
+from .views import ActualitePublicListView, admin_publie_photo
 
 urlpatterns = [
     # Page d'accueil : [http://127.0.0.1:8000/](http://127.0.0.1:8000/)
@@ -10,6 +10,7 @@ urlpatterns = [
     path('a-propos/', views.a_propos, name='a_propos'),
     path('nos-formations/', views.nos_formations_liste, name='nos_formation'),
     path('notre_album/', views.notre_album, name='notre_album'),
+    path('actualites/simple/', views.ActualitePublicListView, name='actualites_site'),
    
 
     
@@ -29,5 +30,7 @@ urlpatterns = [
    path('actualites/', views.actualite_liste, name='actualite_liste'),
    path('actualites/creer/', views.admin_actualite_creer, name='actualite_creer'),
    path('notifications/admin/', views.notifications_page, name='notifications_page'),
+   path('dashboard/partenaires/', views.admin_list_partenaires, name='admin_list_partenaires'),
+   path('dashboard/partenaires/ajouter/', views.admin_creer_partenaire, name='admin_creer_partenaire'), # <--- Ajout de /ajouter/
 
 ]

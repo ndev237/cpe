@@ -317,7 +317,7 @@
 
     <nav class="navbar">
         <a href="/" class="navbar-brand">
-            <img src="{% static 'images/LOGO CPE.png' %}" alt="{% trans 'Logo CPE' %}" class="navbar-logo">
+            <img src="{% static 'images/LOGO_CPE-removebg-preview.jpeg' %}" alt="{% trans 'Logo CPE' %}" class="navbar-logo">
             <span class="logo-text">{% trans "Club-Prepa-Emploi" %}</span>
         </a>
         
@@ -332,7 +332,7 @@
             <a href="{% url 'a_propos' %}" class="nav-link">{% trans "A propos" %}</a>
             <a href="{% url 'nos_formation' %}" class="nav-link">{% trans "Nos formations" %}</a>
             <a href="{% url 'notre_album' %}" class="nav-link">{% trans "Album" %}</a>
-            <a href="#annonces" class="nav-link">{% trans "Actualités" %}</a>
+            <a href="{% url 'actualites_site' %}" class="nav-link">{% trans "Actualités" %}</a>
         </div>
     </nav>
 
@@ -344,7 +344,7 @@
     <footer class="footer">
         <div class="footer-inner">
             <div class="footer-brand">
-                <img class="footer-logo" src="{% static 'images/LOGO CPE.png' %}" alt="{% trans 'Logo CPE' %}">
+                <img class="footer-logo" src="{% static 'images/LOGO_CPE-removebg-preview.jpeg' %}" alt="{% trans 'Logo CPE' %}">
                 <div>
                     <div class="footer-title" style="font-weight: bold; font-size: 1.2rem;">{% trans "Club-Prepa-Emploi" %}</div>
                     <div class="footer-subtitle">{% trans "École de Formation Professionnelle" %}</div>

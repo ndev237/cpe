@@ -1,41 +1,65 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="fr" data-theme="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
         /* --- VARIABLES GLOBALES ET THÈMES --- */
         :root {
-            --primary-rose: #D18FB2;
-            --primary-dark-blue: #003366;
-            --bg-gradient: linear-gradient(135deg, #D18FB2 0%, #b87599 100%);
+            /* Identité de marque (Vos couleurs de référence) */
+            --brand-green: #11321A;       /* Vert Forêt */
+            --brand-rose: #D18FB2;        /* Rose CPE */
+            --brand-rose-hover: #b87599;
+            
             --top-navbar-height: 70px;
             --sidebar-width: 280px;
-            --transition-speed: 0.25s;
+            --transition-speed: 0.3s;
 
-            /* Mode Clair par défaut */
+            /* --- MODE CLAIR GLOBAL --- */
             --bg-main: #f8fafc;
+            --bg-navbar: rgba(255, 255, 255, 0.85);
             --bg-card: #ffffff;
-            --text-main: #1e293b;
+            --text-main: #0f172a;
             --text-muted: #64748b;
-            --sidebar-bg: #1e3f20; /* Vert forêt profond haut de gamme */
-            --sidebar-text: rgba(255, 255, 255, 0.8);
-            --sidebar-hover: rgba(255, 255, 255, 0.12);
             --border-color: #e2e8f0;
+
+            /* La sidebar épouse le mode clair */
+            --sidebar-bg: #ffffff;
+            --sidebar-text: #475569;
+            --sidebar-hover: #f1f5f9;
+            --sidebar-border: #e2e8f0;
+            --sidebar-title: var(--brand-green); /* Le vert forêt signe les sections */
+            
+            /* Bouton actif en mode clair : Vert forêt avec texte blanc pour impacter */
+            --nav-active-bg: var(--brand-green);
+            --nav-active-text: #ffffff;
+            --nav-active-shadow: rgba(17, 50, 26, 0.2);
         }
 
         [data-theme="dark"] {
+            /* --- MODE SOMBRE GLOBAL --- */
             --bg-main: #0f172a;
+            --bg-navbar: rgba(15, 23, 42, 0.85);
             --bg-card: #1e293b;
-            --text-main: #f1f5f9;
+            --text-main: #f8fafc;
             --text-muted: #94a3b8;
-            --sidebar-bg: #090d16; /* Sidebar ultra sombre en mode dark */
-            --sidebar-text: rgba(241, 245, 249, 0.8);
-            --sidebar-hover: rgba(241, 245, 249, 0.08);
             --border-color: #334155;
+
+            /* La sidebar épouse le mode sombre */
+            --sidebar-bg: #1e293b;
+            --sidebar-text: #94a3b8;
+            --sidebar-hover: #293548;
+            --sidebar-border: #334155;
+            --sidebar-title: var(--brand-rose); /* Le rose ressort mieux sur le sombre */
+            
+            /* Bouton actif en mode sombre : Rose ou dégradé lumineux */
+            --nav-active-bg: linear-gradient(135deg, var(--brand-rose) 0%, var(--brand-rose-hover) 100%);
+            --nav-active-text: #ffffff;
+            --nav-active-shadow: rgba(209, 143, 178, 0.25);
         }
 
         /* --- STYLES DE BASE --- */
@@ -59,91 +83,98 @@
         #sidebar {
             width: var(--sidebar-width);
             background: var(--sidebar-bg);
-            color: #ffffff;
             display: flex;
             flex-direction: column;
             position: sticky;
             top: 0;
             height: 100vh;
             z-index: 50;
-            box-shadow: 4px 0 24px rgba(0, 0, 0, 0.15);
-            transition: transform var(--transition-speed) cubic-bezier(0.4, 0, 0.2, 1), background var(--transition-speed);
+            border-right: 1px solid var(--sidebar-border);
+            transition: all var(--transition-speed) cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .sidebar-header {
             padding: 1.5rem;
-            text-align: center;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            border-bottom: 1px solid var(--sidebar-border);
+            height: var(--top-navbar-height);
+            display: flex;
+            align-items: center;
+            gap: 12px;
         }
 
-        .logo-text {
-            font-weight: 800;
-            font-size: 1.6rem;
-            letter-spacing: -0.5px;
-            color: #ffffff;
+        .logo-container img {
+            height: 35px;
+            width: auto;
+            object-fit: contain;
         }
-        
-        .logo-text span {
-            color: var(--primary-rose);
+
+        /* Inversion subtile du logo si nécessaire sur fond sombre */
+        [data-theme="dark"] .logo-container img {
+            filter: drop-shadow(0px 2px 8px rgba(255,255,255,0.05));
         }
 
         .sidebar-subtitle {
             font-size: 11px;
-            font-weight: 600;
-            letter-spacing: 0.15em;
-            margin-top: 0.25rem;
+            font-weight: 700;
+            letter-spacing: 0.1em;
             text-transform: uppercase;
-            color: var(--primary-rose);
-            opacity: 0.9;
+            color: var(--brand-rose);
         }
 
         .sidebar-content {
             flex: 1;
-            padding: 1rem 0;
+            padding: 1.25rem 0;
             overflow-y: auto;
         }
 
-        /* Liens de navigation */
+        .sidebar-content::-webkit-scrollbar {
+            width: 5px;
+        }
+        .sidebar-content::-webkit-scrollbar-thumb {
+            background: var(--border-color);
+            border-radius: 10px;
+        }
+
         .nav-link {
             display: flex;
             align-items: center;
-            padding: 0.75rem 1.2rem;
-            margin: 0.2rem 1rem;
+            padding: 0.75rem 1.25rem;
+            margin: 0.25rem 1rem;
             border-radius: 8px;
             color: var(--sidebar-text);
             font-weight: 500;
-            font-size: 0.9rem;
+            font-size: 0.875rem;
             text-decoration: none;
             transition: all 0.2s ease;
             cursor: pointer;
         }
 
         .nav-link i:first-child {
-            width: 28px;
+            width: 24px;
             font-size: 1.1rem;
-            opacity: 0.9;
+            opacity: 0.8;
         }
 
         .nav-link:hover {
             background: var(--sidebar-hover);
-            color: #ffffff;
-            transform: translateX(4px);
+            color: var(--text-main);
         }
 
         .nav-link.active {
-            background: var(--bg-gradient);
-            color: white;
-            box-shadow: 0 4px 14px rgba(209, 143, 178, 0.35);
+            background: var(--nav-active-bg);
+            color: var(--nav-active-text) !important;
+            box-shadow: 0 4px 12px var(--nav-active-shadow);
         }
 
         .sidebar-section-title {
-            color: #ffffff;
-            font-size: 0.75rem;
+            color: var(--sidebar-title);
+            font-size: 0.725rem;
             font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 1.5px;
-            padding: 1.5rem 1.5rem 0.5rem;
-            opacity: 0.5;
+            padding: 1.5rem 1.75rem 0.5rem;
+            opacity: 0.8;
+            transition: color var(--transition-speed);
         }
 
         /* --- ACCORDÉONS DÉROULANTS --- */
@@ -163,85 +194,100 @@
         .nav-link.has-dropdown .arrow {
             font-size: 0.75rem;
             transition: transform var(--transition-speed) ease;
-            opacity: 0.7;
         }
 
         .dropdown-menu {
             max-height: 0;
             overflow: hidden;
-            transition: max-height var(--transition-speed) cubic-bezier(0, 1, 0, 1), opacity var(--transition-speed);
+            transition: max-height var(--transition-speed) ease-in-out, opacity var(--transition-speed);
             opacity: 0;
             display: flex;
             flex-direction: column;
-            background: rgba(0, 0, 0, 0.15);
+            background: var(--sidebar-hover);
             margin: 0 1rem;
-            border-radius: 6px;
+            border-radius: 8px;
         }
 
         .dropdown-container.open .dropdown-menu {
-            max-height: 500px; /* Valeur haute sécure pour contenir tous les éléments */
-            transition: max-height var(--transition-speed) cubic-bezier(1, 0, 1, 0);
+            max-height: 300px;
             opacity: 1;
             padding: 0.25rem 0;
+            margin-top: 0.25rem;
+            margin-bottom: 0.25rem;
         }
 
         .dropdown-container.open .nav-link.has-dropdown .arrow {
             transform: rotate(180deg);
         }
 
+        .dropdown-container.open .nav-link.has-dropdown {
+            color: var(--text-main);
+            background: var(--sidebar-hover);
+        }
+
         .dropdown-item {
             display: flex;
             align-items: center;
-            padding: 0.6rem 1.2rem;
-            margin: 0.1rem 0.5rem 0.1rem 1.2rem;
+            padding: 0.65rem 1.25rem;
+            margin: 0.1rem 0.5rem 0.1rem 1.5rem;
             border-radius: 6px;
             color: var(--sidebar-text);
-            font-size: 0.85rem;
+            font-size: 0.825rem;
             font-weight: 400;
             text-decoration: none;
             transition: all 0.2s ease;
         }
         
         .dropdown-item i {
-            font-size: 11px;
+            font-size: 10px;
             margin-right: 10px;
-            opacity: 0.7;
+            opacity: 0.5;
         }
 
         .dropdown-item:hover {
-            background: var(--sidebar-hover);
-            color: white;
-            transform: translateX(4px);
+            color: var(--text-main);
+            background: rgba(0,0,0,0.03);
+        }
+        [data-theme="dark"] .dropdown-item:hover {
+            background: rgba(255,255,255,0.03);
         }
 
-        /* --- PIED DE SIDEBAR (PROFIL & LOGOUT) --- */
+        .dropdown-item.active {
+            color: var(--brand-rose) !important;
+            font-weight: 600;
+        }
+        html[data-theme="light"] .dropdown-item.active {
+            color: var(--brand-green) !important;
+        }
+
+        /* --- PIED DE SIDEBAR --- */
         .sidebar-footer {
             padding: 1rem;
-            border-top: 1px solid rgba(255, 255, 255, 0.08);
-            background: rgba(0, 0, 0, 0.1);
+            border-top: 1px solid var(--sidebar-border);
+            background: var(--sidebar-hover);
         }
 
         .user-profile-card {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 12px;
+            background: var(--sidebar-bg);
+            border: 1px solid var(--sidebar-border);
+            border-radius: 10px;
             padding: 0.75rem;
             display: flex;
             align-items: center;
         }
 
         .user-avatar {
-            width: 2.4rem;
-            height: 2.4rem;
+            width: 2.25rem;
+            height: 2.25rem;
             border-radius: 8px;
             display: flex;
             align-items: center;
             justify-content: center;
             font-weight: 700;
-            background: var(--bg-gradient);
+            background: linear-gradient(135deg, var(--brand-green) 0%, var(--brand-rose) 100%);
             color: white;
             flex-shrink: 0;
-            font-size: 1rem;
+            font-size: 0.9rem;
         }
 
         .user-info {
@@ -252,7 +298,7 @@
         .user-name {
             font-size: 0.85rem;
             font-weight: 600;
-            color: white;
+            color: var(--text-main);
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
@@ -263,7 +309,10 @@
             font-weight: 600;
             text-transform: uppercase;
             letter-spacing: 0.5px;
-            color: var(--primary-rose);
+            color: var(--brand-rose);
+        }
+        html[data-theme="light"] .user-role {
+            color: var(--brand-green);
         }
 
         .btn-logout {
@@ -273,10 +322,10 @@
             justify-content: center;
             gap: 0.5rem;
             width: 100%;
-            padding: 0.65rem;
+            padding: 0.6rem;
             color: #ef4444;
-            background: rgba(239, 68, 68, 0.1);
-            border: 1px solid rgba(239, 68, 68, 0.2);
+            background: rgba(239, 68, 68, 0.05);
+            border: 1px solid rgba(239, 68, 68, 0.15);
             border-radius: 8px;
             font-size: 0.8rem;
             font-weight: 600;
@@ -287,6 +336,7 @@
         .btn-logout:hover {
             background: #ef4444;
             color: white;
+            border-color: #ef4444;
         }
 
         /* --- MAIN WRAPPER & TOP NAVBAR --- */
@@ -298,7 +348,9 @@
         }
 
         .top-navbar {
-            background: var(--bg-card);
+            background: var(--bg-navbar);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
             border-bottom: 1px solid var(--border-color);
             padding: 0 2rem;
             display: flex;
@@ -317,7 +369,7 @@
         }
 
         .top-navbar h2 {
-            font-size: 1.2rem;
+            font-size: 1.15rem;
             font-weight: 700;
             color: var(--text-main);
         }
@@ -343,7 +395,7 @@
         }
 
         .navbar-btn:hover {
-            background: var(--border-color);
+            background: var(--sidebar-hover);
         }
 
         #menuBtn {
@@ -355,27 +407,43 @@
             width: 1px;
             height: 1.5rem;
             background-color: var(--border-color);
-            margin: 0 1.2rem;
+            margin: 0 1rem;
         }
 
-        /* Solution pour cacher/montrer les icônes de thème */
+        .notif-wrapper {
+            position: relative;
+            display: inline-block;
+        }
+
+        .notif-dot {
+            position: absolute;
+            top: -2px;
+            right: -2px;
+            padding: 2px 6px;
+            border-radius: 50px;
+            background: #ef4444;
+            color: white;
+            font-size: 9px;
+            font-weight: 700;
+            border: 2px solid var(--sidebar-bg);
+        }
+
         html[data-theme="light"] .sun-icon,
         html[data-theme="dark"] .moon-icon {
             display: none;
         }
 
-        /* --- FLASH MESSAGES / SYSTEM --- */
+        /* --- FLASH MESSAGES --- */
         .messages-container {
             padding: 1.5rem 2rem 0;
         }
 
         .alert-message {
-            padding: 1rem 1.25rem;
+            padding: 0.85rem 1.25rem;
             border-radius: 8px;
-            font-size: 0.9rem;
+            font-size: 0.875rem;
             font-weight: 500;
             margin-bottom: 0.75rem;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
         }
 
         .alert-success {
@@ -384,9 +452,9 @@
             border: 1px solid #bbf7d0;
         }
         [data-theme="dark"] .alert-success {
-            background-color: rgba(22, 101, 52, 0.2);
+            background-color: rgba(22, 101, 52, 0.15);
             color: #4ade80;
-            border-color: rgba(34, 197, 94, 0.3);
+            border-color: rgba(34, 197, 94, 0.2);
         }
 
         .alert-error {
@@ -395,9 +463,9 @@
             border: 1px solid #fecaca;
         }
         [data-theme="dark"] .alert-error {
-            background-color: rgba(153, 27, 27, 0.2);
+            background-color: rgba(153, 27, 27, 0.15);
             color: #f87171;
-            border-color: rgba(239, 68, 68, 0.3);
+            border-color: rgba(239, 68, 68, 0.2);
         }
 
         /* --- CONTENU --- */
@@ -406,7 +474,7 @@
             flex: 1;
         }
 
-        /* --- RESPONSIVE ADAPTATIF --- */
+        /* --- RESPONSIVE --- */
         @media (max-width: 1024px) {
             #sidebar {
                 transform: translateX(-100%);
@@ -417,131 +485,132 @@
             }
             #sidebar.open {
                 transform: translateX(0);
+                box-shadow: 4px 0 24px rgba(0, 0, 0, 0.15);
+            }
+            [data-theme="dark"] #sidebar.open {
+                box-shadow: 4px 0 24px rgba(0, 0, 0, 0.4);
             }
             #menuBtn {
                 display: flex;
             }
         }
-        @media (max-width: 576px) {
-            .top-navbar h2 {
-                font-size: 1rem;
-            }
-            .top-navbar p {
-                display: none;
-            }
-            .separator-line {
-                display: none;
-            }
-            .content-body {
-                padding: 1.25rem;
-            }
-        }
     </style>
-    <title>{% block titre %}Admin - Club-Prepa-Emploi{% endblock %}</title>
+    <title>{% block titre %}Admin - CPE{% endblock %}</title>
 </head>
 <body>
 
-    <!-- SIDEBAR REORGANISÉE PAR ORDRE DE PRIORITÉ PROFESSIONNELLE -->
     <aside id="sidebar">
         <div class="sidebar-header">
-            <h2 class="logo-text">CPE<span>+</span></h2> 
-            <p class="sidebar-subtitle">Administration</p>
+            <div class="logo-container">
+                <img src="{% static 'images/LOGO_CPE-removebg-preview.jpeg' %}" alt="Logo CPE" />
+            </div>
+            <p class="sidebar-subtitle">Admin</p>
         </div>
 
         <div class="sidebar-content">
-            
-            <!-- PRIORITÉ 1 : ANALYSE & APERÇU GLOBAL -->
-            <a href="{% url 'dashboard_admin' %}" class="nav-link {% if request.resolver_match.url_name == 'dashboard_admin' %}active{% endif %}" style="margin-bottom: 0.5rem;">
+            <a href="{% url 'dashboard_admin' %}" class="nav-link {% if request.resolver_match.url_name == 'dashboard_admin' %}active{% endif %}">
                 <i class="fas fa-chart-pie"></i> <span>Dashboard</span>
             </a>
 
-            <!-- PRIORITÉ 2 : CRITIQUE / TRAITEMENT DES PROSPECTS -->
-            <a href="{% url 'notifications_page' %}" class="nav-link {% if request.resolver_match.url_name == 'notifications_page' %}active{% endif %}" style="margin-bottom: 1rem;">
+            <a href="{% url 'notifications_page' %}" class="nav-link notif-wrapper {% if request.resolver_match.url_name == 'notifications_page' %}active{% endif %}">
                 <i class="fas fa-bell"></i> <span>Notifications</span>
+                {% with notif_count=request.session.liste_notifications|length %}
+                    {% if notif_count > 0 %}
+                        <span class="notif-dot">{{ notif_count }}</span>
+                    {% endif %}
+                {% endwith %}
             </a>
 
             <div class="sidebar-section-title">Menu Principal</div>
 
-            <!-- PRIORITÉ 3 : CŒUR DE MÉTIER (L'OFFRE DE FORMATION) -->
             <div class="dropdown-container">
                 <a class="nav-link has-dropdown">
                     <div class="nav-title-block">
-                        <i class="fas fa-graduation-cap"></i> <span>Gérer les Formations</span>
+                        <i class="fas fa-graduation-cap"></i> <span>Formations</span>
                     </div>
                     <i class="fas fa-chevron-down arrow"></i>
                 </a>
                 <div class="dropdown-menu">
-                    <a href="{% url 'admin_creer_formation' %}" class="dropdown-item">
-                        <i class="fas fa-plus"></i> Créer une formation
+                    <a href="{% url 'admin_creer_formation' %}" class="dropdown-item {% if request.resolver_match.url_name == 'admin_creer_formation' %}active{% endif %}">
+                        <i class="fas fa-plus"></i> Créer
                     </a>
-                    <a href="{% url 'admin_liste_formations' %}" class="dropdown-item">
-                         <i class="fas fa-list"></i> Liste des formations
+                    <a href="{% url 'admin_liste_formations' %}" class="dropdown-item {% if request.resolver_match.url_name == 'admin_liste_formations' %}active{% endif %}">
+                         <i class="fas fa-list"></i> Liste complète
                     </a>
                 </div>
             </div>
 
-            <!-- PRIORITÉ 4 : COMMUNICATON INTERNE / ANNONCES -->
             <div class="dropdown-container">
                 <a class="nav-link has-dropdown">
                     <div class="nav-title-block">
-                        <i class="fas fa-bullhorn"></i> <span>Gérer les Annonces</span>
+                        <i class="fas fa-bullhorn"></i> <span>Annonces</span>
                     </div>
                     <i class="fas fa-chevron-down arrow"></i>
                 </a>
                 <div class="dropdown-menu">
-                    <a href="{% url 'admin_creer_annonce' %}" class="dropdown-item">
-                        <i class="fas fa-plus"></i> Créer une annonce
+                    <a href="{% url 'admin_creer_annonce' %}" class="dropdown-item {% if request.resolver_match.url_name == 'admin_creer_annonce' %}active{% endif %}">
+                        <i class="fas fa-plus"></i> Créer
                     </a>
-                    <a href="{% url 'admin_list_anonces' %}" class="dropdown-item">
-                         <i class="fas fa-list"></i> Liste des annonces
+                    <a href="{% url 'admin_list_anonces' %}" class="dropdown-item {% if request.resolver_match.url_name == 'admin_list_anonces' %}active{% endif %}">
+                         <i class="fas fa-list"></i> Liste complète
                     </a>
                 </div>
             </div>
 
-            <!-- PRIORITÉ 5 : ANIMATION / FIL D'ACTUALITÉS -->
             <div class="dropdown-container">
                 <a class="nav-link has-dropdown">
                     <div class="nav-title-block">
-                        <i class="fas fa-newspaper"></i> <span>Gérer les Actualités</span>
+                        <i class="fas fa-newspaper"></i> <span>Actualités</span>
                     </div>
                     <i class="fas fa-chevron-down arrow"></i>
                 </a>
                 <div class="dropdown-menu">
-                   <a href="{% url 'actualite_creer' %}" class="dropdown-item">
-                        <i class="fas fa-plus"></i> Publier une Actualité
+                    <a href="{% url 'actualite_creer' %}" class="dropdown-item {% if request.resolver_match.url_name == 'actualite_creer' %}active{% endif %}">
+                        <i class="fas fa-plus"></i> Publier
                     </a>
-                   <a href="{% url 'actualite_liste' %}" class="dropdown-item">
-                         <i class="fas fa-list"></i> Liste des Actualités
+                    <a href="{% url 'actualite_liste' %}" class="dropdown-item {% if request.resolver_match.url_name == 'actualite_liste' %}active{% endif %}">
+                        <i class="fas fa-list"></i> Liste complète
                     </a>
                 </div>
             </div>
 
-            <!-- PRIORITÉ 6 : MÉDIAS, VITRINE & PREUVE SOCIALE -->
             <div class="dropdown-container">
                 <a class="nav-link has-dropdown">
                     <div class="nav-title-block">
-                        <i class="fas fa-images"></i> <span>Gérer l'Album</span>
+                        <i class="fas fa-images"></i> <span>Album</span>
                     </div>
                     <i class="fas fa-chevron-down arrow"></i>
                 </a>
                 <div class="dropdown-menu">
-                   <a href="{% url 'admin_publier_photo' %}" class="dropdown-item">
-                        <i class="fas fa-plus"></i> Publier une photo
+                    <a href="{% url 'admin_publier_photo' %}" class="dropdown-item {% if request.resolver_match.url_name == 'admin_publier_photo' %}active{% endif %}">
+                        <i class="fas fa-plus"></i> Ajouter une photo
                     </a>
-                    <a href="{% url 'admin_liste_photos' %}" class="dropdown-item">
+                    <a href="{% url 'admin_liste_photos' %}" class="dropdown-item {% if request.resolver_match.url_name == 'admin_liste_photos' %}active{% endif %}">
                          <i class="fas fa-list"></i> Liste des photos
                     </a>
                 </div>
             </div>
 
-            <a href="#" class="nav-link" style="margin-bottom: 1rem;">
-                <i class="fas fa-handshake"></i> <span>Gérer les Partenaires</span>
-            </a>
+            <div class="dropdown-container">
+                <a class="nav-link has-dropdown">
+                    <div class="nav-title-block">
+                        <i class="fas fa-handshake"></i> <span>Partenaires</span>
+                    </div>
+                    <i class="fas fa-chevron-down arrow"></i>
+                </a>
+                <div class="dropdown-menu">
+                    <a href="{% url 'admin_creer_partenaire' %}" class="dropdown-item {% if request.resolver_match.url_name == 'admin_creer_partenaire' %}active{% endif %}">
+                        <i class="fas fa-plus"></i> Ajouter
+                    </a>
+                    <a href="{% url 'admin_list_partenaires' %}" class="dropdown-item {% if request.resolver_match.url_name == 'admin_list_partenaires' %}active{% endif %}">
+                         <i class="fas fa-list"></i> Liste complète
+                    </a>
+                </div>
+            </div>
 
-            <!-- PRIORITÉ 7 : SÉCURITÉ, ACCÈS SYSTEME & CONTRÔLE EXTERNE -->
             <div class="sidebar-section-title">Sécurité & Liens</div>
 
-            <a href="#" class="nav-link" style="margin-bottom: 0.5rem;">
+            <a href="#" class="nav-link">
                 <i class="fas fa-users"></i> <span>Utilisateurs</span>
             </a>
 
@@ -553,10 +622,14 @@
         <div class="sidebar-footer">
             <div class="user-profile-card">
                 <div class="user-avatar">
-                    {% if user.is_authenticated %}{{ user.nom|slice:":1"|upper }}{% else %}A{% endif %}
+                    {% if user.is_authenticated and user.nom %}
+                        {{ user.nom|slice:":1"|upper }}
+                    {% else %}
+                        A
+                    {% endif %}
                 </div>
                 <div class="user-info">
-                    <p class="user-name">{% if user.is_authenticated %}{{ user.nom }}{% else %}Anonyme{% endif %}</p>
+                    <p class="user-name">{% if user.is_authenticated and user.nom %}{{ user.nom }}{% else %}Anonyme{% endif %}</p>
                     <p class="user-role">{% if user.is_admin %}Superviseur{% else %}Staff{% endif %}</p>
                 </div>
             </div>
@@ -573,20 +646,18 @@
     </aside>
 
     <div class="main-wrapper">
-
-        <!-- TOP NAVBAR -->
         <nav class="top-navbar">
             <div class="navbar-left">
-                <button id="menuBtn" class="navbar-btn">
-                    <i class="fas fa-bars" style="font-size: 1.2rem;"></i>
+                <button id="menuBtn" class="navbar-btn" aria-label="Menu">
+                    <i class="fas fa-bars" style="font-size: 1.1rem;"></i>
                 </button>
                 <h2>Espace Administration</h2>
             </div>
 
             <div class="navbar-right">
                 <button id="themeToggle" class="navbar-btn" aria-label="Changer le thème">
-                    <i class="fas fa-moon moon-icon" style="font-size: 1.15rem;"></i>
-                    <i class="fas fa-sun sun-icon" style="font-size: 1.15rem;"></i>
+                    <i class="fas fa-moon moon-icon"></i>
+                    <i class="fas fa-sun sun-icon"></i>
                 </button>
                 
                 <div class="separator-line"></div>
@@ -594,7 +665,6 @@
             </div>
         </nav>
 
-        <!-- ZONE DE NOTIFICATION FLASH SYSTEME -->
         {% if messages %}
         <div class="messages-container">
             {% for message in messages %}
@@ -605,40 +675,36 @@
         </div>
         {% endif %}
 
-        <!-- BLOC DE CONTENU ENFANT DYNAMIQUE -->
         <main class="content-body">
             {% block content %}
             {% endblock %}
         </main>
-
     </div>
 
-    <!-- SCRIPTS ENGINES -->
     <script>
         const menuBtn = document.getElementById("menuBtn");
         const sidebar = document.getElementById("sidebar");
         const themeToggle = document.getElementById("themeToggle");
-
-        // 1. ACCORDÉONS NAVIGATION SÉCURISÉS (Gestion exclusive d'ouverture d'un menu à la fois)
         const dropdowns = document.querySelectorAll(".dropdown-container");
         
         dropdowns.forEach(dropdown => {
             const trigger = dropdown.querySelector(".has-dropdown");
             
+            if (dropdown.querySelector('.dropdown-item.active')) {
+                dropdown.classList.add('open');
+            }
+            
             trigger.addEventListener("click", (e) => {
                 e.preventDefault();
-                
                 dropdowns.forEach(other => {
                     if (other !== dropdown) {
                         other.classList.remove("open");
                     }
                 });
-                
                 dropdown.classList.toggle("open");
             });
         });
 
-        // 2. RESPONSIVE MOBILE SIDEBAR TOGGLE
         menuBtn.addEventListener("click", (e) => {
             e.stopPropagation();
             sidebar.classList.toggle("open");
@@ -650,7 +716,6 @@
             }
         });
 
-        // 3. DARK MODE ENGINE VIA LOCALSTORAGE
         const savedTheme = localStorage.getItem('adminTheme') || 'light';
         document.documentElement.setAttribute('data-theme', savedTheme);
         
