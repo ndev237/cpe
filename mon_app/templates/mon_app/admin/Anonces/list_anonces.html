@@ -22,12 +22,12 @@
 
     .page-header h1 {
         font-size: 1.8rem;
-        color: #398e4a; /* Bleu Nuit */
+        color: #398e4a;
         margin: 0;
         font-weight: 600;
     }
 
-    /* Barre de recherche */
+    /* Barre de recherche Glassmorphism */
     .search-box {
         position: relative;
         display: flex;
@@ -38,42 +38,58 @@
         padding: 10px 15px;
         padding-left: 40px;
         width: 300px;
-        border: 1px solid #e2e8f0;
+        border: 1px solid rgba(255, 255, 255, 0.45);
         border-radius: 8px;
         font-size: 0.9rem;
         outline: none;
-        transition: border-color 0.2s ease;
-        background-color: white;
+        transition: all 0.2s ease;
+        background-color: rgba(255, 255, 255, 0.3);
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+        color: #1e293b;
     }
 
     [data-theme="dark"] .search-box input {
-        background-color: #1e293b;
-        border-color: #334155;
+        background-color: rgba(30, 41, 59, 0.3);
+        border-color: rgba(255, 255, 255, 0.1);
         color: white;
     }
 
     .search-box input:focus {
-        border-color: #D18FB2; /* Rose Serpents */
+        border-color: #398e4a;
+        background-color: rgba(255, 255, 255, 0.80);
+        box-shadow: 0 0 0 4px rgba(57, 142, 74, 0.15);
+    }
+
+    [data-theme="dark"] .search-box input:focus {
+        background-color: rgba(30, 41, 59, 0.80);
     }
 
     .search-box i {
         position: absolute;
         left: 15px;
+        color: #64748b;
+    }
+
+    [data-theme="dark"] .search-box i {
         color: #94a3b8;
     }
 
-    /* Tableau responsive */
+    /* Structure Table Responsive en Verre */
     .table-responsive {
-        background: white;
+        background-color: rgba(255, 255, 255, 0.3);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
         border-radius: 12px;
-        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
-        border: 1px solid rgba(0,0,0,0.05);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.04);
+        border: 1px solid rgba(255, 255, 255, 0.45);
         overflow-x: auto;
     }
 
     [data-theme="dark"] .table-responsive {
-        background: #1e293b;
-        border-color: #334155;
+        background-color: rgba(30, 41, 59, 0.3);
+        border-color: rgba(255, 255, 255, 0.1);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
     }
 
     /* Style du Tableau */
@@ -87,19 +103,19 @@
     .annonce-table th, 
     .annonce-table td {
         padding: 16px 20px;
-        border-bottom: 1px solid #f1f5f9;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.05);
         font-size: 0.9rem;
         vertical-align: middle;
     }
 
     [data-theme="dark"] .annonce-table th,
     [data-theme="dark"] .annonce-table td {
-        border-bottom: 1px solid #334155;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
     }
 
     .annonce-table th {
-        background-color: #f8fafc;
-        color: #475569;
+        background-color: rgba(255, 255, 255, 0.25);
+        color: #334155;
         font-weight: 600;
         text-transform: uppercase;
         font-size: 0.75rem;
@@ -107,16 +123,16 @@
     }
 
     [data-theme="dark"] .annonce-table th {
-        background-color: #151f32;
-        color: #94a3b8;
+        background-color: rgba(15, 23, 42, 0.3);
+        color: #cbd5e1;
     }
 
     .annonce-table tr:hover {
-        background-color: #f8fafc;
+        background-color: rgba(255, 255, 255, 0.25);
     }
 
     [data-theme="dark"] .annonce-table tr:hover {
-        background-color: #243249;
+        background-color: rgba(255, 255, 255, 0.05);
     }
 
     /* Image d'illustration */
@@ -125,10 +141,16 @@
         height: 50px;
         border-radius: 6px;
         object-fit: cover;
-        background-color: #f1f5f9;
+        background-color: rgba(255, 255, 255, 0.2);
+        border: 1px solid rgba(255, 255, 255, 0.3);
     }
 
-    /* Badges de Statuts */
+    [data-theme="dark"] .annonce-img-placeholder {
+        background-color: rgba(15, 23, 42, 0.4) !important;
+        color: #64748b !important;
+    }
+
+    /* Badges de Statuts Translucides */
     .badge-status {
         display: inline-flex;
         align-items: center;
@@ -137,21 +159,35 @@
         border-radius: 6px;
         font-size: 0.75rem;
         font-weight: 600;
+        backdrop-filter: blur(4px);
+        -webkit-backdrop-filter: blur(4px);
     }
 
     .status-pinned {
         background-color: rgba(255, 193, 7, 0.15);
         color: #b27b00;
+        border: 1px solid rgba(255, 193, 7, 0.2);
+    }
+    [data-theme="dark"] .status-pinned {
+        color: #f59e0b;
     }
 
     .status-active {
-        background-color: rgba(161, 213, 177, 0.2);
+        background-color: rgba(161, 213, 177, 0.25);
         color: #1e6b36;
+        border: 1px solid rgba(161, 213, 177, 0.3);
+    }
+    [data-theme="dark"] .status-active {
+        color: #4ade80;
     }
 
     .status-inactive {
-        background-color: rgba(239, 68, 68, 0.1);
+        background-color: rgba(239, 68, 68, 0.15);
         color: #dc2626;
+        border: 1px solid rgba(239, 68, 68, 0.2);
+    }
+    [data-theme="dark"] .status-inactive {
+        color: #f87171;
     }
 
     /* Actions */
@@ -170,23 +206,68 @@
         text-decoration: none;
         font-size: 0.85rem;
         transition: all 0.2s ease;
-        border: none;
+        border: 1px solid rgba(255, 255, 255, 0.4);
         cursor: pointer;
     }
 
     .btn-edit {
-        background-color: rgba(0, 51, 102, 0.08);
+        background-color: rgba(255, 255, 255, 0.4);
         color: #003366;
     }
+    [data-theme="dark"] .btn-edit {
+        background-color: rgba(255, 255, 255, 0.08);
+        border-color: rgba(255, 255, 255, 0.1);
+        color: #38bdf8;
+    }
+
     .btn-edit:hover {
         background-color: #003366;
         color: white;
+        transform: translateY(-1px);
+    }
+    [data-theme="dark"] .btn-edit:hover {
+        background-color: #38bdf8;
+        color: #0f172a;
     }
 
     .empty-message {
         padding: 40px;
         text-align: center;
-        color: #64748b;
+        color: #475569;
+    }
+    [data-theme="dark"] .empty-message {
+        color: #94a3b8;
+    }
+
+    /* Textes spécifiques */
+    .annonce-title-text {
+        font-weight: 600; 
+        color: #0f172a; 
+        margin-bottom: 4px;
+    }
+    [data-theme="dark"] .annonce-title-text {
+        color: #ffffff;
+    }
+
+    .annonce-content-text {
+        font-size: 0.8rem; 
+        color: #475569; 
+        max-width: 400px; 
+        display: -webkit-box; 
+        -webkit-line-clamp: 1; 
+        -webkit-box-orient: vertical; 
+        overflow: hidden;
+    }
+    [data-theme="dark"] .annonce-content-text {
+        color: #cbd5e1;
+    }
+
+    .annonce-date-text {
+        color: #475569; 
+        font-size: 0.85rem;
+    }
+    [data-theme="dark"] .annonce-date-text {
+        color: #94a3b8;
     }
 
     @media (max-width: 640px) {
@@ -233,20 +314,20 @@
                         {% if annonce.image %}
                             <img src="{{ annonce.image.url }}" alt="Illustration" class="annonce-img">
                         {% else %}
-                            <div class="annonce-img" style="display: flex; align-items: center; justify-content: center; background: #e2e8f0; color: #94a3b8;">
+                            <div class="annonce-img annonce-img-placeholder" style="display: flex; align-items: center; justify-content: center; background: #e2e8f0; color: #94a3b8;">
                                 <i class="fas fa-image"></i>
                             </div>
                         {% endif %}
                     </td>
                     <td>
-                        <div class="annonce-searchable-text" style="font-weight: 600; color: #1e293b; margin-bottom: 4px;">
+                        <div class="annonce-searchable-text annonce-title-text">
                             {{ annonce.titre }}
                         </div>
-                        <div class="annonce-searchable-content" style="font-size: 0.8rem; color: #64748b; max-width: 400px; display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; overflow: hidden;">
+                        <div class="annonce-searchable-content annonce-content-text">
                             {{ annonce.contenu }}
                         </div>
                     </td>
-                    <td style="color: #475569; font-size: 0.85rem;">
+                    <td class="annonce-date-text">
                         {{ annonce.date_publication|date:"d M Y à H:i" }}
                     </td>
                     <td>

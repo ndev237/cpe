@@ -11,6 +11,7 @@ urlpatterns = [
     path('nos-formations/', views.nos_formations_liste, name='nos_formation'),
     path('notre_album/', views.notre_album, name='notre_album'),
     path('actualites/simple/', views.ActualitePublicListView, name='actualites_site'),
+    path('annonce/<slug:slug>/', views.detail_annonce, name='detail_annonce'),
    
 
     

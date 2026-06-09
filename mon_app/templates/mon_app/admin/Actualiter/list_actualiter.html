@@ -17,11 +17,15 @@
     .page-header h1 {
         font-size: 1.75rem;
         font-weight: 700;
-        color: #4A7c59; /* Vert Forêt */
+        color: #4A7c59; /* Vert Forêt original */
+    }
+
+    [data-theme="dark"] .page-header h1 {
+        color: #62a375;
     }
 
     .btn-create {
-        background-color: #4A7c59; /* Vert Forêt */
+        background-color: #4A7c59;
         color: white;
         border: none;
         padding: 12px 24px;
@@ -29,7 +33,7 @@
         font-size: 14px;
         font-weight: 600;
         text-decoration: none;
-        box-shadow: 0 4px 12px rgba(74, 124, 89, 0.15);
+        box-shadow: 0 4px 14px rgba(74, 124, 89, 0.2);
         transition: all 0.2s ease;
         display: inline-flex;
         align-items: center;
@@ -39,27 +43,42 @@
     .btn-create:hover {
         background-color: #3b6347;
         transform: translateY(-1px);
-        box-shadow: 0 6px 16px rgba(74, 124, 89, 0.25);
+        box-shadow: 0 6px 16px rgba(74, 124, 89, 0.3);
     }
 
-    /* --- CONTENEUR DU TABLEAU & FILTRES --- */
+    /* --- CONTENEUR TABLEAU (GLASSMORPHIC) --- */
     .table-container {
-        background: #ffffff;
-        border: 1px solid #e2e8f0;
+        /* Effet de verre ultra-transparent */
+        background-color: rgba(255, 255, 255, 0.3);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        
+        border: 1px solid rgba(255, 255, 255, 0.45);
         border-radius: 20px;
-        box-shadow: 0 20px 40px rgba(74, 124, 89, 0.04);
+        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.04);
         overflow: hidden;
+    }
+
+    [data-theme="dark"] .table-container {
+        background-color: rgba(30, 41, 59, 0.3);
+        border-color: rgba(255, 255, 255, 0.1);
+        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
     }
 
     .table-toolbar {
         padding: 1.25rem 1.5rem;
-        border-bottom: 1px solid #e2e8f0;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.3);
         display: flex;
         justify-content: space-between;
         align-items: center;
         gap: 1rem;
     }
 
+    [data-theme="dark"] .table-toolbar {
+        border-bottom-color: rgba(255, 255, 255, 0.05);
+    }
+
+    /* --- BARRE DE RECHERCHE TRANSLUCIDE --- */
     .search-box {
         position: relative;
         max-width: 320px;
@@ -69,21 +88,31 @@
     .search-box input {
         width: 100%;
         padding: 10px 16px 10px 2.5rem;
-        background-color: #f8fafc;
-        border: 1px solid #e2e8f0;
+        background-color: rgba(255, 255, 255, 0.25);
+        border: 1px solid rgba(255, 255, 255, 0.4);
         border-radius: 10px;
-        color: #1e293b;
+        color: #0f172a;
         font-size: 14px;
         font-family: inherit;
         transition: all 0.2s;
         box-sizing: border-box;
+        outline: none;
+    }
+
+    [data-theme="dark"] .search-box input {
+        background-color: rgba(15, 23, 42, 0.25);
+        border-color: rgba(255, 255, 255, 0.1);
+        color: #ffffff;
     }
 
     .search-box input:focus {
-        border-color: #D18FB2; /* Focus Rose */
-        background-color: #ffffff;
-        outline: none;
-        box-shadow: 0 0 0 4px rgba(209, 143, 178, 0.15);
+        border-color: #D18FB2;
+        background-color: rgba(255, 255, 255, 0.9);
+        box-shadow: 0 0 0 4px rgba(209, 143, 178, 0.25);
+    }
+
+    [data-theme="dark"] .search-box input:focus {
+        background-color: rgba(15, 23, 42, 0.9);
     }
 
     .search-box i {
@@ -91,8 +120,12 @@
         left: 0.9rem;
         top: 50%;
         transform: translateY(-50%);
-        color: #94a3b8;
+        color: #64748b;
         font-size: 0.9rem;
+    }
+
+    [data-theme="dark"] .search-box i {
+        color: #94a3b8;
     }
 
     /* --- LE TABLEAU --- */
@@ -103,22 +136,33 @@
     }
 
     .custom-table th {
-        background-color: #f8fafc;
-        color: #64748b;
+        background-color: rgba(255, 255, 255, 0.2);
+        color: #475569;
         font-size: 12px;
         font-weight: 700;
         text-transform: uppercase;
         letter-spacing: 0.5px;
         padding: 1rem 1.5rem;
-        border-bottom: 1px solid #e2e8f0;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+    }
+
+    [data-theme="dark"] .custom-table th {
+        background-color: rgba(15, 23, 42, 0.15);
+        color: #cbd5e1;
+        border-bottom-color: rgba(255, 255, 255, 0.05);
     }
 
     .custom-table td {
         padding: 1rem 1.5rem;
-        border-bottom: 1px solid #e2e8f0;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.2);
         color: #334155;
         font-size: 14px;
         vertical-align: middle;
+    }
+
+    [data-theme="dark"] .custom-table td {
+        border-bottom-color: rgba(255, 255, 255, 0.05);
+        color: #cbd5e1;
     }
 
     .custom-table tbody tr:last-child td {
@@ -126,10 +170,14 @@
     }
 
     .custom-table tbody tr:hover {
-        background-color: rgba(74, 124, 89, 0.02); /* Voile vert subtil au survol */
+        background-color: rgba(255, 255, 255, 0.35);
     }
 
-    /* --- COMPOSANTS INTERNES --- */
+    [data-theme="dark"] .custom-table tbody tr:hover {
+        background-color: rgba(255, 255, 255, 0.03);
+    }
+
+    /* --- ELEMENTS CELLULES --- */
     .article-cell {
         display: flex;
         align-items: center;
@@ -141,14 +189,23 @@
         height: 45px;
         border-radius: 8px;
         object-fit: cover;
-        background-color: #f1f5f9;
-        border: 1px solid #e2e8f0;
+        background-color: rgba(255, 255, 255, 0.3);
+        border: 1px solid rgba(255, 255, 255, 0.4);
+    }
+
+    [data-theme="dark"] .article-img {
+        background-color: rgba(15, 23, 42, 0.3);
+        border-color: rgba(255, 255, 255, 0.05);
     }
 
     .article-info .article-title {
         font-weight: 600;
-        color: #1e293b;
+        color: #0f172a;
         margin-bottom: 0.15rem;
+    }
+
+    [data-theme="dark"] .article-info .article-title {
+        color: #ffffff;
     }
 
     .article-info .article-author {
@@ -156,6 +213,19 @@
         color: #64748b;
     }
 
+    [data-theme="dark"] .article-info .article-author {
+        color: #94a3b8;
+    }
+
+    .text-timestamp {
+        color: #475569;
+    }
+
+    [data-theme="dark"] .text-timestamp {
+        color: #94a3b8;
+    }
+
+    /* --- BADGES ET ACTIONS --- */
     .badge-status {
         display: inline-flex;
         align-items: center;
@@ -167,8 +237,13 @@
     }
 
     .badge-published {
-        background-color: rgba(34, 197, 94, 0.1);
+        background-color: rgba(34, 197, 94, 0.15);
         color: #166534;
+    }
+
+    [data-theme="dark"] .badge-published {
+        background-color: rgba(34, 197, 94, 0.2);
+        color: #4ade80;
     }
 
     .actions-group {
@@ -184,8 +259,8 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        border: 1px solid #e2e8f0;
-        background: #ffffff;
+        border: 1px solid rgba(255, 255, 255, 0.4);
+        background: rgba(255, 255, 255, 0.25);
         color: #475569;
         text-decoration: none;
         cursor: pointer;
@@ -193,15 +268,27 @@
         font-size: 13px;
     }
 
+    [data-theme="dark"] .btn-action {
+        border-color: rgba(255, 255, 255, 0.1);
+        background: rgba(15, 23, 42, 0.25);
+        color: #cbd5e1;
+    }
+
     .btn-action.edit:hover {
-        background-color: rgba(209, 143, 178, 0.1);
-        color: #316a40; /* Rose au survol */
-        border-color: #3c733f;
+        background-color: #4A7c59;
+        color: white;
+        border-color: #4A7c59;
     }
 
     .btn-action.delete:hover {
-        background-color: rgba(239, 68, 68, 0.1);
+        background-color: rgba(239, 68, 68, 0.2);
         color: #ef4444;
+        border-color: #ef4444;
+    }
+
+    [data-theme="dark"] .btn-action.delete:hover {
+        background-color: #ef4444;
+        color: white;
         border-color: #ef4444;
     }
 
@@ -209,13 +296,21 @@
     .empty-state {
         padding: 4rem 2rem;
         text-align: center;
-        color: #64748b;
+        color: #475569;
+    }
+
+    [data-theme="dark"] .empty-state {
+        color: #94a3b8;
     }
 
     .empty-state i {
         font-size: 3rem;
         margin-bottom: 1rem;
-        color: #cbd5e1;
+        color: rgba(255, 255, 255, 0.4);
+    }
+
+    [data-theme="dark"] .empty-state i {
+        color: rgba(255, 255, 255, 0.1);
     }
 
     @media (max-width: 768px) {
@@ -272,7 +367,8 @@
                     </div>
                 </td>
                 <td class="hide-mobile">
-                    {{ actualite.date_publication|date:"d E Y" }} <span style="font-size: 12px; color: #64748b;">à {{ actualite.date_publication|date:"H:i" }}</span>
+                    <span class="text-timestamp">{{ actualite.date_publication|date:"d E Y" }}</span> 
+                    <span style="font-size: 12px; color: #64748b; margin-left: 4px;">à {{ actualite.date_publication|date:"H:i" }}</span>
                 </td>
                 <td>
                     <span class="badge-status badge-published">

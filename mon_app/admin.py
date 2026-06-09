@@ -2,13 +2,22 @@ from django.contrib import admin
 from django.utils.html import format_html
 from .models import Formation, DemandeContact, Annonce, Partenaire, AlbumPhoto
 
+
 @admin.register(Formation)
 class FormationAdmin(admin.ModelAdmin):
-    list_display = ('titre', 'duree', 'prix', 'est_active')
-    list_filter = ('est_active',)
-    search_fields = ('titre', 'description_courte')
+    list_display = ('titre', 'categorie', 'duree', 'est_active')
+    list_filter = ('est_active', 'categorie')
+    search_fields = ('titre', 'description_courte', 'niveau_requis', 'debouches')  # Modifié ici
     prepopulated_fields = {'slug': ('titre',)}
 
+    fieldsets = (
+        ('Informations Générales', {
+            'fields': ('titre', 'slug', 'categorie', 'duree', 'image', 'est_active')
+        }),
+        ('Contenus et Critères', {
+            'fields': ('description_courte', 'niveau_requis', 'debouches'),  # Modifié ici
+        }),
+    )
 
 @admin.register(DemandeContact)
 class DemandeContactAdmin(admin.ModelAdmin):
@@ -33,18 +42,20 @@ class PartenaireAdmin(admin.ModelAdmin):
 
 @admin.register(AlbumPhoto)
 class AlbumPhotoAdmin(admin.ModelAdmin):
-    list_display = ('titre', 'contenu_court', 'image_apercu')
-    search_fields = ('titre', 'contenu')
-    list_filter = ('image',)
+    list_display = ['id', 'image_apercu', 'get_nom_fichier']
+    search_fields = ['image']
 
-    # Méthode pour tronquer le texte de l'annonce dans la liste
-    @admin.display(description="Extrait du contenu")
-    def contenu_court(self, obj):
-        if obj.contenu and len(obj.contenu) > 50:
-            return obj.contenu[:50] + "..."
-        return obj.contenu
+    @admin.display(description="Aperçu de l'image")
+    def image_apercu(self, obj):
+        if obj.image:
+            return mark_safe(f'<img src="{obj.image.url}" style="width: 60px; height: 60px; object-fit: cover; border-radius: 4px;" />')
+        return "Aucun aperçu"
 
-    # Méthode sécurisée pour afficher la miniature sous Django 6
+    @admin.display(description="Nom du fichier")
+    def get_nom_fichier(self, obj):
+        if obj.image:
+            return obj.image.name.split('/')[-1]
+        return "-"
     @admin.display(description="Aperçu")
     def image_apercu(self, obj):
         if obj.image:

@@ -2,9 +2,7 @@
 {% load static %}
 {% load i18n %}
 
-{% block title %}
-<title>{{ formation.titre }} - {% trans "CPE Formation" %}</title>
-{% endblock %}
+{% block title %}{{ formation.titre }} - {% trans "CPE Formation" %}{% endblock %}
 
 {% block content %}
 <style>
@@ -180,7 +178,7 @@
         grid-template-columns: repeat(2, minmax(0, 1fr));
         gap: 24px;
     }
-    @media (min-width: 768px) { .features-card { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+    @media (min-width: 768px) { .features-card { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
     .feature-item { display: flex; align-items: center; gap: 12px; }
     .feature-icon {
         padding: 12px;
@@ -192,10 +190,6 @@
         justify-content: center;
         width: 44px;
         height: 44px;
-    }
-    .feature-icon.rose {
-        background-color: #fdf2f8;
-        color: var(--primary-rose);
     }
     .feature-label {
         font-size: 10px;
@@ -211,61 +205,82 @@
         color: #392d68;
         margin: 2px 0 0 0;
     }
-    .feature-value.price { font-weight: 900; color: #392d68; }
 
-    /* --- CONTENU DU PROGRAMME --- */
-    .program-card {
+    /* --- DOUBLE BLOC : NIVEAU REQUIS & DÉBOUCHÉS --- */
+    .split-program-container {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 24px;
+    }
+    @media (min-width: 768px) {
+        .split-program-container {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+    }
+
+    .program-sub-card {
         background-color: white;
-        padding: 32px;
+        padding: 28px;
         border-radius: 16px;
         border: 1px solid var(--border-color);
         box-shadow: var(--shadow-sm);
+        transition: border-color 0.2s;
     }
-    .program-header {
+    .program-sub-card:hover {
+        border-color: #cbd5e1;
+    }
+
+    .program-sub-header {
         display: flex;
         align-items: center;
         gap: 12px;
-        border-bottom: 1px solid var(--primary-rose);
-        padding-bottom: 16px;
-        margin-bottom: 24px;
+        border-bottom: 2px solid var(--bg-light);
+        padding-bottom: 14px;
+        margin-bottom: 20px;
     }
-    .program-indicator {
-        width: 8px;
-        height: 24px;
-        background-color: var(--primary-rose);
-        border-radius: 4px;
+    .sub-card-icon {
+        width: 36px;
+        height: 36px;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 16px;
     }
-    .program-title {
-        font-size: 24px;
+    .icon-req { background-color: rgba(57, 45, 104, 0.1); color: var(--primary-rose); }
+    .icon-deb { background-color: rgba(107, 201, 167, 0.15); color: #2d7a5f; }
+
+    .program-sub-title {
+        font-size: 18px;
         font-weight: 700;
         color: #392d68;
         margin: 0;
     }
 
-    /* Rendu HTML dynamique du programme */
+    /* Rendu HTML dynamique */
     .style-programme { line-height: 1.6; }
     .style-programme h2, .style-programme h3 {
-        font-size: 20px;
+        font-size: 16px;
         font-weight: 700;
         color: #392d68;
-        margin-top: 24px;
-        margin-bottom: 12px;
+        margin-top: 16px;
+        margin-bottom: 8px;
     }
     .style-programme ul {
         list-style-type: disc !important;
-        margin-left: 24px !important;
-        margin-bottom: 16px;
-        padding-left: 8px;
+        margin-left: 20px !important;
+        margin-bottom: 14px;
+        padding-left: 0;
     }
     .style-programme li {
         margin-bottom: 8px;
-        color: var(--text-gray-dark);
-        font-size: 15px;
+        color: #334155;
+        font-size: 14px;
     }
     .style-programme p {
-        margin-bottom: 16px;
-        color: var(--text-gray-dark);
-        font-size: 15px;
+        margin-bottom: 14px;
+        color: #334155;
+        font-size: 14px;
     }
 
     /* --- FORMULAIRE D'INSCRIPTION --- */
@@ -339,11 +354,10 @@
         box-shadow: 0 0 0 3px rgba(209, 143, 178, 0.25);
     }
     .form-textarea {
-        padding-left: 16px; /* Pas d'icône pour le textarea */
+        padding-left: 16px;
         resize: none;
     }
-    
-    /* Bouton Rose */
+
     .btn-submit-rose {
         width: 100%;
         background-color: var(--primary-rose);
@@ -389,7 +403,7 @@
 <header class="hero-header">
     <div class="hero-pattern"></div>
     <div class="hero-container">
-        
+
         <div class="hero-text-side">
             <span class="badge-categorie">
                 <span class="badge-dot"></span>
@@ -413,11 +427,11 @@
 
 {# --- MAIN CONTENT --- #}
 <main class="main-content">
-    
-    {# --- COLONNE GAUCHE : INFOS & PROGRAMME --- #}
+
+    {# --- COLONNE GAUCHE : INFOS & GRILLE DÉBOUCHÉS/NIVEAU --- #}
     <div class="col-left space-y">
-        
-        {# Grille de caractéristiques #}
+
+        {# Grille de caractéristiques du haut #}
         <div class="features-card">
             <div class="feature-item">
                 <div class="feature-icon">
@@ -428,14 +442,14 @@
                     <p class="feature-value">{{ formation.duree|default:_("6 mois") }}</p>
                 </div>
             </div>
-            
+
             <div class="feature-item">
                 <div class="feature-icon">
-                    <i class="fas fa-graduation-cap"></i>
+                    <i class="fas fa-user-check"></i>
                 </div>
                 <div>
-                    <p class="feature-label">{% trans "Niveau requis" %}</p>
-                    <p class="feature-value">{% trans "Baccalauréat" %}</p>
+                    <p class="feature-label">{% trans "Admission" %}</p>
+                    <p class="feature-value">{% trans "Sur Dossier" %}</p>
                 </div>
             </div>
 
@@ -448,34 +462,37 @@
                     <p class="feature-value">{% trans "Certifié CPE" %}</p>
                 </div>
             </div>
-
-            <div class="feature-item">
-                <div class="feature-icon rose">
-                    <i class="fas fa-wallet"></i>
-                </div>
-                <div>
-                    <p class="feature-label">{% trans "Coût" %}</p>
-                    <p class="feature-value price">
-                        {% if formation.prix %}
-                            {{ formation.prix }} {% trans "FCFA" %}
-                        {% else %}
-                            {% trans "Gratuit" %}
-                        {% endif %}
-                    </p>
-                </div>
-            </div>
-
         </div>
 
-        {# Corps du programme #}
-        <div class="program-card">
-            <div class="program-header">
-                <div class="program-indicator"></div>
-                <h2 class="program-title">{% trans "Niveau requis et Débouché" %}</h2>
+        {# SECTION CORE : Séparation explicite Niveau requis VS Débouchés #}
+        <div class="split-program-container">
+
+            {# Bloc 1 : Niveau requis #}
+            <div class="program-sub-card">
+                <div class="program-sub-header">
+                    <div class="sub-card-icon icon-req">
+                        <i class="fas fa-graduation-cap"></i>
+                    </div>
+                    <h2 class="program-sub-title">{% trans "Niveau requis" %}</h2>
+                </div>
+                <div class="style-programme">
+                    {{ formation.niveau_requis|safe|default:_("Aucun prérequis spécifique indiqué.") }}
+                </div>
             </div>
-            <div class="style-programme">
-                {{ formation.programme_detaille|safe }}
+
+            {# Bloc 2 : Débouchés professionnels #}
+            <div class="program-sub-card">
+                <div class="program-sub-header">
+                    <div class="sub-card-icon icon-deb">
+                        <i class="fas fa-briefcase"></i>
+                    </div>
+                    <h2 class="program-sub-title">{% trans "Débouchés Professionnels" %}</h2>
+                </div>
+                <div class="style-programme">
+                    {{ formation.debouches|safe|default:_("Contactez notre conseiller pour connaître les opportunités.") }}
+                </div>
             </div>
+
         </div>
     </div>
 

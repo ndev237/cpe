@@ -10,10 +10,15 @@
     .formation-container {
         width: 100%;
         max-width: 1100px;
-        background-color: #ffffff;
+        
+        /* Effet transparent et flouté (Glassmorphism) */
+        background-color: rgba(255, 255, 255, 0.75);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        
         border-radius: 20px;
-        box-shadow: 0 20px 40px rgba(74, 124, 89, 0.06);
-        border: 1px solid #e2e8f0;
+        box-shadow: 0 20px 40px rgba(74, 124, 89, 0.04);
+        border: 1px solid rgba(255, 255, 255, 0.4);
         display: grid;
         grid-template-columns: 0.9fr 1.1fr;
         overflow: hidden;
@@ -21,9 +26,10 @@
         margin: 20px auto;
     }
 
-    /* --- COLONNE GAUCHE : VISUEL (DÉGRADÉ VERT & HALO ROSE) --- */
+    /* --- COLONNE GAUCHE : VISUEL --- */
     .formation-sidebar {
-        background: linear-gradient(135deg, #4A7c59 0%, #2c4c35 100%);
+        /* Légère teinte transparente pour la démarcation */
+        background: rgba(253, 251, 247, 0.4);
         padding: 3rem;
         display: flex;
         flex-direction: column;
@@ -37,7 +43,7 @@
         position: absolute;
         width: 300px;
         height: 300px;
-        background: rgba(209, 143, 178, 0.15);
+        background: rgba(255, 255, 255, 0.5);
         border-radius: 50%;
         filter: blur(40px);
     }
@@ -58,16 +64,16 @@
         flex-direction: column;
         justify-content: center;
     }
-    
-    .form-title { 
-        color: #4A7c59; 
-        margin-bottom: 12px; 
-        font-size: 26px; 
-        font-weight: 700; 
-        letter-spacing: -0.5px; 
+
+    .form-title {
+        color: #4A7c59;
+        margin-bottom: 12px;
+        font-size: 26px;
+        font-weight: 700;
+        letter-spacing: -0.5px;
     }
 
-    /* --- STEPPER (INDICATEUR D'ÉTAPE) --- */
+    /* --- STEPPER --- */
     .stepper {
         display: flex;
         gap: 15px;
@@ -79,7 +85,7 @@
         font-weight: 700;
         color: #94a3b8;
         padding-bottom: 8px;
-        border-bottom: 2px solid #e2e8f0;
+        border-bottom: 2px solid rgba(0, 0, 0, 0.05);
         flex: 1;
         transition: all 0.3s ease;
     }
@@ -97,44 +103,42 @@
     .form-step.active {
         display: block;
     }
-    
-    .form-field { 
-        margin-bottom: 24px; 
+
+    .form-field {
+        margin-bottom: 24px;
     }
-    
-    .form-field label { 
-        display: block; 
-        font-weight: 600; 
-        margin-bottom: 8px; 
-        color: #4b5563; 
-        font-size: 14px; 
+
+    .form-field label {
+        display: block;
+        font-weight: 600;
+        margin-bottom: 8px;
+        color: #4b5563;
+        font-size: 14px;
     }
-    
-    /* Ciblage automatique des inputs générés par Django */
-    .form-field input[type="text"], 
-    .form-field input[type="number"], 
-    .form-field input[type="email"], 
-    .form-field textarea, 
-    .form-field select { 
-        width: 100%; 
-        padding: 12px; 
-        border: 1px solid #e2e8f0; 
-        border-radius: 10px; 
-        background-color: #f8fafc;
-        box-sizing: border-box; 
+
+    .form-field input[type="text"],
+    .form-field input[type="number"],
+    .form-field input[type="email"],
+    .form-field textarea,
+    .form-field select {
+        width: 100%;
+        padding: 12px;
+        border: 1px solid #e2e8f0;
+        border-radius: 10px;
+        background-color: rgba(248, 250, 252, 0.7); /* Champs légèrement translucides */
+        box-sizing: border-box;
         transition: all 0.2s ease;
         font-family: inherit;
         color: #1e293b;
     }
-    
-    /* Effet focus avec ton rose de charte */
-    .form-field input:focus, 
-    .form-field textarea:focus, 
-    .form-field select:focus { 
-        outline: none; 
-        border-color: #D18FB2; 
-        background-color: #fff;
-        box-shadow: 0 0 0 4px rgba(209, 143, 178, 0.15); 
+
+    .form-field input:focus,
+    .form-field textarea:focus,
+    .form-field select:focus {
+        outline: none;
+        border-color: #D18FB2;
+        background-color: #ffffff;
+        box-shadow: 0 0 0 4px rgba(209, 143, 178, 0.15);
     }
 
     .form-field input[type="file"] {
@@ -150,20 +154,40 @@
         cursor: pointer;
     }
 
-    /* --- BOUTONS / ACTIONS --- */
-    .form-actions { 
-        display: flex; 
-        justify-content: flex-end; 
+    /* --- EDITEUR DE TEXTE --- */
+    .quill-editor-wrapper {
+        background-color: rgba(248, 250, 252, 0.7);
+        border-radius: 10px;
+        overflow: hidden;
+        border: 1px solid #e2e8f0;
+    }
+    .ql-toolbar.ql-snow {
+        border: none !important;
+        border-bottom: 1px solid #e2e8f0 !important;
+        background: rgba(241, 245, 249, 0.8);
+    }
+    .ql-container.ql-snow {
+        border: none !important;
+        min-height: 150px;
+        font-family: 'Poppins', sans-serif !important;
+        font-size: 14px;
+        color: #1e293b;
+    }
+
+    /* --- ACTIONS --- */
+    .form-actions {
+        display: flex;
+        justify-content: flex-end;
         gap: 12px;
-        padding-top: 16px; 
-        border-top: 1px solid #e2e8f0; 
+        padding-top: 16px;
+        border-top: 1px solid rgba(0, 0, 0, 0.05);
     }
 
     .btn {
-        padding: 14px 28px; 
-        border-radius: 10px; 
-        font-weight: 600; 
-        cursor: pointer; 
+        padding: 14px 28px;
+        border-radius: 10px;
+        font-weight: 600;
+        cursor: pointer;
         transition: all 0.2s;
         font-size: 14px;
         font-family: inherit;
@@ -174,7 +198,7 @@
     }
 
     .btn-secondary {
-        background-color: #f1f5f9;
+        background-color: rgba(241, 245, 249, 0.8);
         color: #475569;
         border: 1px solid #e2e8f0;
     }
@@ -183,35 +207,25 @@
         background-color: #e2e8f0;
     }
 
-    .btn-primary { 
-        background-color: #4A7c59; 
-        color: white; 
+    .btn-primary {
+        background-color: #4A7c59;
+        color: white;
         border: none;
     }
-    
-    .btn-primary:hover { 
-        background-color: #3b6347; 
-        transform: translateY(-1px); 
+
+    .btn-primary:hover {
+        background-color: #3b6347;
+        transform: translateY(-1px);
     }
 
-    /* --- EDITEUR DE TEXTE --- */
-    .quill-editor-wrapper {
-        background-color: #f8fafc;
+    .error-box {
+        background-color: rgba(254, 226, 226, 0.9);
+        border: 1px solid #fca5a5;
+        color: #991b1b;
+        padding: 1rem;
         border-radius: 10px;
-        overflow: hidden;
-        border: 1px solid #e2e8f0;
-    }
-    .ql-toolbar.ql-snow {
-        border: none !important;
-        border-bottom: 1px solid #e2e8f0 !important;
-        background: #f1f5f9;
-    }
-    .ql-container.ql-snow {
-        border: none !important;
-        min-height: 150px;
-        font-family: 'Poppins', sans-serif !important;
+        margin-bottom: 20px;
         font-size: 14px;
-        color: #1e293b;
     }
 
     @media (max-width: 960px) {
@@ -229,43 +243,61 @@
 </style>
 
 <div class="formation-container">
-    
+
     <div class="formation-sidebar" aria-hidden="true">
         <img class="formation-hero-img" src="{% static 'images/college project-bro.svg' %}" alt="Illustration de création de formation" />
     </div>
 
     <div class="formation-form-area">
         <h2 class="form-title">{% firstof titre_page "Créer une nouvelle formation" %}</h2>
-        
+
         <div class="stepper">
             <div class="step-indicator active" id="badgeStep1">1. {% trans "Contenu & Descriptions" %}</div>
             <div class="step-indicator" id="badgeStep2">2. {% trans "Tarification & Configuration" %}</div>
         </div>
-        
-        <form id="formationForm" method="POST" enctype="multipart/form-data" class="space-y-2">
+
+        {# Zone d'affichage des erreurs globales renvoyées par le serveur Django #}
+        {% if form.errors %}
+            <div class="error-box">
+                <strong>{% trans "Veuillez corriger les erreurs suivantes :" %}</strong>
+                <ul class="list-disc pl-5 mt-1">
+                    {% for field, errors in form.errors.items %}
+                        <li>{{ field }} : {{ errors|striptags }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endif %}
+
+        {# Ajout de novalidate pour empêcher le blocage silencieux du navigateur #}
+        <form id="formationForm" method="POST" enctype="multipart/form-data" class="space-y-2" novalidate>
             {% csrf_token %}
-            
+
             <div class="form-step active" id="step1">
                 {% for field in form %}
                     {% if field.field.widget.input_type != "checkbox" and field.field.widget.input_type != "file" and field.field.widget.input_type != "number" and field.name != "categorie" and field.name != "enseignant" and field.name != "professeur" %}
-                        
+
                         <div class="form-field">
                             <label for="{{ field.id_for_label }}">{{ field.label }}</label>
-                            
+
                             {% if field.name == "description_courte" or field.id_for_label == "id_description_courte" %}
                                 <div style="display: none;">{{ field }}</div>
                                 <div class="quill-editor-wrapper">
                                     <div id="editor_description_courte"></div>
                                 </div>
-                            {% elif field.name == "programme_detaille" or field.id_for_label == "id_programme_detaille" %}
+                            {% elif field.name == "niveau_requis" or field.id_for_label == "id_niveau_requis" %}
                                 <div style="display: none;">{{ field }}</div>
                                 <div class="quill-editor-wrapper">
-                                    <div id="editor_programme_detaille"></div>
+                                    <div id="editor_niveau_requis"></div>
+                                </div>
+                            {% elif field.name == "debouches" or field.id_for_label == "id_debouches" %}
+                                <div style="display: none;">{{ field }}</div>
+                                <div class="quill-editor-wrapper">
+                                    <div id="editor_debouches"></div>
                                 </div>
                             {% else %}
                                 {{ field }}
                             {% endif %}
-                            
+
                             {% if field.errors %}
                                 <div class="mt-1.5 flex items-center gap-1.5 text-red-600">
                                     <i class="fas fa-exclamation-circle text-xs"></i>
@@ -277,11 +309,11 @@
                     {% endif %}
                 {% endfor %}
             </div>
-            
+
             <div class="form-step" id="step2">
                 {% for field in form %}
                     {% if field.field.widget.input_type == "checkbox" or field.field.widget.input_type == "file" or field.field.widget.input_type == "number" or field.name == "categorie" or field.name == "enseignant" or field.name == "professeur" %}
-                        
+
                         <div class="form-field">
                             {% if field.field.widget.input_type == "checkbox" %}
                                 <div class="flex items-center gap-3 mt-2">
@@ -292,7 +324,7 @@
                                 <label for="{{ field.id_for_label }}">{{ field.label }}</label>
                                 {{ field }}
                             {% endif %}
-                            
+
                             {% if field.errors %}
                                 <div class="mt-1.5 flex items-center gap-1.5 text-red-600">
                                     <i class="fas fa-exclamation-circle text-xs"></i>
@@ -304,7 +336,7 @@
                     {% endif %}
                 {% endfor %}
             </div>
-            
+
             <div class="form-actions">
                 <button type="button" class="btn btn-secondary" id="btnBack" style="display: none;">
                     <i class="fas fa-arrow-left"></i> {% trans "Retour" %}
@@ -328,25 +360,13 @@
         const step2 = document.getElementById("step2");
         const badgeStep1 = document.getElementById("badgeStep1");
         const badgeStep2 = document.getElementById("badgeStep2");
-        
+
         const btnBack = document.getElementById("btnBack");
         const btnNext = document.getElementById("btnNext");
         const btnSubmit = document.getElementById("btnSubmit");
+        const form = document.getElementById("formationForm");
 
-        // Vers l'étape 2
-        btnNext.addEventListener("click", function() {
-            step1.classList.remove("active");
-            step2.classList.add("active");
-            badgeStep1.classList.remove("active");
-            badgeStep2.classList.add("active");
-
-            btnNext.style.display = "none";
-            btnBack.style.display = "inline-flex";
-            btnSubmit.style.display = "inline-flex";
-        });
-
-        // Retour à l'étape 1
-        btnBack.addEventListener("click", function() {
+        function showStep1() {
             step2.classList.remove("active");
             step1.classList.add("active");
             badgeStep2.classList.remove("active");
@@ -355,19 +375,41 @@
             btnNext.style.display = "inline-flex";
             btnBack.style.display = "none";
             btnSubmit.style.display = "none";
-        });
+        }
+
+        function showStep2() {
+            step1.classList.remove("active");
+            step2.classList.add("active");
+            badgeStep1.classList.remove("active");
+            badgeStep2.classList.add("active");
+
+            btnNext.style.display = "none";
+            btnBack.style.display = "inline-flex";
+            btnSubmit.style.display = "inline-flex";
+        }
+
+        btnNext.addEventListener("click", showStep2);
+        btnBack.addEventListener("click", showStep1);
 
         // --- CONFIGURATION INITIALE DE QUILL ---
         const toolbarOptions = [
             ['bold', 'italic', 'underline', 'strike'],
-            [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+            ['list', 'ordered'], ['list', 'bullet'],
             ['clean']
         ];
 
-        const textareaShort = document.getElementById("id_description_courte") || document.querySelector("[name='description_courte']");
-        const textareaFull  = document.getElementById("id_programme_detaille") || document.querySelector("[name='programme_detaille']");
+        const toolbarAdvancedOptions = [
+            [{ 'header': [1, 2, 3, false] }],
+            ['bold', 'italic', 'underline'],
+            ['list', 'ordered'], ['list', 'bullet'],
+            ['link', 'clean']
+        ];
 
-        let quillShort, quillFull;
+        const textareaShort = document.getElementById("id_description_courte") || document.querySelector("[name='description_courte']");
+        const textareaNiveau = document.getElementById("id_niveau_requis") || document.querySelector("[name='niveau_requis']");
+        const textareaDebouches = document.getElementById("id_debouches") || document.querySelector("[name='debouches']");
+
+        let quillShort, quillNiveau, quillDebouches;
 
         if (textareaShort) {
             quillShort = new Quill('#editor_description_courte', {
@@ -378,32 +420,58 @@
             quillShort.root.innerHTML = textareaShort.value;
         }
 
-        if (textareaFull) {
-            quillFull = new Quill('#editor_programme_detaille', {
-                modules: { 
-                    toolbar: [
-                        [{ 'header': [1, 2, 3, false] }],
-                        ['bold', 'italic', 'underline'],
-                        [{ 'list': 'ordered'}, { 'list': 'bullet' }],
-                        ['link', 'clean']
-                    ] 
-                },
+        if (textareaNiveau) {
+            quillNiveau = new Quill('#editor_niveau_requis', {
+                modules: { toolbar: toolbarAdvancedOptions },
                 theme: 'snow',
-                placeholder: 'Détaillez le programme étape par étape...'
+                placeholder: 'Ex: Diplôme requis, niveau d\'études minimum...'
             });
-            quillFull.root.innerHTML = textareaFull.value;
+            quillNiveau.root.innerHTML = textareaNiveau.value;
         }
 
-        // --- SYNCHRONISATION AVANT ENVOI DU POST ---
-        const form = document.getElementById("formationForm");
-        form.addEventListener("submit", function(e) {
-            if (textareaShort && quillShort) {
-                textareaShort.value = quillShort.root.innerHTML;
-            }
-            if (textareaFull && quillFull) {
-                textareaFull.value = quillFull.root.innerHTML;
-            }
-        });
+        if (textareaDebouches) {
+            quillDebouches = new Quill('#editor_debouches', {
+                modules: { toolbar: toolbarAdvancedOptions },
+                theme: 'snow',
+                placeholder: 'Ex: Métiers accessibles, débouchés après la formation...'
+            });
+            quillDebouches.root.innerHTML = textareaDebouches.value;
+        }
+
+        // --- SYNCHRONISATION ET VALIDATION MANUELLE AVANT LE POST ---
+        if (form) {
+            form.addEventListener("submit", function(e) {
+                // 1. Transfert du contenu Quill vers les textareas masqués
+                if (textareaShort && quillShort) {
+                    textareaShort.value = (quillShort.root.innerHTML === '<p><br></p>') ? '' : quillShort.root.innerHTML;
+                }
+                if (textareaNiveau && quillNiveau) {
+                    textareaNiveau.value = (quillNiveau.root.innerHTML === '<p><br></p>') ? '' : quillNiveau.root.innerHTML;
+                }
+                if (textareaDebouches && quillDebouches) {
+                    textareaDebouches.value = (quillDebouches.root.innerHTML === '<p><br></p>') ? '' : quillDebouches.root.innerHTML;
+                }
+
+                // 2. Validation personnalisée pour éviter le blocage invisible
+                let invalidFieldInStep1 = false;
+                const step1Fields = step1.querySelectorAll("input[required], textarea[required], select[required]");
+
+                step1Fields.forEach(field => {
+                    if (!field.value.trim()) {
+                        invalidFieldInStep1 = true;
+                        field.style.borderColor = "#dc2626"; // Bordure rouge
+                    } else {
+                        field.style.borderColor = "#e2e8f0";
+                    }
+                });
+
+                if (invalidFieldInStep1) {
+                    e.preventDefault(); // Annule la soumission
+                    showStep1(); // Renvoie automatiquement l'utilisateur à l'étape défectueuse
+                    alert("Certains champs obligatoires de l'étape 1 ne sont pas remplis.");
+                }
+            });
+        }
     });
 </script>
 {% endblock %}

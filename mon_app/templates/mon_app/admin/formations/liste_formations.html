@@ -22,9 +22,10 @@
 
     .page-header h1 {
         font-size: 1.8rem;
-        color: #4A7c59; /* Vert Forêt à la place du Bleu Nuit */
+        color: #4A7c59; 
         margin: 0;
         font-weight: 600;
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
     }
 
     /* Zone de recherche */
@@ -38,43 +39,54 @@
         padding: 10px 15px;
         padding-left: 40px;
         width: 300px;
-        border: 1px solid #e2e8f0;
+        border: 1px solid rgba(255, 255, 255, 0.4);
         border-radius: 8px;
         font-size: 0.9rem;
         outline: none;
-        transition: border-color 0.2s ease;
-        background-color: white;
+        transition: all 0.2s ease;
+        background-color: rgba(255, 255, 255, 0.4);
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+        color: #0f172a;
     }
 
     [data-theme="dark"] .search-box input {
-        background-color: #1e293b;
-        border-color: #334155;
+        background-color: rgba(30, 41, 59, 0.4);
+        border-color: rgba(255, 255, 255, 0.1);
         color: white;
     }
 
     .search-box input:focus {
-        border-color: #4A7c59; /* Focus Vert Forêt à la place du Rose */
-        box-shadow: 0 0 0 4px rgba(74, 124, 89, 0.15);
+        border-color: #4A7c59; 
+        background-color: rgba(255, 255, 255, 0.9);
+        box-shadow: 0 0 0 4px rgba(74, 124, 89, 0.2);
+    }
+
+    [data-theme="dark"] .search-box input:focus {
+        background-color: rgba(30, 41, 59, 0.9);
     }
 
     .search-box i {
         position: absolute;
         left: 15px;
-        color: #94a3b8;
+        color: #64748b;
     }
 
-    /* Conteneur de tableau responsive */
+    /* Conteneur de tableau responsive - Glassmorphism principal */
     .table-responsive {
-        background: white;
+        background-color: rgba(255, 255, 255, 0.3);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
         border-radius: 12px;
-        box-shadow: 0 4px 166px rgba(74, 124, 89, 0.04);
-        border: 1px solid rgba(0,0,0,0.05);
+        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.45);
         overflow-x: auto;
     }
 
     [data-theme="dark"] .table-responsive {
-        background: #1e293b;
-        border-color: #334155;
+        background-color: rgba(30, 41, 59, 0.3);
+        border-color: rgba(255, 255, 255, 0.1);
+        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
     }
 
     /* Style du Tableau */
@@ -88,19 +100,21 @@
     .formation-table th, 
     .formation-table td {
         padding: 16px 20px;
-        border-bottom: 1px solid #f1f5f9;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.25);
         font-size: 0.9rem;
         vertical-align: middle;
+        color: #0f172a;
     }
 
     [data-theme="dark"] .formation-table th,
     [data-theme="dark"] .formation-table td {
-        border-bottom: 1px solid #334155;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        color: #cbd5e1;
     }
 
     .formation-table th {
-        background-color: #f8fafc;
-        color: #475569;
+        background-color: rgba(248, 250, 252, 0.4);
+        color: #334155;
         font-weight: 600;
         text-transform: uppercase;
         font-size: 0.75rem;
@@ -108,16 +122,16 @@
     }
 
     [data-theme="dark"] .formation-table th {
-        background-color: #151f32;
+        background-color: rgba(21, 31, 50, 0.5);
         color: #94a3b8;
     }
 
     .formation-table tr:hover {
-        background-color: rgba(74, 124, 89, 0.02); /* Léger voile vert au survol */
+        background-color: rgba(74, 124, 89, 0.06); /* Voile vert légèrement plus visible sur le verre */
     }
 
     [data-theme="dark"] .formation-table tr:hover {
-        background-color: #243249;
+        background-color: rgba(36, 50, 73, 0.4);
     }
 
     /* Miniatures d'images */
@@ -126,7 +140,8 @@
         height: 45px;
         border-radius: 6px;
         object-fit: cover;
-        background-color: #f1f5f9;
+        background-color: rgba(255, 255, 255, 0.4);
+        border: 1px solid rgba(255, 255, 255, 0.2);
     }
 
     /* Badges d'état */
@@ -139,13 +154,23 @@
     }
 
     .status-active {
-        background-color: rgba(74, 124, 89, 0.15); /* Vert de la charte plus doux en opacité */
-        color: #4A7c59;
+        background-color: rgba(74, 124, 89, 0.2); 
+        color: #2c4c36;
+    }
+    
+    [data-theme="dark"] .status-active {
+        background-color: rgba(74, 124, 89, 0.3);
+        color: #8ce0a2;
     }
 
     .status-inactive {
-        background-color: rgba(239, 68, 68, 0.1);
-        color: #dc2626;
+        background-color: rgba(239, 68, 68, 0.15);
+        color: #b91c1c;
+    }
+    
+    [data-theme="dark"] .status-inactive {
+        background-color: rgba(239, 68, 68, 0.25);
+        color: #fca5a5;
     }
 
     /* Boutons d'action */
@@ -169,20 +194,31 @@
     }
 
     .btn-edit {
-        background-color: rgba(74, 124, 89, 0.08); /* Fond vert transparent */
+        background-color: rgba(74, 124, 89, 0.15); 
         color: #4A7c59;
     }
+    
+    [data-theme="dark"] .btn-edit {
+        color: #8ce0a2;
+        background-color: rgba(74, 124, 89, 0.25);
+    }
+    
     .btn-edit:hover {
-        background-color: #4A7c59; /* Vert uni au survol */
+        background-color: #4A7c59; 
         color: white;
+        transform: translateY(-1px);
     }
 
     /* Message si vide */
     .empty-message {
         padding: 40px;
         text-align: center;
-        color: #64748b;
+        color: #475569;
         font-size: 0.95rem;
+    }
+    
+    [data-theme="dark"] .empty-message {
+        color: #94a3b8;
     }
 
     @media (max-width: 640px) {
@@ -230,19 +266,19 @@
                         {% if formation.image %}
                             <img src="{{ formation.image.url }}" alt="Logo" class="formation-img">
                         {% else %}
-                            <div class="formation-img" style="display: flex; align-items: center; justify-content: center; background: #e2e8f0; color: #94a3b8;"><i class="fas fa-graduation-cap"></i></div>
+                            <div class="formation-img" style="display: flex; align-items: center; justify-content: center; background: rgba(255, 255, 255, 0.2); color: #64748b;"><i class="fas fa-graduation-cap"></i></div>
                         {% endif %}
                     </td>
                     <td class="formation-title" style="font-weight: 500;">{{ formation.titre }}</td>
                     
-                    <td><span style="color: #64748b;">{{ formation.get_categorie_display }}</span></td>
+                    <td><span style="opacity: 0.8;">{{ formation.get_categorie_display }}</span></td>
 
                     <td>{{ formation.duree }}</td>
                     <td>
                         {% if formation.prix %}
-                            <span style="font-weight: 600; color: #4A7c59;">{{ formation.prix }} FCFA</span> <!-- Vert Forêt pour le prix -->
+                            <span style="font-weight: 600; color: #4A7c59;">{{ formation.prix }} FCFA</span>
                         {% else %}
-                            <span style="color: #94a3b8; font-style: italic;">Gratuit</span>
+                            <span style="opacity: 0.6; font-style: italic;">Gratuit</span>
                         {% endif %}
                     </td>
                     <td>
@@ -263,7 +299,7 @@
                 {% empty %}
                 <tr>
                     <td colspan="7" class="empty-message">
-                        <i class="fas fa-folder-open" style="font-size: 2rem; margin-bottom: 10px; display: block; color: #cbd5e1;"></i>
+                        <i class="fas fa-folder-open" style="font-size: 2rem; margin-bottom: 10px; display: block; color: rgba(148, 163, 184, 0.5);"></i>
                         Aucune formation n'a été trouvée dans la base de données.
                     </td>
                 </tr>

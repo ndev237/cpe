@@ -2,35 +2,43 @@
 
 {% block content %}
 <style>
-    /* Style du conteneur de formulaire */
+    /* --- CONTENEUR PRINCIPAL (GLASSMORPHIC) --- */
     .form-container {
-        background: #ffffff;
-        border-radius: 20px;
-        box-shadow: 0 20px 40px rgba(74, 124, 89, 0.06);
-        border: 1px solid #e2e8f0;
-        padding: 2.5rem;
+        width: 100%;
         max-width: 700px;
         margin: 20px auto;
-        transition: background 0.3s, color 0.3s;
+        padding: 2.5rem;
+        
+        /* Effet de verre ultra-transparent */
+        background-color: rgba(255, 255, 255, 0.3);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        
+        border-radius: 20px;
+        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.45);
+        transition: background 0.3s, border-color 0.3s, box-shadow 0.3s;
+        box-sizing: border-box;
     }
 
     [data-theme="dark"] .form-container {
-        background: #1e293b;
-        border-color: #334155;
-        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        background-color: rgba(30, 41, 59, 0.3);
+        border-color: rgba(255, 255, 255, 0.1);
+        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
     }
 
     .form-title {
         font-size: 1.5rem;
         font-weight: 700;
         margin-bottom: 1.5rem;
-        color: #4A7c59; /* Vert Forêt */
+        color: #4A7c59; /* Vert Forêt original */
     }
+    
     [data-theme="dark"] .form-title {
-        color: #f1f5f9;
+        color: #62a375;
     }
 
-    /* Groupes de champs */
+    /* --- GROUPES DE CHAMPS --- */
     .form-group {
         margin-bottom: 1.5rem;
         display: flex;
@@ -41,76 +49,90 @@
         font-size: 0.875rem;
         font-weight: 600;
         margin-bottom: 0.5rem;
-        color: #4b5563;
+        color: #334155;
     }
+    
     [data-theme="dark"] .form-group label {
         color: #cbd5e1;
     }
 
-    /* Inputs et Textarea */
+    /* --- INPUTS ET TEXTAREA TRANSLUCIDES --- */
     .form-control {
         width: 100%;
         padding: 0.75rem 1rem;
         font-family: 'Poppins', sans-serif;
         font-size: 0.9rem;
-        border: 1px solid #e2e8f0;
+        border: 1px solid rgba(255, 255, 255, 0.4);
         border-radius: 10px;
-        background: #f8fafc;
-        color: #1e293b;
+        background-color: rgba(255, 255, 255, 0.25);
+        color: #0f172a;
         outline: none;
         transition: all 0.2s ease;
         box-sizing: border-box;
     }
+    
     [data-theme="dark"] .form-control {
-        background: #0f172a;
-        border-color: #334155;
-        color: #f1f5f9;
+        background-color: rgba(15, 23, 42, 0.25);
+        border-color: rgba(255, 255, 255, 0.1);
+        color: #ffffff;
     }
 
-    /* Focus sur les inputs : Vert Forêt */
+    /* Focus sur les champs textuels */
     .form-control:focus {
         border-color: #4A7c59;
-        background-color: #ffffff;
-        box-shadow: 0 0 0 4px rgba(74, 124, 89, 0.15);
+        background-color: rgba(253, 251, 247, 0.9); /* Blanc cassé opaque au focus */
+        box-shadow: 0 0 0 4px rgba(74, 124, 89, 0.2);
     }
+    
     [data-theme="dark"] .form-control:focus {
-        background-color: #0f172a;
+        background-color: rgba(15, 23, 42, 0.9);
+        border-color: #62a375;
+        box-shadow: 0 0 0 4px rgba(98, 163, 117, 0.2);
     }
 
-    /* Style spécifique pour le champ fichier */
+    /* --- ZONE DE DÉPÔT D'IMAGE (DASHED VERRE) --- */
     .form-control-file {
         padding: 0.75rem 1rem;
-        border: 2px dashed #e2e8f0;
+        border: 2px dashed rgba(255, 255, 255, 0.6);
         border-radius: 10px;
         cursor: pointer;
-        background: #f8fafc;
-        color: #4b5563;
+        background-color: rgba(253, 251, 247, 0.2); /* Blanc cassé translucide */
+        color: #475569;
     }
+    
     [data-theme="dark"] .form-control-file {
-        background: #0f172a;
-        border-color: #334155;
+        background-color: rgba(15, 23, 42, 0.2);
+        border-color: rgba(255, 255, 255, 0.15);
         color: #94a3b8;
     }
+    
     .form-control-file:focus {
         border-color: #4A7c59;
         border-style: dashed;
+        background-color: rgba(250, 250, 250, 0.4);
     }
 
-    /* Actions bouton */
+    [data-theme="dark"] .form-control-file:focus {
+        border-color: #62a375;
+        background-color: rgba(15, 23, 42, 0.4);
+    }
+
+    /* --- ACTIONS / BOUTONS --- */
     .form-actions {
         display: flex;
         justify-content: flex-end;
         gap: 12px;
         margin-top: 2rem;
-        padding-top: 16px;
-        border-top: 1px solid #e2e8f0;
+        padding-top: 20px;
+        border-top: 1px solid rgba(255, 255, 255, 0.3);
     }
+    
     [data-theme="dark"] .form-actions {
-        border-top-color: #334155;
+        border-top-color: rgba(255, 255, 255, 0.05);
     }
 
     .btn-submit {
-        background-color: #4A7c59; /* Vert Forêt */
+        background-color: #4A7c59;
         color: white;
         border: none;
         padding: 0.75rem 1.5rem;
@@ -119,20 +141,20 @@
         font-weight: 600;
         border-radius: 10px;
         cursor: pointer;
-        box-shadow: 0 4px 12px rgba(74, 124, 89, 0.15); /* Ombre Verte corrigée */
+        box-shadow: 0 4px 14px rgba(74, 124, 89, 0.2);
         transition: all 0.2s ease;
     }
 
     .btn-submit:hover {
-        background-color: #3b6347; /* Vert plus sombre au survol */
+        background-color: #3b6347;
         transform: translateY(-1px);
-        box-shadow: 0 6px 16px rgba(74, 124, 89, 0.25);
+        box-shadow: 0 6px 16px rgba(74, 124, 89, 0.3);
     }
 
     .btn-cancel {
-        background: #f1f5f9;
-        border: 1px solid #e2e8f0;
-        color: #475569;
+        background-color: rgba(255, 255, 255, 0.4);
+        border: 1px solid rgba(255, 255, 255, 0.5);
+        color: #334155;
         padding: 0.75rem 1.5rem;
         font-family: 'Poppins', sans-serif;
         font-size: 14px;
@@ -142,23 +164,26 @@
         text-align: center;
         transition: all 0.2s ease;
     }
+    
     [data-theme="dark"] .btn-cancel {
-        background: #1e293b;
-        border-color: #334155;
-        color: #94a3b8;
+        background-color: rgba(255, 255, 255, 0.08);
+        border-color: rgba(255, 255, 255, 0.1);
+        color: #cbd5e1;
     }
+    
     .btn-cancel:hover {
-        background: #e2e8f0;
+        background-color: rgba(255, 255, 255, 0.7);
     }
+    
     [data-theme="dark"] .btn-cancel:hover {
-        background: #334155;
-        color: #f1f5f9;
+        background-color: rgba(255, 255, 255, 0.15);
+        color: #ffffff;
     }
 </style>
 
 <div class="form-container">
     <h2 class="form-title">
-        <i class="fas fa-camera" style="margin-right: 10px; color: #4A7c59;"></i> Publier une nouvelle photo <!-- Couleur fixée ici -->
+        <i class="fas fa-camera" style="margin-right: 10px; color: #4A7c59;"></i> Publier une nouvelle photo
     </h2>
     
     <form method="POST" enctype="multipart/form-data">

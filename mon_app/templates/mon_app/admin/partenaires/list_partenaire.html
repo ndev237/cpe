@@ -6,7 +6,7 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
 <style>
-    /* Conteneur principal */
+    /* --- CONTENEUR PRINCIPAL --- */
     .liste-partenaires-container {
         font-family: 'Poppins', sans-serif;
         padding: 10px;
@@ -14,7 +14,7 @@
         margin: 0 auto;
     }
 
-    /* Barre d'action supérieure (Titre + Recherche) */
+    /* --- BARRE D'ACTION SUPÉRIEURE --- */
     .page-header {
         display: flex;
         justify-content: space-between;
@@ -26,12 +26,16 @@
 
     .page-header h1 {
         font-size: 1.8rem;
-        color: #4A7c59; /* Vert Forêt */
+        color: #4A7c59; /* Vert Forêt d'origine */
         margin: 0;
         font-weight: 600;
     }
+    
+    [data-theme="dark"] .page-header h1 {
+        color: #f1f5f9;
+    }
 
-    /* Zone de recherche */
+    /* --- ZONE DE RECHERCHE --- */
     .search-box {
         position: relative;
         display: flex;
@@ -39,49 +43,63 @@
     }
 
     .search-box input {
-        padding: 10px 15px;
-        padding-left: 40px;
+        padding: 10px 15px 10px 40px;
         width: 300px;
-        border: 1px solid #e2e8f0;
+        border: 1px solid rgba(255, 255, 255, 0.4);
         border-radius: 8px;
         font-size: 0.9rem;
         outline: none;
-        transition: border-color 0.2s ease;
-        background-color: white;
+        background-color: rgba(255, 255, 255, 0.25);
+        color: #0f172a;
+        transition: all 0.3s ease;
     }
 
     [data-theme="dark"] .search-box input {
-        background-color: #1e293b;
-        border-color: #334155;
-        color: white;
+        background-color: rgba(15, 23, 42, 0.25);
+        border-color: rgba(255, 255, 255, 0.1);
+        color: #ffffff;
     }
 
     .search-box input:focus {
         border-color: #4A7c59; 
+        background-color: rgba(255, 255, 255, 0.9);
         box-shadow: 0 0 0 4px rgba(74, 124, 89, 0.15);
+    }
+    
+    [data-theme="dark"] .search-box input:focus {
+        background-color: rgba(15, 23, 42, 0.9);
+        border-color: #62a375;
+        box-shadow: 0 0 0 4px rgba(98, 163, 117, 0.15);
     }
 
     .search-box i {
         position: absolute;
         left: 15px;
+        color: #64748b;
+    }
+    
+    [data-theme="dark"] .search-box i {
         color: #94a3b8;
     }
 
-    /* Conteneur de tableau responsive */
+    /* --- TABLEAU RESPONSIVE (GLASSMORPHIC) --- */
     .table-responsive {
-        background: white;
+        background-color: rgba(255, 255, 255, 0.3);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
         border-radius: 12px;
-        box-shadow: 0 4px 166px rgba(74, 124, 89, 0.04);
-        border: 1px solid rgba(0,0,0,0.05);
+        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.04);
+        border: 1px solid rgba(255, 255, 255, 0.45);
         overflow-x: auto;
+        transition: background 0.3s, border-color 0.3s;
     }
 
     [data-theme="dark"] .table-responsive {
-        background: #1e293b;
-        border-color: #334155;
+        background-color: rgba(30, 41, 59, 0.3);
+        border-color: rgba(255, 255, 255, 0.1);
+        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
     }
 
-    /* Style du Tableau */
     .partenaire-table {
         width: 100%;
         border-collapse: collapse;
@@ -92,18 +110,20 @@
     .partenaire-table th, 
     .partenaire-table td {
         padding: 16px 20px;
-        border-bottom: 1px solid #f1f5f9;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.2);
         font-size: 0.9rem;
         vertical-align: middle;
+        color: #334155;
     }
 
     [data-theme="dark"] .partenaire-table th,
     [data-theme="dark"] .partenaire-table td {
-        border-bottom: 1px solid #334155;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        color: #cbd5e1;
     }
 
     .partenaire-table th {
-        background-color: #f8fafc;
+        background-color: rgba(255, 255, 255, 0.2);
         color: #475569;
         font-weight: 600;
         text-transform: uppercase;
@@ -112,35 +132,57 @@
     }
 
     [data-theme="dark"] .partenaire-table th {
-        background-color: #151f32;
+        background-color: rgba(15, 23, 42, 0.15);
         color: #94a3b8;
     }
 
+    .partenaire-table tbody tr:last-child td {
+        border-bottom: none;
+    }
+
     .partenaire-table tr:hover {
-        background-color: rgba(74, 124, 89, 0.02); /* Léger voile vert au survol */
+        background-color: rgba(255, 255, 255, 0.35);
     }
 
     [data-theme="dark"] .partenaire-table tr:hover {
-        background-color: #243249;
+        background-color: rgba(255, 255, 255, 0.03);
     }
 
-    /* Miniatures des logos partenaires */
+    /* --- MINIATURES DES LOGOS --- */
     .partenaire-img {
         width: 50px;
         height: 50px;
         border-radius: 8px;
-        object-fit: contain; /* Idéal pour les logos pour ne pas les déformer */
-        background-color: #f8fafc;
-        border: 1px solid #e2e8f0;
+        object-fit: contain;
+        background-color: rgba(255, 255, 255, 0.4);
+        border: 1px solid rgba(255, 255, 255, 0.5);
         padding: 4px;
+        box-sizing: border-box;
     }
 
     [data-theme="dark"] .partenaire-img {
-        background-color: #334155;
-        border-color: #475569;
+        background-color: rgba(15, 23, 42, 0.3);
+        border-color: rgba(255, 255, 255, 0.08);
     }
 
-    /* Boutons d'action */
+    /* --- BADGE ORDRE D'AFFICHAGE --- */
+    .badge-ordre {
+        font-weight: 600;
+        background-color: rgba(255, 255, 255, 0.5);
+        border: 1px solid rgba(255, 255, 255, 0.6);
+        padding: 4px 10px;
+        border-radius: 6px;
+        color: #475569;
+        display: inline-block;
+    }
+
+    [data-theme="dark"] .badge-ordre {
+        background-color: rgba(255, 255, 255, 0.06);
+        border-color: rgba(255, 255, 255, 0.05);
+        color: #cbd5e1;
+    }
+
+    /* --- BOUTONS D'ACTION --- */
     .action-btn-group {
         display: flex;
         gap: 8px;
@@ -156,34 +198,51 @@
         text-decoration: none;
         font-size: 0.85rem;
         transition: all 0.2s ease;
-        border: none;
+        border: 1px solid transparent;
         cursor: pointer;
     }
 
     .btn-edit {
-        background-color: rgba(74, 124, 89, 0.08); 
+        background-color: rgba(74, 124, 89, 0.1); 
+        border-color: rgba(74, 124, 89, 0.2);
         color: #4A7c59;
     }
     .btn-edit:hover {
         background-color: #4A7c59; 
+        border-color: #4A7c59;
+        color: white;
+    }
+    [data-theme="dark"] .btn-edit {
+        background-color: rgba(98, 163, 117, 0.15);
+        border-color: rgba(98, 163, 117, 0.2);
+        color: #62a375;
+    }
+    [data-theme="dark"] .btn-edit:hover {
+        background-color: #62a375;
         color: white;
     }
 
     .btn-link {
-        background-color: rgba(209, 143, 178, 0.15); /* Teinte rose issue de votre charte */
+        background-color: rgba(209, 143, 178, 0.15);
+        border-color: rgba(209, 143, 178, 0.25);
         color: #D18FB2;
     }
     .btn-link:hover {
         background-color: #D18FB2;
+        border-color: #D18FB2;
         color: white;
     }
 
-    /* Message si vide */
+    /* --- ÉTAT VIDE --- */
     .empty-message {
-        padding: 40px;
+        padding: 50px 40px;
         text-align: center;
         color: #64748b;
         font-size: 0.95rem;
+    }
+    
+    [data-theme="dark"] .empty-message {
+        color: #94a3b8;
     }
 
     @media (max-width: 640px) {
@@ -229,12 +288,17 @@
                         {% if partenaire.logo %}
                             <img src="{{ partenaire.logo.url }}" alt="{{ partenaire.nom }}" class="partenaire-img">
                         {% else %}
-                            <div class="partenaire-img" style="display: flex; align-items: center; justify-content: center; background: #e2e8f0; color: #94a3b8;">
+                            <div class="partenaire-img" style="display: flex; align-items: center; justify-content: center; background: rgba(255,255,255,0.2); color: #94a3b8;">
                                 <i class="fas fa-handshake"></i>
                             </div>
                         {% endif %}
                     </td>
-                    <td class="partenaire-name" style="font-weight: 500;">{{ partenaire.nom }}</td>
+                    <td class="partenaire-name" style="font-weight: 500; color: #4A7c59;">
+                        <script>
+                            // Harmonisation de la couleur de surbrillance du texte selon le thème actif
+                            document.write(document.documentElement.getAttribute('data-theme') === 'dark' ? '<span style="color:#ffffff">{{ partenaire.nom }}</span>' : '<span>{{ partenaire.nom }}</span>');
+                        </script>
+                    </td>
                     
                     <td>
                         {% if partenaire.site_web %}
@@ -247,7 +311,7 @@
                     </td>
 
                     <td style="text-align: center;">
-                        <span style="font-weight: 600; background-color: #f1f5f9; padding: 4px 10px; border-radius: 6px; color: #475569;">
+                        <span class="badge-ordre">
                             {{ partenaire.ordre_affichage }}
                         </span>
                     </td>
@@ -268,7 +332,7 @@
                 {% empty %}
                 <tr>
                     <td colspan="5" class="empty-message">
-                        <i class="fas fa-handshake-slash" style="font-size: 2rem; margin-bottom: 10px; display: block; color: #cbd5e1;"></i>
+                        <i class="fas fa-handshake-slash" style="font-size: 2rem; margin-bottom: 10px; display: block; color: rgba(255,255,255,0.4);"></i>
                         {% trans "Aucun partenaire n'a été trouvé dans la base de données." %}
                     </td>
                 </tr>

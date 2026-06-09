@@ -12,10 +12,15 @@
     .formation-container {
         width: 100%;
         max-width: 1100px;
-        background-color: #ffffff;
+        
+        /* Effet de verre ultra-transparent */
+        background-color: rgba(255, 255, 255, 0.3);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        
         border-radius: 20px;
-        box-shadow: 0 20px 40px rgba(74, 124, 89, 0.06);
-        border: 1px solid #e2e8f0;
+        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.06);
+        border: 1px solid rgba(255, 255, 255, 0.45);
         display: grid;
         grid-template-columns: 0.9fr 1.1fr;
         overflow: hidden;
@@ -23,15 +28,22 @@
         margin: 20px auto;
     }
 
-    /* --- COLONNE GAUCHE : VISUEL (DÉGRADÉ VERT & HALO ROSE) --- */
+    [data-theme="dark"] .formation-container {
+        background-color: rgba(30, 41, 59, 0.3);
+        border-color: rgba(255, 255, 255, 0.1);
+        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
+    }
+
+    /* --- COLONNE GAUCHE : VISUEL --- */
     .formation-sidebar {
-        background: linear-gradient(135deg, #4A7c59 0%, #2c4c35 100%);
+        background: rgba(255, 255, 255, 0.05);
         padding: 3rem;
         display: flex;
         flex-direction: column;
         justify-content: center;
         align-items: center;
         position: relative;
+        border-right: 1px solid rgba(255, 255, 255, 0.2);
     }
 
     .formation-sidebar::before {
@@ -39,9 +51,9 @@
         position: absolute;
         width: 300px;
         height: 300px;
-        background: rgba(209, 143, 178, 0.15);
+        background: rgba(209, 143, 178, 0.2);
         border-radius: 50%;
-        filter: blur(40px);
+        filter: blur(50px);
     }
 
     .formation-hero-img {
@@ -51,6 +63,7 @@
         display: block;
         position: relative;
         z-index: 1;
+        filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.05));
     }
 
     /* --- COLONNE DROITE : FORMULAIRE --- */
@@ -71,8 +84,12 @@
 
     .form-subtitle {
         font-size: 0.9rem;
-        color: #4b5563;
+        color: #475569;
         margin-bottom: 28px;
+    }
+
+    [data-theme="dark"] .form-subtitle {
+        color: #94a3b8;
     }
     
     .form-field { 
@@ -83,11 +100,15 @@
         display: block; 
         font-weight: 600; 
         margin-bottom: 8px; 
-        color: #4b5563; 
+        color: #334155; 
         font-size: 14px; 
     }
+
+    [data-theme="dark"] .form-field label {
+        color: #cbd5e1;
+    }
     
-    /* Ciblage automatique des inputs générés par Django */
+    /* Ciblage et stylisation des inputs Django en mode Verre */
     .form-field input[type="text"], 
     .form-field input[type="number"], 
     .form-field input[type="email"], 
@@ -95,29 +116,48 @@
     .form-field select { 
         width: 100%; 
         padding: 12px; 
-        border: 1px solid #e2e8f0; 
+        border: 1px solid rgba(255, 255, 255, 0.4); 
         border-radius: 10px; 
-        background-color: #f8fafc;
+        background-color: rgba(255, 255, 255, 0.25);
         box-sizing: border-box; 
         transition: all 0.2s ease;
         font-family: inherit;
-        color: #1e293b;
+        color: #0f172a;
+        outline: none;
+    }
+
+    [data-theme="dark"] .form-field input[type="text"], 
+    [data-theme="dark"] .form-field input[type="number"], 
+    [data-theme="dark"] .form-field input[type="email"], 
+    [data-theme="dark"] .form-field textarea, 
+    [data-theme="dark"] .form-field select { 
+        background-color: rgba(15, 23, 42, 0.25);
+        border-color: rgba(255, 255, 255, 0.1);
+        color: #ffffff;
     }
     
-    /* Effet focus avec ton rose de charte */
     .form-field input:focus, 
     .form-field textarea:focus, 
     .form-field select:focus { 
-        outline: none; 
         border-color: #D18FB2; 
-        background-color: #fff;
-        box-shadow: 0 0 0 4px rgba(209, 143, 178, 0.15); 
+        background-color: rgba(255, 255, 255, 0.9);
+        box-shadow: 0 0 0 4px rgba(209, 143, 178, 0.25); 
+    }
+
+    [data-theme="dark"] .form-field input:focus, 
+    [data-theme="dark"] .form-field textarea:focus, 
+    [data-theme="dark"] .form-field select:focus { 
+        background-color: rgba(15, 23, 42, 0.9);
     }
 
     .form-field input[type="file"] {
         padding: 8px 0;
-        color: #4b5563;
+        color: #475569;
         font-size: 14px;
+    }
+
+    [data-theme="dark"] .form-field input[type="file"] {
+        color: #cbd5e1;
     }
 
     .form-field input[type="checkbox"] {
@@ -132,8 +172,12 @@
         display: flex; 
         justify-content: flex-end; 
         gap: 12px;
-        padding-top: 16px; 
-        border-top: 1px solid #e2e8f0; 
+        padding-top: 20px; 
+        border-top: 1px solid rgba(255, 255, 255, 0.3); 
+    }
+
+    [data-theme="dark"] .form-actions {
+        border-color: rgba(255, 255, 255, 0.05);
     }
 
     .btn {
@@ -151,44 +195,73 @@
     }
 
     .btn-secondary {
-        background-color: #f1f5f9;
-        color: #475569;
-        border: 1px solid #e2e8f0;
+        background-color: rgba(255, 255, 255, 0.4);
+        color: #334155;
+        border: 1px solid rgba(255, 255, 255, 0.5);
+    }
+
+    [data-theme="dark"] .btn-secondary {
+        background-color: rgba(255, 255, 255, 0.08);
+        border-color: rgba(255, 255, 255, 0.1);
+        color: #cbd5e1;
     }
 
     .btn-secondary:hover {
-        background-color: #e2e8f0;
+        background-color: rgba(255, 255, 255, 0.7);
+    }
+
+    [data-theme="dark"] .btn-secondary:hover {
+        background-color: rgba(255, 255, 255, 0.15);
     }
 
     .btn-primary { 
         background-color: #4A7c59; 
         color: white; 
         border: none;
+        box-shadow: 0 4px 14px rgba(74, 124, 89, 0.2);
     }
     
     .btn-primary:hover { 
-        background-color: #3b6347; 
+        background-color: #385f44; 
         transform: translateY(-1px); 
+        box-shadow: 0 6px 16px rgba(74, 124, 89, 0.3);
     }
 
-    /* --- EDITEUR DE TEXTE --- */
+    /* --- EDITEUR DE TEXTE (QUILL) --- */
     .quill-editor-wrapper {
-        background-color: #f8fafc;
+        background-color: rgba(255, 255, 255, 0.25);
         border-radius: 10px;
         overflow: hidden;
-        border: 1px solid #e2e8f0;
+        border: 1px solid rgba(255, 255, 255, 0.4);
     }
+
+    [data-theme="dark"] .quill-editor-wrapper {
+        background-color: rgba(15, 23, 42, 0.25);
+        border-color: rgba(255, 255, 255, 0.1);
+    }
+
     .ql-toolbar.ql-snow {
         border: none !important;
-        border-bottom: 1px solid #e2e8f0 !important;
-        background: #f1f5f9;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.3) !important;
+        background: rgba(255, 255, 255, 0.4) !important;
     }
+
+    [data-theme="dark"] .ql-toolbar.ql-snow {
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
+        background: rgba(15, 23, 42, 0.4) !important;
+    }
+
     .ql-container.ql-snow {
         border: none !important;
         min-height: 250px;
         font-family: 'Poppins', sans-serif !important;
         font-size: 14px;
-        color: #1e293b;
+        background: transparent;
+        color: #0f172a;
+    }
+
+    [data-theme="dark"] .ql-container.ql-snow {
+        color: #ffffff;
     }
 
     .error-text {
@@ -217,13 +290,10 @@
 
 <div class="formation-container">
     
-    <!-- Colonne Visuelle Gauche - Identique au formulaire formation -->
     <div class="formation-sidebar" aria-hidden="true">
-        <!-- Tu peux remplacer l'image si tu as un SVG spécifique pour les actualités -->
         <img class="formation-hero-img" src="{% static 'images/Blog post-bro.svg' %}" alt="Illustration actualité" />
     </div>
 
-    <!-- Colonne Droite - Formulaire d'actualité -->
     <div class="formation-form-area">
         <h2 class="form-title">{% trans "Nouvelle Actualité" %}</h2>
         <p class="form-subtitle">{% trans "Rédigez et publiez un article mis en forme pour l'école." %}</p>
@@ -242,7 +312,6 @@
                         <label for="{{ field.id_for_label }}">{{ field.label }}</label>
                         
                         {% if field.name == 'contenu' or field.name == 'texte' %}
-                            <!-- Gestion Quill pour le champ texte de l'article -->
                             <div style="display:none;">{{ field }}</div>
                             <div class="quill-editor-wrapper">
                                 <div id="editor-container">{{ field.value|default_if_none:""|safe }}</div>
@@ -276,7 +345,6 @@
     </div>
 </div>
 
-<!-- Inclusion du script de l'éditeur Quill -->
 <script src="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.js"></script>
 
 <script>

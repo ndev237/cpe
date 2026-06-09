@@ -17,31 +17,44 @@
 
         body {
             font-family: 'Poppins', sans-serif;
-            background-color: #f4f7f5; /* Fond très légèrement teinté de vert */
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
             padding: 1.5rem;
+            
+            /* Fond avec le logo CPE en couverture totale */
+            background-image: linear-gradient(rgba(244, 247, 245, 0.75), rgba(244, 247, 245, 0.75)), url("{% static 'images/LOGO_CPE-removebg-preview.jpeg' %}");
+            background-repeat: no-repeat;
+            background-position: center center;
+            background-size: cover;
+            background-attachment: fixed;
         }
 
-        /* --- CONTENEUR SPLIT EN DEUX --- */
+        /* --- CONTENEUR SPLIT EN DEUX (PLUS TRANSPARENT : 50%) --- */
         .login-container {
             width: 100%;
             max-width: 960px;
-            background-color: #ffffff;
+            /* MODIFICATION : Passage à 0.5 d'opacité pour accentuer la transparence */
+            background-color: rgba(255, 255, 255, 0.5);
             border-radius: 20px;
-            box-shadow: 0 20px 40px rgba(74, 124, 89, 0.06);
-            border: 1px solid #e2e8f0;
+            /* Augmentation du flou arrière-plan pour un effet "verre dépoli" intense */
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            box-shadow: 0 30px 60px rgba(44, 76, 53, 0.18);
+            border: 1px solid rgba(255, 255, 255, 0.45);
             display: grid;
             grid-template-columns: 1.1fr 1fr;
             overflow: hidden;
             min-height: 560px;
+            position: relative;
+            z-index: 2;
         }
 
-        /* --- COLONNE GAUCHE : VISUEL (DOMINANTE VERT PÂLE) --- */
+        /* --- COLONNE GAUCHE : VISUEL (VERT ÉGALEMENT SOUPLI À LA TRANSPARENCE) --- */
         .login-sidebar {
-            background: linear-gradient(135deg, #4A7c59 0%, #2c4c35 100%); /* Dégradé vert de ta sidebar */
+            /* Dégradé vert rendu un peu plus transparent (0.85) pour s'accorder avec le reste */
+            background: linear-gradient(135deg, rgba(74, 124, 89, 0.85) 0%, rgba(44, 76, 53, 0.85) 100%);
             padding: 3rem;
             display: flex;
             flex-direction: column;
@@ -56,7 +69,7 @@
             position: absolute;
             width: 300px;
             height: 300px;
-            background: rgba(209, 143, 178, 0.15); /* Rappel rose transparent */
+            background: rgba(209, 143, 178, 0.15);
             border-radius: 50%;
             filter: blur(40px);
         }
@@ -70,12 +83,13 @@
             z-index: 1;
         }
 
-        /* --- COLONNE DROITE : FORMULAIRE --- */
+        /* --- COLONNE DROITE : ZONE FORMULAIRE --- */
         .login-form-area {
             padding: 3.5rem 3rem;
             display: flex;
             flex-direction: column;
             justify-content: center;
+            background-color: transparent;
         }
 
         /* --- EN-TÊTE --- */
@@ -86,18 +100,19 @@
         .login-header h1 {
             font-size: 2.2rem;
             font-weight: 800;
-            color: #4A7c59; /* Titre principal en Vert */
+            color: #1e3524; /* Assombri pour rester lisible sur un fond très clair/transparent */
             letter-spacing: -0.5px;
         }
 
         .login-header h1 span {
-            color: #D18FB2; /* Touche de rose conservée sur le + */
+            color: #D18FB2;
         }
 
         .login-header p {
-            color: #64748b;
+            color: #334155;
             font-size: 0.95rem;
             margin-top: 0.5rem;
+            font-weight: 600; /* Plus épais pour contrer la transparence */
         }
 
         /* --- ERREURS DJANGO --- */
@@ -109,7 +124,7 @@
             padding: 0.85rem 1.25rem;
             font-size: 0.875rem;
             border-radius: 12px;
-            background-color: #fef2f2;
+            background-color: rgba(254, 242, 242, 0.95);
             color: #b91c1c;
             border: 1px solid #fee2e2;
         }
@@ -128,8 +143,8 @@
 
         .form-group label {
             font-size: 0.875rem;
-            font-weight: 600;
-            color: #475569;
+            font-weight: 700;
+            color: #0f172a; /* Noir profond pour maximiser le contraste */
             margin-bottom: 0.5rem;
         }
 
@@ -138,25 +153,26 @@
             padding: 0.85rem 1.25rem;
             font-family: 'Poppins', sans-serif;
             font-size: 0.95rem;
-            border: 1px solid #cbd5e1;
+            border: 1px solid #94a3b8; /* Bordure légèrement plus visible */
             border-radius: 12px;
-            background-color: #f8fafc;
-            color: #1e293b;
+            /* Inputs à 60% d'opacité */
+            background-color: rgba(248, 250, 252, 0.6);
+            color: #0f172a;
             outline: none;
             transition: all 0.2s ease-in-out;
         }
 
-        /* Focus effet sur les inputs (Halo vert transparent) */
+        /* Focus effet sur les inputs */
         .form-control:focus {
             border-color: #4A7c59;
-            background-color: #ffffff;
-            box-shadow: 0 0 0 4px rgba(74, 124, 89, 0.15);
+            background-color: #ffffff; /* Redvient 100% blanc au clic pour écrire confortablement */
+            box-shadow: 0 0 0 4px rgba(74, 124, 89, 0.25);
         }
 
-        /* --- BOUTON DE SOUMISSION VERT --- */
+        /* --- BOUTON DE SOUMISSION --- */
         .btn-submit {
             width: 100%;
-            background-color: #4A7c59; /* Vert dominant */
+            background-color: #4A7c59;
             color: #ffffff;
             padding: 1rem;
             border: none;
@@ -165,15 +181,15 @@
             font-size: 1rem;
             font-weight: 700;
             cursor: pointer;
-            box-shadow: 0 4px 14px rgba(74, 124, 89, 0.2);
+            box-shadow: 0 4px 14px rgba(74, 124, 89, 0.4);
             margin-top: 0.5rem;
             transition: all 0.2s ease;
         }
 
         .btn-submit:hover {
-            background-color: #385f44; /* Vert plus sombre au survol */
+            background-color: #2c4c35;
             transform: translateY(-1px);
-            box-shadow: 0 6px 18px rgba(74, 124, 89, 0.25);
+            box-shadow: 0 6px 18px rgba(74, 124, 89, 0.5);
         }
 
         /* --- RESPONSIVE DESIGN (MOBILE) --- */
@@ -181,6 +197,8 @@
             .login-container {
                 grid-template-columns: 1fr;
                 max-width: 460px;
+                /* On garde un peu plus d'opacité sur mobile pour éviter la fatigue visuelle */
+                background-color: rgba(255, 255, 255, 0.7); 
             }
             
             .login-sidebar {

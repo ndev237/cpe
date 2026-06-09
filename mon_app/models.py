@@ -44,19 +44,23 @@ class utilisateur(AbstractBaseUser):
         return self.is_admin
 
 
+from django.db import models
+from django.utils.text import slugify
+from django.utils.translation import gettext_lazy as _
+
+
 class Formation(models.Model):
     class Categorie(models.TextChoices):
         paramedical = 'Paramedical', _('Paramedical')
         industrielle = 'Industrielle', _('Industrielle')
-             
-        
     titre = models.CharField(max_length=200, verbose_name="Titre de la formation")
-    slug = models.SlugField(max_length=200, unique=True)
+    slug = models.SlugField(max_length=200, unique=True, blank=True)
     description_courte = models.TextField(max_length=300, verbose_name="Description courte (pour les cartes)")
-    programme_detaille = models.TextField(verbose_name="Programme détaillé")
+    niveau_requis = models.TextField(verbose_name="Niveau requis", blank=True, null=True)
+    debouches = models.TextField(verbose_name="Débouchés professionnels", blank=True, null=True)
+
     categorie = models.CharField(max_length=50, choices=Categorie.choices, default=Categorie.paramedical)
     duree = models.CharField(max_length=50, verbose_name="Durée (ex: 3 mois / 120 heures)")
-    prix = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Prix (FCFA / €)", blank=True, null=True)
     image = models.ImageField(upload_to='formations/', verbose_name="Image d'illustration", blank=True, null=True)
     est_active = models.BooleanField(default=True, verbose_name="Afficher sur le site")
     date_creation = models.DateTimeField(auto_now_add=True)
@@ -68,7 +72,16 @@ class Formation(models.Model):
 
     def __str__(self):
         return self.titre
-
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            base_slug = slugify(self.titre)
+            slug = base_slug
+            compteur = 1
+            while Formation.objects.filter(slug=slug).exists():
+                slug = f"{base_slug}-{compteur}"
+                compteur += 1
+            self.slug = slug
+        super().save(*args, **kwargs)
 
 class DemandeContact(models.Model):
     nom_complet = models.CharField(max_length=150, verbose_name="Nom complet")
@@ -124,19 +137,17 @@ class Partenaire(models.Model):
         return self.nom
     
 class AlbumPhoto(models.Model):
-    titre = models.CharField(max_length=200, verbose_name="Titre de l'evenement")
-    contenu = models.TextField(verbose_name="Contenu de l'annonce ou de l'article")
-    image = models.ImageField(upload_to='annonces/', verbose_name="Image d'illustration", blank=True, null=True)
-
+    image = models.ImageField(upload_to='albums/', verbose_name="Image de l'album",  blank=True, null=True )
+   
     class Meta:
-        verbose_name = "Album"
-        verbose_name_plural = "Albums"
-        ordering = ['titre']
+        verbose_name = "Photo d'album"
+        verbose_name_plural = "Album Photos"
 
     def __str__(self):
-        return self.titre
-
-
+        if self.image:
+            return f"Photo #{self.id} - {self.image.name.split('/')[-1]}"
+        return f"Photo #{self.id} (Sans image)"
+        
 
 
 class Actualite(models.Model):

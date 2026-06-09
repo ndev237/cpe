@@ -1,69 +1,88 @@
 {% extends 'mon_app/base.html' %} 
 {% load static %}
+{% load i18n %}
 
-{% block titre %}Actualités - CPE{% endblock %}
+{% block titre %}{% trans "Actualités - CPE" %}{% endblock %}
 
 {% block content %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
 <style>
-    /* --- EN-TÊTE DE LA PAGE --- */
+    /* --- EN-TÊTE DE LA PAGE (STYLE GAZETTE HARVARD) --- */
     .page-header {
-        margin-bottom: 2.5rem;
+        margin-bottom: 3.5rem;
         text-align: center;
-        padding: 1rem 0;
+        padding: 2rem 0 1.5rem 0;
+        border-bottom: 3px double var(--border-color); /* Double bordure classique de journal */
     }
 
     .page-title-block h1 {
-        font-size: 2rem;
-        font-weight: 800;
+        font-family: Georgia, Cambria, "Times New Roman", Times, serif;
+        font-size: 2.75rem;
+        font-weight: 700;
+        color: #003366; /* Votre Bleu Marine */
+        margin-bottom: 0.75rem;
+        letter-spacing: -0.5px;
+    }
+
+    html[data-theme="dark"] .page-title-block h1 {
         color: var(--text-main);
-        margin-bottom: 0.5rem;
     }
 
     .page-title-block p {
-        font-size: 1rem;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        font-size: 1.05rem;
         color: var(--text-muted);
-        max-width: 600px;
+        max-width: 650px;
         margin: 0 auto;
+        line-height: 1.5;
     }
 
-    /* --- GRILLE D'ACTUALITÉS (STYLE BLOG CORPO) --- */
+    /* --- GRILLE D'ACTUALITÉS ÉPURÉE ET STRUCTURÉE --- */
     .news-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-        gap: 2rem;
-        padding-bottom: 3rem;
+        grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+        gap: 2.5rem;
+        padding-bottom: 4rem;
     }
 
     .news-card {
         background: var(--bg-card);
         border: 1px solid var(--border-color);
-        border-radius: 16px;
+        border-radius: 0px; /* Suppression des arrondis pour un aspect éditorial strict */
         overflow: hidden;
         display: flex;
         flex-direction: column;
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
     }
 
     .news-card:hover {
-        transform: translateY(-6px);
-        box-shadow: 0 12px 24px rgba(0, 0, 0, 0.06);
+        transform: translateY(-4px);
+        box-shadow: 0 12px 24px rgba(0, 51, 102, 0.06); /* Léger reflet Bleu Marine */
     }
 
-    /* --- IMAGE --- */
+    /* --- ENCADREMENT IMAGE --- */
     .card-image-wrapper {
         position: relative;
-        height: 200px;
-        background: #e2e8f0;
+        height: 220px;
+        background: #f8fafc;
+        overflow: hidden;
+        border-bottom: 1px solid var(--border-color);
     }
 
     html[data-theme="dark"] .card-image-wrapper {
-        background: #334155;
+        background: #1e293b;
     }
 
     .card-image {
         width: 100%;
         height: 100%;
         object-fit: cover;
+        transition: transform 0.4s ease;
+    }
+    
+    .news-card:hover .card-image {
+        transform: scale(1.03);
     }
 
     .card-image-placeholder {
@@ -74,47 +93,63 @@
         justify-content: center;
         color: var(--text-muted);
         font-size: 2.5rem;
+        background-color: var(--sidebar-hover);
     }
 
-    /* --- CORPS DE LA CARTE --- */
+    /* --- CORPS DE L'ARTICLE --- */
     .card-body {
-        padding: 1.5rem;
+        padding: 1.75rem;
         display: flex;
         flex-direction: column;
         flex: 1;
     }
 
+    /* Badge de Date & Catégorie avec vos codes couleurs */
+    .card-meta-block {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 1rem;
+    }
+
     .card-date {
         font-size: 0.8rem;
-        font-weight: 500;
-        color: var(--brand-rose); /* Utilisation de votre rose comme marqueur visuel */
-        margin-bottom: 0.75rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        color: var(--brand-rose); /* Rose Serpents par défaut */
         display: flex;
         align-items: center;
         gap: 6px;
     }
     
     html[data-theme="light"] .card-date {
-        color: var(--brand-green); /* Vert forêt en mode clair pour le raffinement */
+        color: #7bb98e; /* Vert Caducée en mode clair */
     }
 
+    /* Titre Typographie Harvard */
     .card-title {
-        font-size: 1.2rem;
+        font-family: Georgia, Cambria, "Times New Roman", Times, serif;
+        font-size: 1.35rem;
         font-weight: 700;
+        color: #003366; /* Bleu Marine Institutionnel */
+        margin-bottom: 0.85rem;
+        line-height: 1.35;
+    }
+
+    html[data-theme="dark"] .card-title {
         color: var(--text-main);
-        margin-bottom: 0.75rem;
-        line-height: 1.4;
     }
 
     .card-excerpt {
-        font-size: 0.9rem;
+        font-size: 0.95rem;
         color: var(--text-muted);
         line-height: 1.6;
-        margin-bottom: 1.5rem;
+        margin-bottom: 1.75rem;
         flex: 1;
     }
 
-    /* --- BOUTON DE LECTURE PUBLIC --- */
+    /* --- LIEN EN STYLE DE LIEN DE PRESSE INSTITUTIONNEL --- */
     .card-actions {
         border-top: 1px solid var(--border-color);
         padding-top: 1.25rem;
@@ -122,74 +157,87 @@
     }
 
     .btn-read-more {
-        display: flex;
+        display: inline-flex;
         align-items: center;
-        justify-content: center;
-        gap: 8px;
-        width: 100%;
-        padding: 0.65rem;
-        border-radius: 8px;
-        background: var(--sidebar-hover);
-        color: var(--text-main);
+        gap: 6px;
+        color: #003366 !important; /* Bleu Marine */
         text-decoration: none;
-        font-size: 0.875rem;
-        font-weight: 600;
-        transition: all 0.2s ease;
+        font-size: 0.9rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        transition: color 0.2s ease;
+        background: transparent;
+        padding: 0;
+        width: auto;
+    }
+
+    .btn-read-more i {
+        transition: transform 0.2s ease;
     }
 
     .btn-read-more:hover {
-        background: var(--brand-green);
-        color: white !important;
+        color: var(--brand-rose) !important; /* Rose Serpents au survol */
+    }
+    
+    .btn-read-more:hover i {
+        transform: translateX(4px);
     }
 
+    html[data-theme="dark"] .btn-read-more {
+        color: var(--brand-rose) !important;
+    }
     html[data-theme="dark"] .btn-read-more:hover {
-        background: var(--brand-rose);
+        color: #7bb98e !important; /* Vert Caducée au survol en mode sombre */
     }
 
-    /* --- ÉTAT VIDE --- */
+    /* --- ÉTAT VIDE ACADÉMIQUE --- */
     .empty-state {
         text-align: center;
         padding: 5rem 2rem;
         background: var(--bg-card);
-        border-radius: 16px;
+        border-radius: 0px;
         border: 1px solid var(--border-color);
-        max-width: 500px;
-        margin: 2rem auto;
+        max-width: 550px;
+        margin: 3rem auto;
     }
 
     .empty-state i {
-        font-size: 3.5rem;
-        color: var(--text-muted);
+        font-size: 3rem;
+        color: #003366;
         margin-bottom: 1.25rem;
-        opacity: 0.4;
+        opacity: 0.6;
     }
 
     .empty-state h3 {
-        font-size: 1.35rem;
+        font-family: Georgia, Cambria, "Times New Roman", Times, serif;
+        font-size: 1.5rem;
         color: var(--text-main);
-        margin-bottom: 0.5rem;
+        margin-bottom: 0.75rem;
     }
 
     .empty-state p {
         color: var(--text-muted);
-        font-size: 0.9rem;
+        font-size: 0.95rem;
+        line-height: 1.5;
     }
 </style>
 
 <div class="page-header">
     <div class="page-title-block">
-        <h1>Actualités du CPE</h1>
-        <p>Restez informé des derniers événements, projets et actualités au sein de notre communauté.</p>
+        <h1>{% trans "Actualités du CPE" %}</h1>
+        <p>{% trans "Découvrez les communiqués, rapports académiques et événements officiels marquants de notre établissement." %}</p>
     </div>
 </div>
 
 {% if actualites %}
     <div class="news-grid">
+        {% trans "Lire l'article" as trans_read_more %}
         {% for actualite in actualites %}
         <article class="news-card">
             <div class="card-image-wrapper">
                 {% if actualite.image %}
-                    <img src="{{ actualite.image.url }}" alt="{{ actualite.titre }}" class="card-image" loading="lazy">
+                    <img src="{{ actualite.image.url }}" alt="{{ actualite.titre|escape }}" class="card-image" loading="lazy">
                 {% else %}
                     <div class="card-image-placeholder">
                         <i class="fas fa-newspaper"></i>
@@ -198,18 +246,18 @@
             </div>
 
             <div class="card-body">
-                <div class="card-date">
-                    <i class="far fa-calendar-alt"></i> {{ actualite.date_publication|date:"d E Y" }}
-                </div>
-                <h2 class="card-title">{{ actualite.titre }}</h2>
-             
-                <div class="card-excerpt">
-                    {{ actualite.contenu|truncatewords_html:22|safe }}
+                <div class="card-meta-block">
+                    <div class="card-date">
+                        <i class="far fa-calendar-alt"></i> {{ actualite.date_publication|date:"d E Y" }}
+                    </div>
                 </div>
                 
+                <h2 class="card-title">{{ actualite.titre }}</h2>
+                
                 <div class="card-actions">
-                    <a href="#" class="btn-read-more">
-                        <span>Lire l'article</span> <i class="fas fa-arrow-right" style="font-size: 0.8rem;"></i>
+                    <a href="#" class="btn-read-more" aria-label="{{ trans_read_more }}">
+                        <span>{{ trans_read_more }}</span>
+                        <i class="fas fa-arrow-right"></i>
                     </a>
                 </div>
             </div>
@@ -219,8 +267,8 @@
 {% else %}
     <div class="empty-state">
         <i class="far fa-newspaper"></i>
-        <h3>Aucun article disponible</h3>
-        <p>Il n'y a pas d'actualité publiée pour le moment. Revenez très bientôt !</p>
+        <h3>{% trans "Aucune publication enregistrée" %}</h3>
+        <p>{% trans "Les annonces officielles et revues d'actualités scientifiques seront répertoriées sur cette page prochainement." %}</p>
     </div>
 {% endif %}
 

@@ -1,280 +1,301 @@
 {% extends 'mon_app/base.html' %}
 {% load static %}
 {% load i18n %}
+
 {% block content %}
 <style>
-    /* --- EN-TÊTE HERO --- */
-    .page-hero {
-        background: linear-gradient(rgba(142, 216, 178, 0.85), rgba(209, 143, 178, 0.9)),
-                    url('https://picsum.photos/1400/450') no-repeat center center/cover;
-        color: rgb(14, 13, 13);
-        border-radius: 12px;
-        padding: 50px 40px;
-        margin: 10px 0 40px 0;
-        box-shadow: 0 4px 20px rgba(209, 143, 178, 0.15);
-    }
-    .page-hero h1 { 
-        font-size: 2.8rem; 
-        margin: 0 0 15px 0; 
-        font-weight: 700;
-    }
-    .page-hero p { 
-        margin: 0; 
-        font-size: 1.1rem; 
-        opacity: 0.95; 
-        line-height: 1.7; 
-        max-width: 800px;
+    /* --- DESIGN ACADÉMIQUE STYLE HARVARD --- */
+    .harvard-about-container {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        color: #1e293b;
+        line-height: 1.8;
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 40px 20px 80px 20px;
     }
 
-    /* --- TITRES DE SECTIONS --- */
-    .section-title {
-        text-align: center;
-        margin: 50px 0 30px 0;
-        color: #003366;
-        font-size: 2.2rem;
-        font-weight: 700;
-        position: relative;
-    }
-    .section-title::after {
-        content: '';
-        display: block;
-        width: 50px;
-        height: 4px;
-        background: #A1D5B1;
-        border-radius: 2px;
-        margin: 12px auto 0 auto;
-    }
-
-    /* --- GRILLES REACTIONNES --- */
-    .grid-2 {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
-        gap: 25px;
-        align-items: start;
-    }
-
-    /* --- CARTES MODERNES --- */
-    .card {
-        background: white;
-        border-radius: 12px;
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
-        border: 1px solid rgba(0, 0, 0, 0.06);
-        overflow: hidden;
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
-    .card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
-    }
-    .card .card-body { padding: 25px; }
-
-    /* --- BADGES HISTORIQUE --- */
-    .pill {
-        display: inline-block;
-        background: #e2f5e8;
-        color: #003366;
-        font-weight: 700;
-        padding: 6px 14px;
-        border-radius: 20px;
-        font-size: 0.85rem;
-        margin-bottom: 15px;
-        border: 1px solid #A1D5B1;
-    }
-    .content-muted { 
-        color: #475569; 
-        line-height: 1.7; 
-        font-size: 0.95rem;
-    }
-
-    /* --- SECTION PROFFESORAL / LEADERS --- */
-    .leader {
+    /* --- EN-TÊTE HERO ÉDITORIAL --- */
+    .harvard-hero {
         display: flex;
-        gap: 16px;
-        align-items: flex-start;
+        align-items: stretch;
+        background: #ffffff;
+        border: 1px solid #e2e8f0;
+        margin-bottom: 60px;
+        min-height: 380px;
     }
-    .leader .avatar {
-        width: 60px;
-        height: 60px;
-        border-radius: 50%;
-        background: #003366;
-        color: #fff;
+
+    .harvard-hero-content {
+        flex: 1 1 50%;
+        padding: 50px;
         display: flex;
-        align-items: center;
+        flex-direction: column;
         justify-content: center;
-        font-weight: 700;
-        font-size: 1.1rem;
-        flex: 0 0 auto;
-        border: 3px solid #e2f5e8;
-        box-shadow: 0 4px 10px rgba(0, 51, 102, 0.15);
-    }
-    .leader h3 { 
-        margin: 0; 
-        font-size: 1.15rem; 
-        color: #1e293b; 
-        font-weight: 600;
-    }
-    .leader p { 
-        margin: 8px 0 0 0; 
-        color: #64748b; 
-        line-height: 1.6; 
-        font-size: 0.92rem;
+        background-color: #ffffff;
     }
 
-    /* --- SECTION PHOTO DE GROUPE (NOUVEAU) --- */
-    .staff-banner-section {
-        background: white;
-        border-radius: 12px;
-        border: 1px solid rgba(0, 0, 0, 0.06);
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
-        padding: 35px;
-        margin-top: 40px;
+    .harvard-hero-content h1 {
+        font-family: Georgia, Cambria, "Times New Roman", Times, serif;
+        font-size: 2.8rem;
+        color: #003366; /* Votre bleu nuit */
+        margin: 0 0 20px 0;
+        font-weight: 700;
+        line-height: 1.2;
     }
-    .staff-image-container {
-        width: 100%;
-        height: 480px; /* Hauteur idéale pour un portrait de groupe */
-        border-radius: 8px;
-        overflow: hidden;
-        margin-bottom: 20px;
-        box-shadow: inset 0 0 20px rgba(0,0,0,0.05);
-        background-color: #f8fafc;
+
+    .harvard-hero-content p {
+        margin: 0;
+        font-size: 1.15rem;
+        color: #475569;
+        border-left: 3px solid #D18FB2; /* Votre rose serpents en accent institutionnel */
+        padding-left: 20px;
     }
-    .staff-image-container img {
+
+    /* Ajustement pour l'image locale en arrière-plan */
+    .harvard-hero-image {
+        flex: 1 1 50%;
+        background-repeat: no-repeat;
+        background-position: center center;
+        background-size: cover;
+    }
+
+    /* --- STRUCTURE DES TITRES ACADÉMIQUES --- */
+    .harvard-section-title {
+        font-family: Georgia, Cambria, "Times New Roman", Times, serif;
+        font-size: 2rem;
+        color: #003366; /* Votre bleu nuit */
+        margin: 60px 0 30px 0;
+        font-weight: 700;
+        padding-bottom: 12px;
+        border-bottom: 2px solid #A1D5B1; /* Votre vert caducée doux */
+        text-transform: none;
+    }
+
+    /* --- GRILLES ÉDITORIALES (SANS CARTES ENCOMBRANTES) --- */
+    .harvard-editorial-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+        gap: 40px;
+    }
+
+    .harvard-article {
+        background: transparent;
+        padding: 0;
+    }
+
+    .harvard-category-tag {
+        font-size: 0.8rem;
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        color: #D18FB2; /* Votre rose serpents */
+        font-weight: 700;
+        margin-bottom: 10px;
+        display: block;
+    }
+
+    .harvard-article h3 {
+        font-family: Georgia, Cambria, "Times New Roman", Times, serif;
+        font-size: 1.4rem;
+        color: #003366;
+        margin: 0 0 15px 0;
+    }
+
+    .harvard-article p {
+        color: #334155;
+        font-size: 1rem;
+        margin: 0;
+        text-align: justify;
+    }
+
+    /* --- PORTRAIT DU PROMOTEUR (STYLE GRANDE FACULTÉ) --- */
+    .harvard-faculty-profile {
+        display: flex;
+        gap: 40px;
+        align-items: flex-start;
+        background: #f8fafc;
+        border-top: 4px solid #003366; /* Accentuation haut de page */
+        padding: 40px;
+        margin-top: 30px;
+    }
+
+    .faculty-image-frame {
+        flex: 0 0 280px;
+        height: 360px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        border: 1px solid #cbd5e1;
+        background-color: #ffffff;
+    }
+
+    .faculty-image-frame img {
         width: 100%;
         height: 100%;
-        object-fit: cover; /* Recadre proprement sans déformer */
-        object-position: center;
+        object-fit: cover;
     }
 
-    /* --- Layout photo + texte (Dr IGNACE FOYET) --- */
-    .staff-founder-wrap {
-        display: flex;
-        gap: 28px;
-        align-items: center;
-        flex-wrap: wrap;
+    .faculty-bio-text {
+        flex: 1;
     }
-    .staff-founder-wrap .staff-image-container {
-        flex: 0 0 320px;
-        height: 320px;
-        margin-bottom: 0;
-    }
-    .staff-founder-text {
-        flex: 1 1 420px;
-    }
-    .staff-founder-text h3 {
-        margin: 0 0 12px 0;
-        font-size: 1.6rem;
+
+    .faculty-bio-text h3 {
+        font-family: Georgia, Cambria, "Times New Roman", Times, serif;
+        margin: 0 0 5px 0;
+        font-size: 1.8rem;
         color: #003366;
-        font-weight: 800;
+        font-weight: 700;
     }
-    .staff-founder-text p {
+
+    .faculty-title-sub {
+        font-size: 0.95rem;
+        text-transform: uppercase;
+        color: #D18FB2;
+        font-weight: 600;
+        letter-spacing: 1px;
+        margin-bottom: 20px;
+        display: block;
+    }
+
+    .faculty-bio-text p {
+        margin: 0;
+        color: #334155;
+        font-size: 1.05rem;
+        line-height: 1.8;
+        text-align: justify;
+    }
+
+    /* --- GRILLE DIRECTION & ORGANIGRAMME --- */
+    .harvard-leaders-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+        gap: 30px;
+    }
+
+    .harvard-leader-node {
+        border-top: 1px solid #cbd5e1;
+        padding-top: 20px;
+    }
+
+    /* Petite étiquette de fonction stylisée */
+    .leader-office-tag {
+        font-size: 0.75rem;
+        background-color: #e2f5e8; /* Votre vert caducée clair */
+        color: #003366;
+        padding: 2px 8px;
+        font-weight: 700;
+        display: inline-block;
+        margin-bottom: 10px;
+    }
+
+    .harvard-leader-node h4 {
+        font-family: Georgia, Cambria, "Times New Roman", Times, serif;
+        margin: 0 0 8px 0;
+        font-size: 1.2rem;
+        color: #003366;
+    }
+
+    .harvard-leader-node p {
         margin: 0;
         color: #475569;
-        line-height: 1.8;
-        font-size: 1rem;
+        font-size: 0.92rem;
+        line-height: 1.6;
     }
 
-    .staff-description {
-        text-align: center;
-        max-width: 750px;
-        margin: 0 auto;
-        color: #475569;
-        font-size: 1rem;
-        line-height: 1.7;
+    /* --- RESPONSIVE ACADÉMIQUE --- */
+    @media (max-width: 992px) {
+        .harvard-hero { flex-direction: column; }
+        .harvard-hero-image { min-height: 250px; }
+        .harvard-faculty-profile { flex-direction: column; align-items: center; padding: 25px; }
+        .faculty-image-frame { flex: 0 0 250px; width: 200px; height: 260px; }
+    }
+
+    @media (max-width: 768px) {
+        .harvard-hero-content { padding: 30px 20px; }
+        .harvard-hero-content h1 { font-size: 2.2rem; }
+        .harvard-editorial-grid { grid-template-columns: 1fr; gap: 30px; }
     }
 </style>
 
-<div class="page-hero">
-    <h1>{% trans "À propos de CPE Formation" %}</h1>
-    <p>
-        {% trans "CPE Formation est un centre de formation professionnelle orienté emploi, fondé sur l’expertise terrain. Nous accompagnons les apprenants avec des formations structurées, encadrées et évaluées." %}
-    </p>
-</div>
+<div class="harvard-about-container">
 
-<h2 class="section-title">{% trans "Historique" %}</h2>
-<div class="grid-2">
-    <div class="card">
-        <div class="card-body">
-            <div class="pill">{% trans "CLUB-PREPA-EMPLOI" %}</div>
-            <p class="content-muted">
-                {% blocktrans %}Le centre de formation <strong>“CLUB-PREPA-EMPLOI”</strong> sous l’assistance technique de l’Institut Universitaire et Stratégique de l’Estuaire, fort de plus de dix ans d’expérience dans les formations paramédicales, s’installe à Douala, Yaoundé et Bafoussam.{% endblocktrans %}
-            </p>
-        </div>
-    </div>
-
-    <div class="card">
-        <div class="card-body">
-            <div class="pill">{% trans "Nos évaluations" %}</div>
-            <p class="content-muted">
-                {% blocktrans %}Exemple : <strong>Examen CQP – phase de MSP (Mise en Situation Professionnelle)</strong>. Cette étape permet de vérifier les compétences réelles des apprenants à travers des mises en situation proches du terrain.{% endblocktrans %}
-            </p>
-        </div>
-    </div>
-</div>
-
-<h2 class="section-title">{% trans "Mot du Promoteur" %}</h2>
-<div class="staff-banner-section">
-    <div class="staff-founder-wrap">
-        <div class="staff-image-container">
-            <img src="{% static 'images/Mr_foyet.png' %}" alt="{% trans 'Dr IGNACE FOYET' %}">
-        </div>
-
-        <div class="staff-founder-text">
-            <h3>{% trans "Dr IGNACE FOYET" %}</h3>
+    <section class="harvard-hero">
+        <div class="harvard-hero-content">
+            <h1>{% trans "À propos de CPE Formation" %}</h1>
             <p>
-                {% trans "Depuis 1993, nous travaillons à former les jeunes Camerounais en quête de connaissances, de compétences et de savoir-être. Nous sommes un groupe de quatre institutions d’enseignement supérieur, basées à Douala, Yaoundé, Bafoussam, Mbouda, Libreville (au Gabon) et N’Djamena (au Tchad). Spécialisés dans des domaines aussi variés que le commerce et la gestion, la communication et l'information, l’industrie et les nouvelles technologies, l’ingénierie et la formation médicale, nos offres couvrent les cycles BTS, Ingénieur, Licence Professionnelle et Master Professionnel. Toutes nos formations sont accompagnées de compléments de diplômes et certifications internationales afin de contribuer au développement d’un capital humain créatif, innovant et compétitif pour notre pays, à travers des compétences flexibles et adaptables. Ce programme fait de l'Institut Universitaire et Stratégique de l’Estuaire (IUEs Insam) une pépinière de compétences et de leaders au service du développement du Cameroun." %}
+                {% trans "CPE Formation est un centre de formation professionnelle orienté emploi, fondé sur l’expertise terrain. Nous accompagnons les apprenants avec des formations structurées, encadrées et évaluées." %}
             </p>
         </div>
-    </div>
-</div>
+        <div class="harvard-hero-image" style="background-image: url('{% static 'images/images_cpe.jpeg' %}');"></div>
+    </section>
 
-<h2 class="section-title">{% trans "Direction & encadrement" %}</h2>
-<div class="grid-2">
-    <div class="card">
-        <div class="card-body">
-            <div class="leader">
-                <div class="avatar">{% trans "DG" %}</div>
-                <div>
-                    <h3>{% trans "Direction Générale" %}</h3>
-                    <p>{% trans "Vision de l’école, pilotage des formations et stratégie de partenariats institutionnels." %}</p>
-                </div>
+    <section>
+        <h2 class="harvard-section-title">{% trans "Histoire & Évaluations" %}</h2>
+        <div class="harvard-editorial-grid">
+            <article class="harvard-article">
+                <span class="harvard-category-tag">{% trans "Fondation" %}</span>
+                <h3>{% trans "Le projet CLUB-PREPA-EMPLOI" %}</h3>
+                <p>
+                    {% blocktrans trimmed %}Le centre de formation <strong>"CLUB-PREPA-EMPLOI"</strong> sous l’assistance technique de l’Institut Universitaire et Stratégique de l’Estuaire, fort de plus de dix ans d’expérience dans les formations paramédicales, s’installe à Douala, Yaoundé et Bafoussam.{% endblocktrans %}
+                </p>
+            </article>
+
+            <article class="harvard-article">
+                <span class="harvard-category-tag">{% trans "Rigueur & Excellence" %}</span>
+                <h3>{% trans "Nos exigences d'évaluation" %}</h3>
+                <p>
+                    {% blocktrans trimmed %}Exemple : <strong>Examen CQP – phase de MSP (Mise en Situation Professionnelle)</strong>. Cette étape rigoureuse permet de vérifier les compétences réelles des apprenants à travers des mises en situation proches du terrain.{% endblocktrans %}
+                </p>
+            </article>
+        </div>
+    </section>
+
+    <section>
+        <h2 class="harvard-section-title">{% trans "Mot du Promoteur" %}</h2>
+        <div class="harvard-faculty-profile">
+            <div class="faculty-image-frame">
+                {% trans "Dr IGNACE FOYET" as alt_promoteur %}
+                <img src="{% static 'images/Mr_foyet.png' %}" alt="{{ alt_promoteur }}">
+            </div>
+            <div class="faculty-bio-text">
+                <h3>{% trans "Dr IGNACE FOYET" %}</h3>
+                <span class="faculty-title-sub">{% trans "Fondateur & Promoteur Institutionnel" %}</span>
+                <p>
+                    {% trans "Depuis 1993, nous travaillons à former les jeunes Camerounais en quête de connaissances, de compétences et de savoir-être. Nous sommes un groupe de quatre institutions d’enseignement supérieur, basées à Douala, Yaoundé, Bafoussam, Mbouda, Libreville (au Gabon) et N’Djamena (au Tchad). Spécialisés dans des domaines aussi variés que le commerce et la gestion, la communication et l'information, l’industrie et les nouvelles technologies, l’ingénierie et la formation médicale, nos offres couvrent les cycles BTS, Ingénieur, Licence Professionnelle et Master Professionnel." %}
+                </p>
+                <p style="margin-top: 15px;">
+                    {% trans "Toutes nos formations sont accompagnées de compléments de diplômes et certifications internationales afin de contribuer au développement d’un capital humain créatif, innovant et compétitif pour notre pays, à travers des compétences flexibles et adaptables. Ce programme fait de l'Institut Universitaire et Stratégique de l’Estuaire (IUEs Insam) une pépinière de compétences et de leaders au service du développement du Cameroun." %}
+                </p>
             </div>
         </div>
-    </div>
+    </section>
 
-    <div class="card">
-        <div class="card-body">
-            <div class="leader">
-                <div class="avatar">{% trans "FO" %}</div>
-                <div>
-                    <h3>{% trans "Responsable Formation" %}</h3>
-                    <p>{% trans "Organisation des parcours, suivi pédagogique et mise à jour continue des programmes." %}</p>
-                </div>
+    <section>
+        <h2 class="harvard-section-title">{% trans "Direction & Encadrement" %}</h2>
+        <div class="harvard-leaders-grid">
+            
+            <div class="harvard-leader-node">
+                <span class="leader-office-tag">{% trans "DG" %}</span>
+                <h4>{% trans "Direction Générale" %}</h4>
+                <p>{% trans "Vision de l’école, pilotage des formations et stratégie de partenariats institutionnels." %}</p>
             </div>
-        </div>
-    </div>
 
-    <div class="card">
-        <div class="card-body">
-            <div class="leader">
-                <div class="avatar">{% trans "EV" %}</div>
-                <div>
-                    <h3>{% trans "Responsable Évaluation" %}</h3>
-                    <p>{% trans "Conception des évaluations et accompagnement personnalisé des apprenants vers la réussite de leur certification." %}</p>
-                </div>
+            <div class="harvard-leader-node">
+                <span class="leader-office-tag">{% trans "FO" %}</span>
+                <h4>{% trans "Responsable Formation" %}</h4>
+                <p>{% trans "Organisation des parcours, suivi pédagogique et mise à jour continue des programmes." %}</p>
             </div>
-        </div>
-    </div>
 
-    <div class="card">
-        <div class="card-body">
-            <div class="leader">
-                <div class="avatar">{% trans "RH" %}</div>
-                <div>
-                    <h3>{% trans "Coordination Ressources Humaines" %}</h3>
-                    <p>{% trans "Gestion des inscriptions, communication interne et coordination globale des équipes d’encadrement." %}</p>
-                </div>
+            <div class="harvard-leader-node">
+                <span class="leader-office-tag">{% trans "EV" %}</span>
+                <h4>{% trans "Responsable Évaluation" %}</h4>
+                <p>{% trans "Conception des évaluations et accompagnement personnalisé des apprenants vers la réussite de leur certification." %}</p>
             </div>
+
+            <div class="harvard-leader-node">
+                <span class="leader-office-tag">{% trans "RH" %}</span>
+                <h4>{% trans "Ressources Humaines" %}</h4>
+                <p>{% trans "Gestion des inscriptions, communication interne et coordination globale des équipes d’encadrement." %}</p>
+            </div>
+
         </div>
-    </div>
+    </section>
+
 </div>
 {% endblock %}

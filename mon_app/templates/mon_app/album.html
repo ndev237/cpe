@@ -3,23 +3,43 @@
 {% load i18n %}
 
 {% block content %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
 <style>
     .album-page { padding: 10px 0 40px 0; }
 
-    /* Harmonisation du Hero : Rose Serpents appliqué */
+    /* Harmonisation du Hero : Style académique épuré */
     .page-hero {
-        background: linear-gradient(rgba(126, 193, 162, 0.9), rgba(209, 143, 178, 0.9)),
-                    url('https://picsum.photos/1400/420') no-repeat center center/cover;
-        color: rgb(21, 20, 20);
+        background-color: #f8fafc;
+        color: #1e293b;
         border-radius: 10px;
         padding: 40px 30px;
         margin-bottom: 30px;
+        border-top: 4px solid #003366;
+        border-bottom: 4px solid #D18FB2;
+    }
+    [data-theme="dark"] .page-hero {
+        background-color: #1e293b;
+        border-top-color: #62a375;
+        color: #f1f5f9;
     }
 
-    .page-hero h1 { font-size: 2.6rem; margin: 0 0 10px 0; }
-    .page-hero p { margin: 0; font-size: 1.05rem; opacity: 0.95; }
+    .page-hero h1 { 
+        font-family: Georgia, Cambria, "Times New Roman", Times, serif;
+        font-size: 2.6rem; 
+        margin: 0 0 10px 0; 
+        color: #003366;
+    }
+    [data-theme="dark"] .page-hero h1 { color: #ffffff; }
 
-    /* Ajout du style manquant pour le titre de section avec rappel Vert Caducée */
+    .page-hero p { 
+        margin: 0; 
+        font-size: 1.05rem; 
+        color: #475569;
+    }
+    [data-theme="dark"] .page-hero p { color: #cbd5e1; }
+
+    /* Titre de section */
     .section-title {
         text-align: center;
         margin: 40px 0 20px 0;
@@ -27,6 +47,8 @@
         font-size: 2rem;
         position: relative;
     }
+    [data-theme="dark"] .section-title { color: #62a375; }
+
     .section-title::after {
         content: '';
         display: block;
@@ -36,54 +58,124 @@
         margin: 10px auto 0 auto;
     }
 
-    .grid-gallery {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-        gap: 18px;
-        align-items: start;
+    /* --- EN CARTES STYLE PIXABAY (MASONRY LAYOUT) --- */
+    .pixabay-gallery {
+        column-count: 4; /* Nombre de colonnes par défaut sur grand écran */
+        column-gap: 15px; /* Espace horizontal entre les colonnes */
+        width: 100%;
+        margin-bottom: 40px;
     }
 
     .gallery-item {
-        background: white;
-        border-radius: 10px;
+        position: relative;
+        margin-bottom: 15px; /* Espace vertical entre les images */
+        break-inside: avoid; /* Empêche l'image de se couper en deux entre deux colonnes */
+        border-radius: 8px;
         overflow: hidden;
-        box-shadow: 0 10px 25px rgba(0,0,0,0.07);
-        border: 1px solid rgba(0,0,0,0.05);
+        cursor: pointer;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+        background-color: #f1f5f9;
     }
+    [data-theme="dark"] .gallery-item { background-color: #151f32; }
 
     .gallery-item img {
         width: 100%;
-        height: 190px;
-        object-fit: cover;
+        height: auto; /* Hauteur fluide respectant le ratio d'origine de l'image */
+        display: block;
+        transition: transform 0.4s ease;
+    }
+
+    /* Effet d'assombrissement et informations au survol (Pixabay Style) */
+    .gallery-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(to top, rgba(0, 0, 0, 0.7) 0%, rgba(0, 0, 0, 0.2) 60%, rgba(0, 0, 0, 0) 100%);
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        padding: 15px;
+        box-sizing: border-box;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+        z-index: 2;
+    }
+
+    /* Au survol de la carte */
+    .gallery-item:hover img {
+        transform: scale(1.04); /* Léger zoom sur l'image */
+    }
+
+    .gallery-item:hover .gallery-overlay {
+        opacity: 1; /* Rendre les infos visibles */
+    }
+
+    .overlay-title {
+        color: #ffffff;
+        font-weight: 600;
+        font-size: 1rem;
+        margin-bottom: 4px;
+        text-shadow: 0 1px 3px rgba(0,0,0,0.5);
+    }
+
+    .overlay-details {
+        color: #e2e8f0;
+        font-size: 0.85rem;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+    .overlay-details i {
+        color: #a1d5b1;
+    }
+
+    /* Ajustement du responsive pour les colonnes */
+    @media (max-width: 1024px) { .pixabay-gallery { column-count: 3; } }
+    @media (max-width: 768px)  { .pixabay-gallery { column-count: 2; } }
+    @media (max-width: 480px)  { .pixabay-gallery { column-count: 1; } }
+
+
+    /* --- SECTION VIDÉO --- */
+    .video-container {
+        width: 100%; 
+        max-width: 1000px; 
+        margin: 0 auto 40px auto;
+        position: relative;
+    }
+
+    .video-wrapper {
+        position: relative;
+        width: 100%;
+        aspect-ratio: 16 / 9;
+        border-radius: 16px;
+        overflow: hidden;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
+        background: #000000;
+        border: 1px solid rgba(0, 0, 0, 0.1);
+    }
+
+    .video-wrapper video {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
         display: block;
     }
 
-    .gallery-caption {
-        padding: 12px 14px;
-        color: #333;
-        font-weight: 700;
-        font-size: 1rem;
-    }
-
-    .gallery-comment {
-        padding: 0 14px 14px 14px;
-        color: #666;
+    .video-caption {
+        margin-top: 14px;
+        color: #4a5568;
+        font-weight: 600;
         font-size: 0.95rem;
-        line-height: 1.5;
+        text-align: center;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
     }
-
-    /* Badge de commentaire basculé sur le Vert Caducée et Bleu Marine */
-    .badge-comment {
-        display: inline-block;
-        background: #A1D5B1;
-        color: #003366;
-        padding: 4px 8px;
-        border-radius: 6px;
-        font-size: 0.85rem;
-        margin-bottom: 8px;
-        font-weight: 800;
-    }
-
+    [data-theme="dark"] .video-caption { color: #cbd5e1; }
+    .video-caption i { color: #7bb98e; }
 </style>
 
 <div class="album-page">
@@ -94,24 +186,46 @@
 
     <h2 class="section-title">{% trans "Galerie CPE" %}</h2>
 
-    <div class="grid-gallery">
+    <div class="pixabay-gallery">
+        {% trans "Photo CPE" as alt_default %}
         {% for album in albums %}
         <div class="gallery-item">
             {% if album.image %}
-                <img src="{{ album.image.url }}" alt="{{ album.titre }}">
+                <img src="{{ album.image.url }}" alt="{{ album.titre|default:alt_default }}">
             {% else %}
-                <img src="https://picsum.photos/800/500?random=7" alt="{{ album.titre }}">
+                <img src="https://picsum.photos/600/{% cycle '400' '700' '500' '800' '600' %}?random={{ forloop.counter }}" alt="{{ alt_default }}">
             {% endif %}
 
-            <div class="gallery-caption">{{ album.titre }}</div>
-            <div class="gallery-comment">
-                <span class="badge-comment">{% trans "Commentaire" %}</span>
-                {{ album.contenu }}
+            <div class="gallery-overlay">
+                <div class="overlay-title">
+                    {% if album.titre %}{{ album.titre }}{% else %}{% trans "Campus CPE" %}{% endif %}
+                </div>
+                <div class="overlay-details">
+                    <span><i class="fas fa-camera"></i> {% trans "CPE Officiel" %}</span>
+                    <span><i class="far fa-image"></i> #{{ album.id }}</span>
+                </div>
             </div>
         </div>
         {% empty %}
-        <p style="text-align:center; color:#888; grid-column: 1/-1;">{% trans "Aucun album publié pour le moment." %}</p>
+        <p style="text-align:center; color:#888; width: 100%; display: block; grid-column: 1/-1; padding: 40px 0;">
+            {% trans "Aucun album publié pour le moment." %}
+        </p>
         {% endfor %}
     </div>
+
+    <h2 class="section-title">{% trans "Vidéo du moment" %}</h2>
+
+    <div class="video-container">
+        <div class="video-wrapper">
+            <video controls preload="metadata">
+                <source src="{% static 'videos/WhatsApp Video 2025-04-17 at 09.32.48.mp4' %}" type="video/mp4">
+                {% trans "Votre navigateur ne supporte pas la lecture de cette vidéo." %}
+            </video>
+        </div>
+        <p class="video-caption">
+            <i class="fas fa-play-circle"></i> {% trans "Découvrez les coulisses et l'ambiance au CPE Formation" %}
+        </p>
+    </div>
+
 </div>
 {% endblock %}

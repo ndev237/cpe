@@ -1,0 +1,284 @@
+{% extends 'mon_app/base.html' %}
+{% load i18n %}
+{% load static %}
+
+{% block title %}{{ annonce.titre }} - {% trans "Fil des actualités" %}{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<style>
+    /* --- CONTENEUR PRINCIPAL STYLE FIL D'ACTUALITÉ --- */
+    .fb-feed-wrapper {
+        max-width: 680px; /* Largeur standard et optimale pour un post de type réseau social */
+        margin: 40px auto;
+        padding: 0 15px;
+    }
+
+    .fb-card {
+        background: #ffffff;
+        border: 1px solid #e4e6eb;
+        border-radius: 12px;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+        padding: 20px;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    /* --- EN-TÊTE DU POST --- */
+    .post-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 16px;
+    }
+
+    .author-info {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .author-avatar {
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        background-color: #4A7c59; /* Couleur de votre charte graphique */
+        color: #ffffff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+        font-size: 18px;
+        border: 1px solid #e4e6eb;
+    }
+
+    .author-meta {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .author-name {
+        font-weight: 600;
+        color: #050505;
+        font-size: 15px;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        text-decoration: none;
+    }
+
+    .author-name:hover {
+        text-decoration: underline;
+    }
+
+    .badge-verified {
+        color: #1877f2; /* Bleu de certification Facebook */
+        font-size: 13px;
+    }
+
+    .post-time-meta {
+        font-size: 13px;
+        color: #65676b;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+    }
+
+    /* --- BADGE DE PRIORITÉ --- */
+    .badge-important-fb {
+        background-color: #fcedea;
+        color: #e41e3f;
+        padding: 6px 14px;
+        border-radius: 50px;
+        font-weight: 600;
+        font-size: 12px;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    /* --- TITRE ET CONTENU --- */
+    .post-title {
+        color: #050505;
+        font-size: 24px;
+        font-weight: 700;
+        line-height: 1.3;
+        margin: 10px 0 16px 0;
+        letter-spacing: -0.3px;
+    }
+
+    .post-content {
+        color: #050505;
+        font-size: 18px; /* Taille augmentée demandée */
+        line-height: 1.6;
+        margin-bottom: 20px;
+    }
+
+    .post-content-text {
+        margin-bottom: 1.25rem;
+        white-space: pre-line;
+    }
+
+    /* --- VISUEL / IMAGE ATTACHÉE --- */
+    .post-media-container {
+        margin-left: -20px;
+        margin-right: -20px;
+        border-top: 1px solid #f0f2f5;
+        border-bottom: 1px solid #f0f2f5;
+        background-color: #f8fafc;
+        max-height: 500px;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .post-image {
+        width: 100%;
+        height: auto;
+        max-height: 500px;
+        object-fit: cover;
+    }
+
+    /* --- BARRE D'INTERACTION SOCIALE --- */
+    .post-actions-bar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding-top: 12px;
+        margin-top: 12px;
+        border-top: 1px solid #e4e6eb;
+    }
+
+    .action-btn {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        padding: 8px;
+        border-radius: 6px;
+        color: #65676b;
+        font-weight: 600;
+        font-size: 14px;
+        background: transparent;
+        border: none;
+        cursor: pointer;
+        transition: background-color 0.2s;
+    }
+
+    .action-btn:hover {
+        background-color: #f2f3f5;
+        color: #050505;
+    }
+
+    .action-btn.active-like {
+        color: #1877f2;
+    }
+
+    /* --- COMPOSANT DE RETOUR SIMPLIFIÉ --- */
+    .back-to-feed-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        color: #65676b;
+        font-weight: 600;
+        font-size: 14px;
+        text-decoration: none;
+        margin-bottom: 16px;
+        transition: color 0.2s;
+    }
+    .back-to-feed-btn:hover {
+        color: #4A7c59;
+    }
+</style>
+
+<div class="fb-feed-wrapper">
+    
+    <a href="javascript:history.back()" class="back-to-feed-btn">
+        <i class="fas fa-chevron-left"></i> {% trans "Fil des actualités" %}
+    </a>
+
+    <article class="fb-card">
+        
+        <div class="post-header">
+            <div class="author-info">
+                <div class="author-avatar">C</div>
+                <div class="author-meta">
+                    <span class="author-name">
+                        {% trans "Centre de Formation Professionnelle" %}
+                        {% trans "Compte officiel" as title_verified %}
+                        <i class="fas fa-check-circle badge-verified" title="{{ title_verified }}"></i>
+                    </span>
+                    <div class="post-time-meta">
+                        <span>{{ annonce.date_publication|date:"d F Y" }}</span>
+                        <span>•</span>
+                        {% trans "Public" as title_public %}
+                        <i class="fas fa-globe-africa" title="{{ title_public }}"></i>
+                    </div>
+                </div>
+            </div>
+
+            {% if annonce.est_epinglee %}
+                <div class="badge-important-fb">
+                    <i class="fas fa-thumbtack"></i> {% trans "À la une" %}
+                </div>
+            {% endif %}
+        </div>
+
+        <h1 class="post-title">{{ annonce.titre }}</h1>
+
+        <div class="post-content">
+            <div class="post-content-text">{{ annonce.contenu|linebreaksbr }}</div>
+        </div>
+
+        {% if annonce.image %}
+            <div class="post-media-container">
+                <img class="post-image" src="{{ annonce.image.url }}" alt="{{ annonce.titre }}">
+            </div>
+        {% endif %}
+
+        <div class="post-actions-bar">
+            <button type="button" class="action-btn" id="likeBtn">
+                <i class="far fa-thumbs-up fa-lg"></i>
+                <span>{% trans "J'aime" %}</span>
+            </button>
+            <button type="button" class="action-btn" onclick="window.print()">
+                <i class="far fa-file-alt fa-lg"></i>
+                <span>{% trans "Imprimer" %}</span>
+            </button>
+            <button type="button" class="action-btn" id="shareBtn">
+                <i class="far fa-share-square fa-lg"></i>
+                <span>{% trans "Partager" %}</span>
+            </button>
+        </div>
+
+    </article>
+</div>
+
+{% trans "Lien de l'annonce copié dans le presse-papier !" as texte_presse_papier %}
+<script>
+    // Module de gestion des interactions sociales
+    document.getElementById('likeBtn').addEventListener('click', function() {
+        this.classList.toggle('active-like');
+        const icon = this.querySelector('i');
+        if (this.classList.contains('active-like')) {
+            icon.className = 'fas fa-thumbs-up fa-lg';
+        } else {
+            icon.className = 'far fa-thumbs-up fa-lg';
+        }
+    });
+
+    document.getElementById('shareBtn').addEventListener('click', function() {
+        if (navigator.share) {
+            navigator.share({
+                title: "{{ annonce.titre|escapejs }}",
+                url: window.location.href
+            }).catch(console.error);
+        } else {
+            navigator.clipboard.writeText(window.location.href);
+            alert("{{ texte_presse_papier|escapejs }}");
+        }
+    });
+</script>
+{% endblock %}

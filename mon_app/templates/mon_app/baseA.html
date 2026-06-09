@@ -20,21 +20,24 @@
             --transition-speed: 0.3s;
 
             /* --- MODE CLAIR GLOBAL --- */
-            --bg-main: #f8fafc;
-            --bg-navbar: rgba(255, 255, 255, 0.85);
+            --bg-navbar: rgba(255, 255, 255, 0.7);
             --bg-card: #ffffff;
             --text-main: #0f172a;
-            --text-muted: #64748b;
-            --border-color: #e2e8f0;
+            --text-muted: #475569;
+            --border-color: #cbd5e1;
+
+            /* MODIFICATION TRANSPARENCE MODE CLAIR */
+            --bg-overlay: rgba(244, 247, 245, 0.75); /* Voile global au-dessus du logo */
+            --bg-glass-card: rgba(255, 255, 255, 0.5); /* Conteneur transparent à l'intérieur du block content */
+            --border-glass: rgba(255, 255, 255, 0.45);
 
             /* La sidebar épouse le mode clair */
             --sidebar-bg: #ffffff;
             --sidebar-text: #475569;
             --sidebar-hover: #f1f5f9;
             --sidebar-border: #e2e8f0;
-            --sidebar-title: var(--brand-green); /* Le vert forêt signe les sections */
+            --sidebar-title: var(--brand-green);
             
-            /* Bouton actif en mode clair : Vert forêt avec texte blanc pour impacter */
             --nav-active-bg: var(--brand-green);
             --nav-active-text: #ffffff;
             --nav-active-shadow: rgba(17, 50, 26, 0.2);
@@ -42,21 +45,24 @@
 
         [data-theme="dark"] {
             /* --- MODE SOMBRE GLOBAL --- */
-            --bg-main: #0f172a;
-            --bg-navbar: rgba(15, 23, 42, 0.85);
+            --bg-navbar: rgba(15, 23, 42, 0.7);
             --bg-card: #1e293b;
             --text-main: #f8fafc;
-            --text-muted: #94a3b8;
-            --border-color: #334155;
+            --text-muted: #cbd5e1;
+            --border-color: #475569;
+
+            /* MODIFICATION TRANSPARENCE MODE SOMBRE */
+            --bg-overlay: rgba(15, 23, 42, 0.82); /* Voile sombre au-dessus du logo */
+            --bg-glass-card: rgba(30, 41, 59, 0.5); /* Conteneur sombre transparent */
+            --border-glass: rgba(255, 255, 255, 0.08);
 
             /* La sidebar épouse le mode sombre */
             --sidebar-bg: #1e293b;
             --sidebar-text: #94a3b8;
             --sidebar-hover: #293548;
             --sidebar-border: #334155;
-            --sidebar-title: var(--brand-rose); /* Le rose ressort mieux sur le sombre */
+            --sidebar-title: var(--brand-rose);
             
-            /* Bouton actif en mode sombre : Rose ou dégradé lumineux */
             --nav-active-bg: linear-gradient(135deg, var(--brand-rose) 0%, var(--brand-rose-hover) 100%);
             --nav-active-text: #ffffff;
             --nav-active-shadow: rgba(209, 143, 178, 0.25);
@@ -71,12 +77,18 @@
 
         body {
             font-family: 'Poppins', sans-serif;
-            background-color: var(--bg-main);
             color: var(--text-main);
             display: flex;
             min-height: 100vh;
             overflow-x: hidden;
-            transition: background-color var(--transition-speed), color var(--transition-speed);
+            transition: color var(--transition-speed);
+
+            /* MODIFICATION : Application du logo CPE en plein écran derrière toute l'application */
+            background-image: linear-gradient(var(--bg-overlay), var(--bg-overlay)), url("{% static 'images/LOGO_CPE-removebg-preview.jpeg' %}");
+            background-repeat: no-repeat;
+            background-position: center center;
+            background-size: cover;
+            background-attachment: fixed;
         }
 
         /* --- SIDEBAR --- */
@@ -108,7 +120,6 @@
             object-fit: contain;
         }
 
-        /* Inversion subtile du logo si nécessaire sur fond sombre */
         [data-theme="dark"] .logo-container img {
             filter: drop-shadow(0px 2px 8px rgba(255,255,255,0.05));
         }
@@ -225,6 +236,11 @@
             background: var(--sidebar-hover);
         }
 
+        .dropdown-container.open .nav-link.has-dropdown.active {
+            background: var(--nav-active-bg);
+            color: var(--nav-active-text) !important;
+        }
+
         .dropdown-item {
             display: flex;
             align-items: center;
@@ -237,7 +253,7 @@
             text-decoration: none;
             transition: all 0.2s ease;
         }
-        
+
         .dropdown-item i {
             font-size: 10px;
             margin-right: 10px;
@@ -345,6 +361,7 @@
             display: flex;
             flex-direction: column;
             min-width: 0;
+            background: transparent; /* MODIFICATION : pour laisser transparaître le body */
         }
 
         .top-navbar {
@@ -376,8 +393,8 @@
 
         .top-navbar p {
             font-size: 0.85rem;
-            font-weight: 500;
-            color: var(--text-muted);
+            font-weight: 600; /* Légèrement accentué pour la lisibilité */
+            color: var(--text-main);
         }
 
         .navbar-btn {
@@ -447,23 +464,23 @@
         }
 
         .alert-success {
-            background-color: #f0fdf4;
+            background-color: rgba(240, 253, 244, 0.9);
             color: #166534;
             border: 1px solid #bbf7d0;
         }
         [data-theme="dark"] .alert-success {
-            background-color: rgba(22, 101, 52, 0.15);
+            background-color: rgba(22, 101, 52, 0.3);
             color: #4ade80;
             border-color: rgba(34, 197, 94, 0.2);
         }
 
         .alert-error {
-            background-color: #fef2f2;
+            background-color: rgba(254, 242, 242, 0.9);
             color: #991b1b;
             border: 1px solid #fecaca;
         }
         [data-theme="dark"] .alert-error {
-            background-color: rgba(153, 27, 27, 0.15);
+            background-color: rgba(153, 27, 27, 0.3);
             color: #f87171;
             border-color: rgba(239, 68, 68, 0.2);
         }
@@ -472,6 +489,37 @@
         .content-body {
             padding: 2rem;
             flex: 1;
+        }
+
+        /* AJOUT CLASSE D'EFFET DE VERRE (À utiliser dans vos sous-pages) */
+        .glass-card {
+            background-color: var(--bg-glass-card);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--border-glass);
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.06);
+            transition: background-color var(--transition-speed), border-color var(--transition-speed);
+        }
+        [data-theme="dark"] .glass-card {
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
+        }
+
+        /* Épaississement général des labels de formulaires pour la lisibilité */
+        .glass-card label, .glass-card .form-label {
+            font-weight: 600;
+            color: var(--text-main);
+        }
+
+        /* Inputs translucides par défaut pour les formulaires dans les sous-pages */
+        .glass-card .form-control, .glass-card input, .glass-card select, .glass-card textarea {
+            background-color: rgba(255, 255, 255, 0.15) !important;
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+        }
+        [data-theme="light"] .glass-card .form-control, [data-theme="light"] .glass-card input {
+            background-color: rgba(248, 250, 252, 0.6) !important;
         }
 
         /* --- RESPONSIVE --- */
@@ -524,7 +572,7 @@
             <div class="sidebar-section-title">Menu Principal</div>
 
             <div class="dropdown-container">
-                <a class="nav-link has-dropdown">
+                <a class="nav-link has-dropdown {% if request.resolver_match.url_name == 'admin_creer_formation' or request.resolver_match.url_name == 'admin_liste_formations' %}active{% endif %}">
                     <div class="nav-title-block">
                         <i class="fas fa-graduation-cap"></i> <span>Formations</span>
                     </div>
@@ -541,7 +589,7 @@
             </div>
 
             <div class="dropdown-container">
-                <a class="nav-link has-dropdown">
+                <a class="nav-link has-dropdown {% if request.resolver_match.url_name == 'admin_creer_annonce' or request.resolver_match.url_name == 'admin_list_anonces' %}active{% endif %}">
                     <div class="nav-title-block">
                         <i class="fas fa-bullhorn"></i> <span>Annonces</span>
                     </div>
@@ -558,7 +606,7 @@
             </div>
 
             <div class="dropdown-container">
-                <a class="nav-link has-dropdown">
+                <a class="nav-link has-dropdown {% if request.resolver_match.url_name == 'actualite_creer' or request.resolver_match.url_name == 'actualite_liste' %}active{% endif %}">
                     <div class="nav-title-block">
                         <i class="fas fa-newspaper"></i> <span>Actualités</span>
                     </div>
@@ -575,7 +623,7 @@
             </div>
 
             <div class="dropdown-container">
-                <a class="nav-link has-dropdown">
+                <a class="nav-link has-dropdown {% if request.resolver_match.url_name == 'admin_publier_photo' or request.resolver_match.url_name == 'admin_liste_photos' %}active{% endif %}">
                     <div class="nav-title-block">
                         <i class="fas fa-images"></i> <span>Album</span>
                     </div>
@@ -592,7 +640,7 @@
             </div>
 
             <div class="dropdown-container">
-                <a class="nav-link has-dropdown">
+                <a class="nav-link has-dropdown {% if request.resolver_match.url_name == 'admin_creer_partenaire' or request.resolver_match.url_name == 'admin_list_partenaires' %}active{% endif %}">
                     <div class="nav-title-block">
                         <i class="fas fa-handshake"></i> <span>Partenaires</span>
                     </div>

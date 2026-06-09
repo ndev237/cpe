@@ -2,18 +2,31 @@ from django import forms
 from .models import Formation, Annonce, AlbumPhoto, Actualite, Partenaire
 from django.utils.text import slugify
 
-
 class FormationForm(forms.ModelForm):
     class Meta:
         model = Formation
-        # On ajoute 'categorie' dans la liste des champs affichés
-        fields = ['titre', 'categorie', 'description_courte', 'programme_detaille', 'duree', 'prix', 'image', 'est_active']
+        # Assurez-vous que 'programme_detaille' a BIEN disparu d'ici :
+        fields = [
+            'titre', 'categorie', 'description_courte',
+            'niveau_requis', 'debouches', 'duree', 'image', 'est_active'
+        ]
+
+        # Et qu'il a BIEN disparu d'ici également :
         widgets = {
-            'description_courte': forms.Textarea(attrs={'rows': 3, 'placeholder': 'Résumé de la formation...'}),
-            'programme_detaille': forms.Textarea(attrs={'rows': 6, 'placeholder': 'Détails des modules...'}),
+            'description_courte': forms.Textarea(attrs={
+                'rows': 3,
+                'placeholder': 'Résumé de la formation (affiché sur les cartes)...'
+            }),
+            'niveau_requis': forms.Textarea(attrs={
+                'rows': 4,
+                'placeholder': 'Ex: Baccalauréat, Niveau d\'études minimum, diplômes ou compétences prérequises...'
+            }),
+            'debouches': forms.Textarea(attrs={
+                'rows': 4,
+                'placeholder': 'Ex: Métiers accessibles, secteurs d\'insertion professionnelle après la formation...'
+            }),
         }
 
-    # Petite astuce pour générer le slug automatiquement à partir du titre
     def save(self, commit=True):
         instance = super().save(commit=False)
         if not instance.slug:
@@ -21,7 +34,6 @@ class FormationForm(forms.ModelForm):
         if commit:
             instance.save()
         return instance
-
 
 class AnnonceForm(forms.ModelForm):
     class Meta:
@@ -40,7 +52,10 @@ class AnnonceForm(forms.ModelForm):
 class AlbumPhotoForm(forms.ModelForm):
     class Meta:
         model = AlbumPhoto
-        fields = ['titre', 'contenu', 'image']
+        fields = ['image']
+        widgets = {
+            'image': forms.ClearableFileInput(attrs={'class': 'form-control-file'}),
+        }
 
 
 class ActualiteForm(forms.ModelForm):
