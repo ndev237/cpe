@@ -220,6 +220,20 @@
             color: #64748b; 
         }
 
+        /* --- EFFET RALENTI ET TRÈS PROGRESSIF (AJOUT POUR LE FOOTER) --- */
+        .footer-col-animate {
+            opacity: 0;
+            transform: translateY(50px);
+            transition: opacity 1.2s cubic-bezier(0.16, 1, 0.3, 1), 
+                        transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+            will-change: transform, opacity;
+        }
+
+        .footer-col-animate.reveal-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
         /* --- BOUTONS FLOTTANTS DISCRETS (SIDE BAR) --- */
         .side-actions {
             position: fixed;
@@ -291,10 +305,10 @@
         }
         @keyframes phoneShake {
             0%, 90%, 100% { transform: rotate(0deg); }
-            92% { transform: rotate(-10deg); }
-            94% { transform: rotate(10deg); }
-            96% { transform: rotate(-6deg); }
-            98% { transform: rotate(6deg); }
+            2% { transform: rotate(-10deg); }
+            4% { transform: rotate(10deg); }
+            6% { transform: rotate(-6deg); }
+            8% { transform: rotate(6deg); }
         }
 
         /* --- MULTI-ÉCRANS ET RESPONSIVE --- */
@@ -388,6 +402,32 @@
 
             updateProgress();
             window.addEventListener('scroll', updateProgress, { passive: true });
+
+            // ========================================================
+            // SCRIPT POUR ANIMER LE FOOTER (EFFET EN CASCADE RALENTI)
+            // ========================================================
+            const footerSection = document.getElementById('cpeFooterSection');
+            const footerCols = document.querySelectorAll('.footer-col-animate');
+            let footerAnimated = false;
+
+            if (footerSection && footerCols.length > 0) {
+                const footerObserver = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        // Déclenchement dès que 5% du footer devient visible à l'écran
+                        if (entry.isIntersecting && !footerAnimated) {
+                            footerAnimated = true;
+                            footerCols.forEach((col, index) => {
+                                setTimeout(() => {
+                                    col.classList.add('reveal-visible');
+                                }, index * 350); // Intervalle de 350ms entre chaque bloc
+                            });
+                            footerObserver.unobserve(footerSection);
+                        }
+                    });
+                }, { root: null, threshold: 0.05 });
+
+                footerObserver.observe(footerSection);
+            }
         });
     </script>
 </head>
@@ -421,10 +461,11 @@
         {% endblock %}
     </div>
 
-    <!-- PIED DE PAGE ACADÉMIQUE -->
-    <footer class="footer">
+    <!-- PIED DE PAGE ACADÉMIQUE AVEC SECTIONS ANIMÉES -->
+    <footer class="footer" id="cpeFooterSection">
         <div class="footer-inner">
-            <div class="footer-brand">
+            <!-- Bloc 1 : Logo & Titres -->
+            <div class="footer-brand footer-col-animate">
                 <img class="footer-logo" src="{% static 'images/LOGO_CPE-removebg-preview.jpeg' %}" alt="{% trans 'Logo CPE' %}">
                 <div>
                     <div class="footer-title">{% trans "Club-Prepa-Emploi" %}</div>
@@ -432,7 +473,8 @@
                 </div>
             </div>
 
-            <div class="footer-links">
+            <!-- Bloc 2 : Liens Rapides -->
+            <div class="footer-links footer-col-animate">
                 <p class="footer-section-title">{% trans "Liens Rapides" %}</p>
                 <a href="/">{% trans "Accueil" %}</a>
                 <a href="{% url 'nos_formation' %}">{% trans "Nos formations" %}</a>
@@ -441,7 +483,8 @@
                 <a href="{% url 'a_propos' %}">{% trans "À propos" %}</a>
             </div>
 
-            <div class="footer-contact">
+            <!-- Bloc 3 : Contacts -->
+            <div class="footer-contact footer-col-animate">
                 <p class="footer-section-title">{% trans "Nos Contacts" %}</p>
                 <div class="contact-row"><i class="fa-solid fa-phone"></i><a href="tel:+237696162016">+237 696162016 / +237 672467070</a></div>
                 <div class="contact-row"><i class="fa-regular fa-envelope"></i><a href="mailto:efpsaf@yahoo.fr">efpsaf@yahoo.fr</a></div>
@@ -451,7 +494,7 @@
         </div>
 
         <div class="footer-bottom">
-            <p>&copy; 2026 {% trans "CPE Formation - Tous droits réservés." %}</p>
+            <p>&copy; 2026 {% trans "CPE Formation - INSAM Ndokoti - monté ENEO" %}</p>
         </div>
     </footer>
 

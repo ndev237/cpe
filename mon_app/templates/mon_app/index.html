@@ -101,9 +101,24 @@
         justify-content: space-between;
         transition: transform 0.2s ease, box-shadow 0.2s ease;
     }
-    .harvard-card:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 10px 20px rgba(0, 51, 102, 0.04);
+    /* Note : On sépare le hover de l'animation d'apparition pour éviter les conflits CSS */
+    .harvard-card.reveal-visible:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0, 51, 102, 0.06);
+    }
+
+    /* ÉTAT INITIAL POUR L'ANIMATION DU BAS VERS LE HAUT */
+    .formation-card-animate {
+        opacity: 0;
+        transform: translateY(40px); /* Positionné plus bas */
+        transition: opacity 0.6s cubic-bezier(0.215, 0.610, 0.355, 1), 
+                    transform 0.6s cubic-bezier(0.215, 0.610, 0.355, 1);
+    }
+
+    /* ÉTAT FINAL (LORSQUE LE SCRIPT S'ACTIVE) */
+    .formation-card-animate.reveal-visible {
+        opacity: 1;
+        transform: translateY(0);
     }
 
     .harvard-img-wrapper {
@@ -235,12 +250,31 @@
         color: #334155;
         line-height: 1.7;
         margin-bottom: 15px;
+        min-height: 80px;
+    }
+
+    .typing::after {
+        content: '|';
+        animation: blink-cursor 0.75s step-end infinite;
+        color: #D18FB2;
+        font-weight: bold;
+    }
+
+    @keyframes blink-cursor {
+        from, to { color: transparent }
+        50% { color: #D18FB2; }
     }
 
     .testimonial-author {
         font-size: 0.9rem;
         font-weight: 700;
         color: #003366;
+        opacity: 0;
+        transition: opacity 0.5s ease-in-out;
+    }
+    
+    .testimonial-author.visible {
+        opacity: 1;
     }
 
     /* --- PARTENAIRES INSTITUTIONNELS --- */
@@ -350,7 +384,7 @@
 
             <div class="harvard-grid">
                 {% for formation in formations_phares|slice:":3" %}
-                <div class="harvard-card">
+                <div class="harvard-card formation-card-animate">
                     <div>
                         <div class="harvard-img-wrapper">
                             {% if formation.image %}
@@ -419,24 +453,20 @@
 
             <div class="grid-testimonials-harvard">
                 <div class="testimonial-harvard">
-                    <p class="testimonial-quote">
-                        {% trans "« Je m’attendais à un cursus purement théorique, mais la rigueur académique mêlée à l'apprentissage sur le terrain m'a permis d'assimiler les compétences clés avec une rapidité remarquable. »" %}
-                    </p>
+                    <p class="testimonial-quote" data-text="{% trans '« Je m’attendais à un cursus purement théorique, mais la rigueur académique mêlée à l\'apprentissage sur le terrain m\'a permis d\'assimiler les compétences clés avec une rapidité remarquable. »' %}"></p>
                     <div class="testimonial-author">
                         {% trans "Amadou K." %} <span style="font-weight: 300; color: #64748b;">— {% trans "Lauréat Certifié" %}</span>
                     </div>
                 </div>
 
                 <div class="testimonial-harvard">
-                    <p class="testimonial-quote">
-                        {% trans "« Les modules d'apprentissage sont parfaitement structurés et l'équipe pédagogique fait preuve d'une écoute constante. Une formation d'excellence que je recommande sans réserve. »" %}
-                    </p>
+                    <p class="testimonial-quote" data-text="{% trans '« Les modules d\'apprentissage sont parfaitement structurés et l\'équipe pédagogique fait preuve d\'une écoute constante. Une formation d\'excellence que je recommande sans réserve. »' %}"></p>
                     <div class="testimonial-author">
-                        {% trans "Safiatou M." %} <span style="font-weight: 300; color: #64748b;">— {% trans "Diplômée d'Établissement" %}</span>
+                        {% trans "Safiatou M." %} <span style="font-weight: 300; color: #64748b;">— {% trans "Diplômée d\'Établissement" %}</span>
                     </div>
                 </div>
             </div>
-        </section>
+        </section>   
 
         <section id="partenaires">
             <div class="section-header-harvard">
@@ -467,4 +497,90 @@
 
     </div>
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const observerOptions = {
+            root: null,
+            threshold: 0.2 // Se déclenche un peu plus tôt (20% de visibilité) pour une animation fluide
+        };
+
+        // ==========================================
+        // 1. ANIMATION DES FORMATIONS (SÉQUENTIELLE)
+        // ==========================================
+        const formationsSection = document.getElementById('formations');
+        const formationCards = document.querySelectorAll('.formation-card-animate');
+        let formationsAnimated = false;
+
+        const formationsObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting && !formationsAnimated) {
+                    formationsAnimated = true;
+                    
+                    // On parcourt les cartes et on ajoute un délai (stagger effect)
+                    formationCards.forEach((card, index) => {
+                        setTimeout(() => {
+                            card.classList.add('reveal-visible');
+                        }, index * 200); // 200 millisecondes d'intervalle entre chaque carte
+                    });
+                    
+                    formationsObserver.unobserve(formationsSection);
+                }
+            });
+        }, observerOptions);
+
+        if (formationsSection && formationCards.length > 0) {
+            formationsObserver.observe(formationsSection);
+        }
+
+        // ==========================================
+        // 2. ANIMATION DES TÉMOIGNAGES (MACHINE À ÉCRIRE)
+        // ==========================================
+        const testimonialSection = document.getElementById('temoignage');
+        const quotes = document.querySelectorAll('.testimonial-quote');
+        let testimonialsAnimated = false;
+
+        function typeEffect(element, text, speed, callback) {
+            let index = 0;
+            element.classList.add('typing');
+            
+            function type() {
+                if (index < text.length) {
+                    element.innerHTML += text.charAt(index);
+                    index++;
+                    setTimeout(type, speed);
+                } else {
+                    element.classList.remove('typing');
+                    if(callback) callback();
+                }
+            }
+            type();
+        }
+
+        const testimonialsObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting && !testimonialsAnimated) {
+                    testimonialsAnimated = true;
+                    
+                    quotes.forEach((quote) => {
+                        const targetText = quote.getAttribute('data-text');
+                        const author = quote.nextElementSibling;
+                        
+                        typeEffect(quote, targetText, 20, () => {
+                            if(author) {
+                                author.classList.add('visible');
+                            }
+                        });
+                    });
+                    
+                    testimonialsObserver.unobserve(testimonialSection);
+                }
+            });
+        }, observerOptions);
+
+        if (testimonialSection) {
+            testimonialsObserver.observe(testimonialSection);
+        }
+    });
+</script>
 {% endblock %}
