@@ -1,0 +1,395 @@
+{% extends 'mon_app/baseA.html' %}
+{% load i18n %}
+{% load static %}
+
+{% block content %}
+<link href="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.snow.css" rel="stylesheet">
+
+<style>
+    .annonce-container {
+        width: 100%;
+        max-width: 1100px;
+        background-color: rgba(255, 255, 255, 0.3);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border-radius: 20px;
+        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.08);
+        border: 1px solid rgba(255, 255, 255, 0.45);
+        display: grid;
+        grid-template-columns: 0.9fr 1.1fr;
+        overflow: hidden;
+        min-height: 650px;
+        margin: 20px auto;
+    }
+
+    [data-theme="dark"] .annonce-container {
+        background-color: rgba(30, 41, 59, 0.3);
+        border-color: rgba(255, 255, 255, 0.1);
+        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
+    }
+
+    .annonce-sidebar {
+        background: rgba(255, 255, 255, 0.05);
+        padding: 3rem;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        border-right: 1px solid rgba(255, 255, 255, 0.2);
+        position: relative;
+    }
+
+    .annonce-hero-img {
+        width: 100%;
+        max-width: 340px;
+        height: auto;
+        filter: drop-shadow(0 10px 20px rgba(0,0,0,0.05));
+    }
+
+    .annonce-form-area {
+        padding: 3rem;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+
+    .annonce-header {
+        margin-bottom: 1.5rem;
+    }
+
+    .annonce-header h1 {
+        font-size: 2rem;
+        font-weight: 800;
+        color: #4A7c59;
+        letter-spacing: -0.5px;
+    }
+
+    .annonce-header h1 span { color: #D18FB2; }
+
+    .stepper {
+        display: flex;
+        gap: 15px;
+        margin-bottom: 1.5rem;
+    }
+
+    .step-indicator {
+        font-size: 0.8rem;
+        font-weight: 700;
+        color: #64748b;
+        padding-bottom: 5px;
+        border-bottom: 2px solid rgba(0, 0, 0, 0.08);
+        flex: 1;
+    }
+
+    .step-indicator.active {
+        color: #4A7c59;
+        border-bottom-color: #4A7c59;
+    }
+
+    .form-step { display: none; flex-direction: column; gap: 1.25rem; }
+    .form-step.active { display: flex; }
+
+    .form-group { display: flex; flex-direction: column; }
+
+    .form-group label {
+        font-size: 0.875rem;
+        font-weight: 600;
+        color: #334155;
+        margin-bottom: 0.5rem;
+    }
+
+    [data-theme="dark"] .form-group label { color: #cbd5e1; }
+
+    .form-group input[type="text"],
+    .form-group textarea {
+        width: 100%;
+        padding: 0.85rem 1.25rem;
+        font-family: 'Poppins', sans-serif;
+        font-size: 0.95rem;
+        border: 1px solid rgba(255, 255, 255, 0.4);
+        border-radius: 12px;
+        background-color: rgba(255, 255, 255, 0.25);
+        color: #0f172a;
+        outline: none;
+        transition: all 0.2s ease-in-out;
+    }
+
+    .quill-editor-wrapper {
+        background-color: rgba(255, 255, 255, 0.25);
+        border-radius: 12px;
+        overflow: hidden;
+        border: 1px solid rgba(255, 255, 255, 0.4);
+    }
+
+    .form-actions {
+        margin-top: 1.5rem;
+        display: flex;
+        justify-content: flex-end;
+        gap: 12px;
+        border-top: 1px solid rgba(255, 255, 255, 0.3);
+        padding-top: 1.5rem;
+    }
+
+    .btn {
+        padding: 0.85rem 1.75rem;
+        border-radius: 12px;
+        font-size: 0.95rem;
+        font-weight: 700;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        font-family: 'Poppins', sans-serif;
+        border: 1px solid transparent;
+        justify-content: center;
+    }
+
+    .btn-secondary {
+        background-color: rgba(255, 255, 255, 0.4);
+        color: #334155;
+        border: 1px solid rgba(255, 255, 255, 0.5);
+    }
+
+    .btn-secondary:hover { background-color: rgba(255, 255, 255, 0.7); }
+
+    .btn-submit {
+        background-color: #4A7c59;
+        color: #ffffff;
+        border: none;
+        box-shadow: 0 4px 14px rgba(74, 124, 89, 0.2);
+    }
+
+    .btn-submit:hover {
+        background-color: #385f44;
+        transform: translateY(-1px);
+        box-shadow: 0 6px 16px rgba(74, 124, 89, 0.3);
+    }
+
+    .file-drop-zone {
+        border: 2px dashed rgba(255, 255, 255, 0.5);
+        border-radius: 12px;
+        padding: 20px;
+        text-align: center;
+        background: rgba(255, 255, 255, 0.2);
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+
+    #imagePreview {
+        max-width: 100%;
+        max-height: 150px;
+        border-radius: 8px;
+        margin-top: 12px;
+        display: none;
+        object-fit: cover;
+        border: 1px solid rgba(255, 255, 255, 0.3);
+    }
+
+    .checkbox-group {
+        display: flex;
+        gap: 24px;
+        flex-wrap: wrap;
+        margin-top: 5px;
+    }
+
+    .checkbox-label {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        cursor: pointer;
+        font-size: 0.9rem;
+        font-weight: 500;
+        color: #334155;
+    }
+
+    [data-theme="dark"] .checkbox-label { color: #cbd5e1; }
+
+    .checkbox-label input[type="checkbox"] {
+        width: 18px;
+        height: 18px;
+        accent-color: #4A7c59;
+    }
+
+    @media (max-width: 960px) {
+        .annonce-container { grid-template-columns: 1fr; max-width: 650px; }
+        .annonce-sidebar { display: none; }
+        .annonce-form-area { padding: 2.5rem 1.5rem; }
+    }
+</style>
+
+<div class="annonce-container">
+    <div class="annonce-sidebar" aria-hidden="true">
+        <img class="annonce-hero-img" src="{% static 'images/Mobile Marketing-bro.svg' %}" alt="Illustration" />
+    </div>
+
+    <div class="annonce-form-area">
+        <div class="annonce-header">
+            <h1>{% trans "Modifier l'annonce" %}<span>+</span></h1>
+        </div>
+
+        <div class="stepper">
+            <div class="step-indicator active" id="badgeStep1">1. {% trans "Contenu" %}</div>
+            <div class="step-indicator" id="badgeStep2">2. {% trans "Média & Options" %}</div>
+        </div>
+
+        <form method="POST" enctype="multipart/form-data" id="annonceForm">
+            {% csrf_token %}
+
+            <div class="form-step active" id="step1">
+                <div class="form-group">
+                    <label for="{{ form.titre.id_for_label }}">{{ form.titre.label }}</label>
+                    {{ form.titre }}
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.slug.id_for_label }}">{{ form.slug.label }}</label>
+                    {{ form.slug }}
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.contenu.id_for_label }}">{{ form.contenu.label }}</label>
+                    <div style="display:none;">{{ form.contenu }}</div>
+                    <div class="quill-editor-wrapper">
+                        <div id="editor_contenu"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-step" id="step2">
+                <div class="form-group">
+                    <label for="{{ form.image.id_for_label }}">{{ form.image.label }}</label>
+                    <div class="file-drop-zone" onclick="document.getElementById('{{ form.image.id_for_label }}').click()">
+                        <i class="fas fa-cloud-upload-alt" style="font-size: 2rem; color: #4A7c59; margin-bottom: 8px; display: block; opacity: 0.7;"></i>
+                        <span style="font-size: 0.85rem; color: #64748b;">{% trans "Cliquez pour choisir une image d'illustration" %}</span>
+                        <div style="display:none;">{{ form.image }}</div>
+                        <img id="imagePreview" src="#" alt="Aperçu">
+                    </div>
+                    {% if annonce.image %}
+                        <p style="font-size:0.8em; margin-top:8px; color:#64748b;">Actuel : {{ annonce.image.name }}</p>
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label>{% trans "Options de publication" %}</label>
+                    <div class="checkbox-group">
+                        <label class="checkbox-label">
+                            {{ form.est_epinglee }}
+                            <span>{{ form.est_epinglee.label }}</span>
+                        </label>
+                        <label class="checkbox-label">
+                            {{ form.est_active }}
+                            <span>{{ form.est_active.label }}</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-actions">
+                <a href="{% url 'admin_list_anonces' %}" class="btn btn-secondary" id="btnCancel">{% trans "Annuler" %}</a>
+                <button type="button" class="btn btn-secondary" id="btnBack" style="display:none;">
+                    <i class="fas fa-arrow-left"></i> {% trans "Retour" %}
+                </button>
+                <button type="button" class="btn btn-submit" id="btnNext">{% trans "Suivant" %} <i class="fas fa-arrow-right" style="font-size:0.8rem; margin-left:4px;"></i></button>
+                <button type="submit" class="btn btn-submit" id="btnSubmit" style="display:none;">
+                    <i class="fas fa-paper-plane"></i> {% trans "Enregistrer" %}
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const step1 = document.getElementById('step1');
+        const step2 = document.getElementById('step2');
+        const btnNext = document.getElementById('btnNext');
+        const btnBack = document.getElementById('btnBack');
+        const btnSubmit = document.getElementById('btnSubmit');
+
+        const badgeStep1 = document.getElementById('badgeStep1');
+        const badgeStep2 = document.getElementById('badgeStep2');
+
+        btnNext.onclick = () => {
+            step1.classList.remove('active');
+            step2.classList.add('active');
+            btnNext.style.display = 'none';
+            btnBack.style.display = 'inline-flex';
+            btnSubmit.style.display = 'inline-flex';
+            badgeStep1.classList.remove('active');
+            badgeStep2.classList.add('active');
+        };
+
+        btnBack.onclick = () => {
+            step2.classList.remove('active');
+            step1.classList.add('active');
+            btnNext.style.display = 'inline-flex';
+            btnBack.style.display = 'none';
+            btnSubmit.style.display = 'none';
+            badgeStep2.classList.remove('active');
+            badgeStep1.classList.add('active');
+        };
+
+        const textareaContenu = document.getElementById('{{ form.contenu.id_for_label }}') || document.querySelector("[name='contenu']");
+        let quillContenu;
+
+        if (textareaContenu) {
+            quillContenu = new Quill('#editor_contenu', {
+                theme: 'snow',
+                modules: {
+                    toolbar: [
+                        [{ 'header': [1, 2, 3, false] }],
+                        ['bold', 'italic', 'underline', 'strike'],
+                        [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+                        ['link', 'clean']
+                    ]
+                }
+            });
+            quillContenu.root.innerHTML = textareaContenu.value;
+        }
+
+        const form = document.getElementById('annonceForm');
+        if (form) {
+            form.addEventListener('submit', function() {
+                if (textareaContenu && quillContenu) {
+                    textareaContenu.value = quillContenu.root.innerHTML;
+                }
+            });
+        }
+
+        const titreInput = document.getElementById('{{ form.titre.id_for_label }}');
+        const slugInput = document.getElementById('{{ form.slug.id_for_label }}');
+        if (titreInput && slugInput) {
+            titreInput.addEventListener('input', function() {
+                let text = titreInput.value;
+                let slug = text.toLowerCase().trim()
+                    .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+                    .replace(/[^a-z0-9\s-]/g, '')
+                    .replace(/[\s_]+/g, '-').replace(/-+/g, '-');
+                slugInput.value = slug;
+            });
+        }
+
+        const imageInput = document.getElementById('{{ form.image.id_for_label }}');
+        const previewImg = document.getElementById('imagePreview');
+        if (imageInput && previewImg) {
+            imageInput.addEventListener('change', function() {
+                const file = this.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        previewImg.src = e.target.result;
+                        previewImg.style.display = 'block';
+                    };
+                    reader.readAsDataURL(file);
+                } else {
+                    previewImg.style.display = 'none';
+                }
+            });
+        }
+    });
+</script>
+{% endblock %}
+

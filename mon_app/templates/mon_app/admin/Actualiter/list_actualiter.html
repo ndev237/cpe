@@ -377,12 +377,19 @@
                 </td>
                 <td style="text-align: right;">
                     <div class="actions-group" style="justify-content: flex-end;">
-                        <a href="#" class="btn-action edit" title="{% trans 'Modifier' %}">
+                        <a href="{% url 'admin_actualite_modifier' actualite.slug %}" class="btn-action edit" title="{% trans 'Modifier' %}">
                             <i class="fas fa-pen"></i>
                         </a>
-                        <a href="#" class="btn-action delete" title="{% trans 'Supprimer' %}" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette actualité ?');">
-                            <i class="fas fa-trash"></i>
+
+                            <i class="fas fa-pen"></i>
                         </a>
+                        
+                        <form method="post" action="{% url 'admin_supprimer_actualite' actualite.slug %}" style="margin:0;">
+                            {% csrf_token %}
+                            <button type="submit" class="btn-action delete" title="{% trans 'Supprimer' %}">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </form>
                     </div>
                 </td>
             </tr>

@@ -255,10 +255,14 @@
                 <h2 class="card-title">{{ actualite.titre }}</h2>
                 
                 <div class="card-actions">
-                    <a href="#" class="btn-read-more" aria-label="{{ trans_read_more }}">
-                        <span>{{ trans_read_more }}</span>
-                        <i class="fas fa-arrow-right"></i>
+                    {% if actue.slug %}
+                    <a href="{% url 'actualite_detail' actue.slug %}" class="btn-read-more">
+                        <span>{% trans "Lire la suite" %}</span>
+                            <i class="fas fa-arrow-right"></i>
                     </a>
+                    {% else %}
+                        <span class="text-muted">{% trans "Contenu bientôt disponible" %}</span>
+                    {% endif %}
                 </div>
             </div>
         </article>

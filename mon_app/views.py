@@ -8,7 +8,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.hashers import check_password
 from . import models
 from .forms import FormationForm,AlbumPhotoForm, PartenaireForm
-from .models import AlbumPhoto, Annonce, Partenaire
+from .models import AlbumPhoto, Annonce, Formation, Partenaire
 from .models import Actualite
 from .forms import ActualiteForm
 from django.views.generic import ListView
@@ -115,6 +115,23 @@ def detail_annonce(request, slug):
     return render(request, 'mon_app/detail_annonce.html', context)
 
 
+def detail_actualite(request, slug):
+    """Vue pour afficher les détails d'une actualité spécifique"""
+    
+    # On récupère l'actualité par son slug, seulement si elle est publiée
+    actualite = get_object_or_404(Actualite, slug=slug, statut=Actualite.Statut.PUBLIE)
+    
+    # Récupérer les 3 autres actualités récentes pour les suggestions (en excluant l'actuelle)
+    actualites_recentes = Actualite.objects.filter(
+        statut=Actualite.Statut.PUBLIE
+    ).exclude(id=actualite.id).order_by('-date_publication')[:3]
+
+    context = {
+        'actualite': actualite,
+        'actualites_recentes': actualites_recentes,
+    }
+    
+    return render(request, 'mon_app/detail_actualite.html', context)
 
 
 ### --- ESPACE ADMIN / DASHBOARD --- ###
@@ -173,6 +190,39 @@ def admin_creer_formation(request):
         form = FormationForm()
     return render(request, 'mon_app/admin/formations/creer_formation.html', {'form': form})
 
+
+
+
+def admin_modifier_formation(request, slug):
+    if not request.session.get('admin_brut_id'):
+        messages.error(request, "Veuillez vous connecter pour accéder au tableau de bord.")
+        return redirect('connexion_dashboard')
+
+    formation = get_object_or_404(Formation, slug=slug)
+
+
+    if request.method == 'POST':
+        form = FormationForm(request.POST, request.FILES, instance=formation)
+
+        if request.POST.get('niveau_requis') in ['<p><br></p>', '']:
+            form.data = form.data.copy()
+            form.data['niveau_requis'] = ''
+        if request.POST.get('debouches') in ['<p><br></p>', '']:
+            form.data = form.data.copy()
+            form.data['debouches'] = ''
+
+        if form.is_valid():
+            form.save()
+            messages.success(request, f"La formation '{formation.titre}' a été mise à jour.")
+            return redirect('admin_liste_formations')
+        else:
+            messages.error(request, "Erreur dans le formulaire. Veuillez vérifier les champs.")
+    else:
+        form = FormationForm(instance=formation)
+
+    return render(request, 'mon_app/admin/formations/update_formation.html', { 'form': form,'formation': formation,'titre_page': f"Modifier : {formation.titre}"})
+
+
 def dash_admin(request):
     if not request.session.get('admin_brut_id'):
         messages.error(request, "Veuillez vous connecter pour accéder au tableau de bord.")
@@ -211,12 +261,52 @@ def admin_liste_formations(request):
     return render(request, 'mon_app/admin/formations/liste_formations.html', {'formations': formations})
 
 
+def admin_supprimer_formation(request, slug):
+    if not request.session.get('admin_brut_id'):
+        messages.error(request, "Veuillez vous connecter pour accéder au tableau de bord.")
+        return redirect('connexion_dashboard')
+
+    formation = get_object_or_404(Formation, slug=slug)
+
+    if request.method == 'POST':
+        formation.delete()
+        messages.success(request, f"La formation '{formation.titre}' a été supprimée.")
+        return redirect('admin_liste_formations')
+
+    return render(
+        request,
+        'mon_app/admin/formations/confirm_delete_formation.html',
+        {'formation': formation},
+    )
+
+
+
 def admin_list_anonces(request):
     if not request.session.get('admin_brut_id'):
         messages.error(request, "Veuillez vous connecter pour accéder au tableau de bord.")
         return redirect('connexion_dashboard')
     anonces = models.Annonce.objects.all().order_by('-date_publication')
     return render(request, 'mon_app/admin/Anonces/list_anonces.html', {'annonces': anonces})
+
+
+def admin_supprimer_annonce(request, slug):
+    if not request.session.get('admin_brut_id'):
+        messages.error(request, "Veuillez vous connecter pour accéder au tableau de bord.")
+        return redirect('connexion_dashboard')
+
+    annonce = get_object_or_404(models.Annonce, slug=slug)
+
+    if request.method == 'POST':
+        annonce.delete()
+        messages.success(request, f"L'annonce '{annonce.titre}' a été supprimée.")
+        return redirect('admin_list_anonces')
+
+    return render(
+        request,
+        'mon_app/admin/anonces/confirm_delete_annonce.html',
+        {'annonce': annonce},
+    )
+
 
 
 def admin_creer_annonce(request):
@@ -236,6 +326,34 @@ def admin_creer_annonce(request):
         form = AnnonceForm()
 
     return render(request, 'mon_app/admin/Anonces/creer_anonces.html', {'form': form})
+
+
+def admin_modifier_annonce(request, slug):
+    if not request.session.get('admin_brut_id'):
+        messages.error(request, "Veuillez vous connecter pour accéder au tableau de bord.")
+        return redirect('connexion_dashboard')
+
+    from .forms import AnnonceForm
+
+    annonce = get_object_or_404(Annonce, slug=slug)
+
+    if request.method == 'POST':
+        form = AnnonceForm(request.POST, request.FILES, instance=annonce)
+        if form.is_valid():
+            form.save()
+            messages.success(request, f"L'annonce '{annonce.titre}' a été mise à jour.")
+            return redirect('admin_list_anonces')
+        else:
+            messages.error(request, "Erreur dans le formulaire. Veuillez vérifier les champs.")
+    else:
+        form = AnnonceForm(instance=annonce)
+
+    return render(
+        request,
+        'mon_app/admin/Anonces/update_anonce.html',
+        {'form': form, 'annonce': annonce},
+    )
+
 
 
 
@@ -290,6 +408,38 @@ def admin_actualite_creer(request):
 
     return render(request, 'mon_app/admin/Actualiter/creer_actualiter.html', {'form': form})
 
+def admin_supprimer_actualite(request, slug):
+    if not request.session.get('admin_brut_id'):
+        messages.error(request, "Veuillez vous connecter.")
+        return redirect('connexion_dashboard')
+
+    # Utilisez le modèle Actualite explicitement
+    actualite = get_object_or_404(Actualite, slug=slug)
+
+    if request.method == 'POST':
+        actualite.delete()
+        messages.success(request, f"L'actualité '{actualite.titre}' a été supprimée.")
+        return redirect('actualite_liste')
+
+    # Si ce n'est pas un POST (ex: accès direct via URL), on affiche une page de confirmation
+    return render(request, 'mon_app/admin/Actualiter/confirm_delete.html', {'actualite': actualite})
+
+
+def admin_actualite_modifier(request, slug):
+    actualite = get_object_or_404(Actualite, slug=slug)
+    if request.method == 'POST':
+        form = ActualiteForm(request.POST, request.FILES, instance=actualite)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Actualité mise à jour.")
+            return redirect('actualite_liste')
+    else:
+        form = ActualiteForm(instance=actualite)
+    return render(request, 'mon_app/admin/Actualiter/modifier_actualiter.html', {'form': form, 'actualite': actualite})
+
+
+
+
 def notifications_page(request):
     # On récupère les notifications stockées en session (ou une liste vide si rien n'existe)
     notifications = request.session.get('liste_notifications', [])
@@ -300,6 +450,7 @@ def notifications_page(request):
 
 def admin_list_partenaires(request):
     partenaires = Partenaire.objects.all()
+
     query = request.GET.get('search')
     if query:
         partenaires = partenaires.filter(nom__icontains=query)
@@ -310,6 +461,21 @@ def admin_list_partenaires(request):
     }
     return render(request, 'mon_app/admin/partenaires/list_partenaire.html', context)
 
+
+
+def admin_supprimer_partenaire(request, pk):
+    if not request.session.get('admin_brut_id'):
+        messages.error(request, "Veuillez vous connecter pour accéder au tableau de bord.")
+        return redirect('connexion_dashboard')
+
+    partenaire = get_object_or_404(Partenaire, pk=pk)
+
+    if request.method == 'POST':
+        partenaire.delete()
+        messages.success(request, "Le partenaire a été supprimé avec succès !")
+        return redirect('admin_list_partenaires')
+
+    return redirect('admin_list_partenaires')
 
 
 def admin_creer_partenaire(request):
@@ -329,3 +495,4 @@ def admin_creer_partenaire(request):
         'titre_page': "Ajouter un nouveau partenaire",
     }
     return render(request, 'mon_app/admin/partenaires/Ajouter_partenaire.html', context)
+

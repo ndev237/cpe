@@ -290,11 +290,19 @@
                     </td>
                     <td>
                         <div class="action-btn-group">
-                            <a href="#" class="action-btn btn-edit" title="Modifier">
+                            <a href="{% url 'admin_modifier_formation' formation.slug %}" class="action-btn btn-edit" title="Modifier">
                                 <i class="fas fa-pen"></i>
                             </a>
+
+                            <form method="post" action="{% url 'admin_supprimer_formation' formation.slug %}" style="margin:0;">
+                                {% csrf_token %}
+                                <button type="submit" class="action-btn" title="Supprimer" style="background-color: rgba(239, 68, 68, 0.15); color: #b91c1c;">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </form>
                         </div>
                     </td>
+
                 </tr>
                 {% empty %}
                 <tr>

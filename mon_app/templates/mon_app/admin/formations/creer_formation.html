@@ -11,31 +11,44 @@
         width: 100%;
         max-width: 1100px;
         
-        /* Effet transparent et flouté (Glassmorphism) */
-        background-color: rgba(255, 255, 255, 0.75);
-        backdrop-filter: blur(10px);
-        -webkit-backdrop-filter: blur(10px);
+        /* THEME CLAIR : Blanc Transparent (Glassmorphism clair) */
+        /* Effet hyper transparent et flou accentué (mimique creer_anonces.html) */
+        background-color: rgba(255, 255, 255, 0.3);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(12px);
         
         border-radius: 20px;
-        box-shadow: 0 20px 40px rgba(74, 124, 89, 0.04);
-        border: 1px solid rgba(255, 255, 255, 0.4);
+        box-shadow: 0 20px 40px rgba(74, 124, 89, 0.08); /* Ombre douce */
+        border: 1px solid rgba(255, 255, 255, 0.6);
         display: grid;
         grid-template-columns: 0.9fr 1.1fr;
         overflow: hidden;
         min-height: 650px;
         margin: 20px auto;
+        transition: background-color 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease;
+    }
+
+    /* THEME SOMBRE : Bleu Nuit Transparent (Glassmorphism sombre) */
+    [data-theme="dark"] .formation-container {
+        background-color: rgba(73, 80, 114, 0.85); /* Bleu nuit très profond et translucide */
+        border-color: rgba(255, 255, 255, 0.1);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
     }
 
     /* --- COLONNE GAUCHE : VISUEL --- */
     .formation-sidebar {
-        /* Légère teinte transparente pour la démarcation */
-        background: rgba(253, 251, 247, 0.4);
+        background: rgba(67, 67, 96, 0.05);
         padding: 3rem;
         display: flex;
         flex-direction: column;
         justify-content: center;
         align-items: center;
         position: relative;
+        transition: background-color 0.4s ease;
+    }
+
+    [data-theme="dark"] .formation-sidebar {
+        background: rgba(37, 47, 73, 0.4); /* Assombrit le côté image */
     }
 
     .formation-sidebar::before {
@@ -43,9 +56,14 @@
         position: absolute;
         width: 300px;
         height: 300px;
-        background: rgba(255, 255, 255, 0.5);
+        background: rgba(255, 255, 255, 0.3);
         border-radius: 50%;
-        filter: blur(40px);
+        filter: blur(50px);
+        transition: background 0.4s ease;
+    }
+
+    [data-theme="dark"] .formation-sidebar::before {
+        background: rgba(74, 124, 89, 0.15); /* Reflet vert caducée léger en mode sombre */
     }
 
     .formation-hero-img {
@@ -66,11 +84,16 @@
     }
 
     .form-title {
-        color: #4A7c59;
+        color: #4A7c59; /* Vert classique */
         margin-bottom: 12px;
         font-size: 26px;
         font-weight: 700;
         letter-spacing: -0.5px;
+        transition: color 0.4s ease;
+    }
+
+    [data-theme="dark"] .form-title {
+        color: #A1D5B1; /* Vert pastel plus lisible sur fond bleu nuit */
     }
 
     /* --- STEPPER --- */
@@ -83,16 +106,26 @@
     .step-indicator {
         font-size: 13px;
         font-weight: 700;
-        color: #94a3b8;
+        color: #64748b; /* Gris foncé pour être lisible sur le blanc transparent */
         padding-bottom: 8px;
         border-bottom: 2px solid rgba(0, 0, 0, 0.05);
         flex: 1;
         transition: all 0.3s ease;
     }
 
+    [data-theme="dark"] .step-indicator {
+        color: #94a3b8;
+        border-bottom-color: rgba(64, 74, 104, 0.1);
+    }
+
     .step-indicator.active {
         color: #4A7c59;
         border-bottom-color: #4A7c59;
+    }
+
+    [data-theme="dark"] .step-indicator.active {
+        color: #A1D5B1;
+        border-bottom-color: #A1D5B1;
     }
 
     /* --- GESTION DES ÉTAPES --- */
@@ -112,8 +145,12 @@
         display: block;
         font-weight: 600;
         margin-bottom: 8px;
-        color: #4b5563;
+        color: #334155; /* Couleur sombre foncée (lisible sur le blanc transparent) */
         font-size: 14px;
+    }
+
+    [data-theme="dark"] .form-field label {
+        color: #e2e8f0; /* Blanc cassé pour le texte des labels en mode nuit */
     }
 
     .form-field input[type="text"],
@@ -123,13 +160,24 @@
     .form-field select {
         width: 100%;
         padding: 12px;
-        border: 1px solid #e2e8f0;
+        border: 1px solid rgba(255, 255, 255, 0.4); /* Bordure ultra-translucide */
         border-radius: 10px;
-        background-color: rgba(248, 250, 252, 0.7); /* Champs légèrement translucides */
+        background-color: rgba(255, 255, 255, 0.25); /* Fond ultra-translucide */
         box-sizing: border-box;
         transition: all 0.2s ease;
         font-family: inherit;
         color: #1e293b;
+    }
+
+    /* Champs de formulaire en Dark Mode */
+    [data-theme="dark"] .form-field input[type="text"],
+    [data-theme="dark"] .form-field input[type="number"],
+    [data-theme="dark"] .form-field input[type="email"],
+    [data-theme="dark"] .form-field textarea,
+    [data-theme="dark"] .form-field select {
+        background-color: rgba(30, 41, 59, 0.5); /* Fond champ sombre */
+        color: #f8fafc; /* Texte blanc */
+        border-color: rgba(255,255,255,0.15);
     }
 
     .form-field input:focus,
@@ -141,10 +189,21 @@
         box-shadow: 0 0 0 4px rgba(209, 143, 178, 0.15);
     }
 
+    [data-theme="dark"] .form-field input:focus,
+    [data-theme="dark"] .form-field textarea:focus,
+    [data-theme="dark"] .form-field select:focus {
+        background-color: rgba(15, 23, 42, 0.9);
+        color: #ffffff;
+    }
+
     .form-field input[type="file"] {
         padding: 8px 0;
-        color: #4b5563;
+        color: #475569;
         font-size: 14px;
+    }
+
+    [data-theme="dark"] .form-field input[type="file"] {
+        color: #cbd5e1;
     }
 
     .form-field input[type="checkbox"] {
@@ -156,22 +215,53 @@
 
     /* --- EDITEUR DE TEXTE --- */
     .quill-editor-wrapper {
-        background-color: rgba(248, 250, 252, 0.7);
+        background-color: rgba(255, 255, 255, 0.6);
         border-radius: 10px;
         overflow: hidden;
-        border: 1px solid #e2e8f0;
+        border: 1px solid #cbd5e1;
+        transition: all 0.3s ease;
     }
+
+    /* Éditeur de texte en Dark Mode */
+    [data-theme="dark"] .quill-editor-wrapper {
+        background-color: rgba(100, 114, 136, 0.5);
+        border-color: rgba(255,255,255,0.15);
+    }
+
     .ql-toolbar.ql-snow {
         border: none !important;
         border-bottom: 1px solid #e2e8f0 !important;
-        background: rgba(241, 245, 249, 0.8);
+        background: rgba(248, 250, 252, 0.8);
     }
+    
+    [data-theme="dark"] .ql-toolbar.ql-snow {
+        background: rgba(15, 23, 42, 0.6);
+        border-bottom: 1px solid rgba(255,255,255,0.1) !important;
+    }
+
+    [data-theme="dark"] .ql-snow .ql-stroke {
+        stroke: #cbd5e1; /* Icônes claires */
+    }
+    [data-theme="dark"] .ql-snow .ql-fill,
+    [data-theme="dark"] .ql-snow .ql-picker.ql-expanded .ql-picker-label,
+    [data-theme="dark"] .ql-snow .ql-picker.ql-expanded .ql-picker-item {
+        fill: #cbd5e1;
+        color: #cbd5e1;
+    }
+    [data-theme="dark"] .ql-picker {
+        color: #cbd5e1;
+    }
+
     .ql-container.ql-snow {
         border: none !important;
         min-height: 150px;
         font-family: 'Poppins', sans-serif !important;
         font-size: 14px;
         color: #1e293b;
+    }
+
+    [data-theme="dark"] .ql-container.ql-snow {
+        color: #f8fafc;
     }
 
     /* --- ACTIONS --- */
@@ -181,6 +271,10 @@
         gap: 12px;
         padding-top: 16px;
         border-top: 1px solid rgba(0, 0, 0, 0.05);
+    }
+
+    [data-theme="dark"] .form-actions {
+        border-top-color: rgba(255,255,255,0.1);
     }
 
     .btn {
@@ -203,8 +297,18 @@
         border: 1px solid #e2e8f0;
     }
 
+    [data-theme="dark"] .btn-secondary {
+        background-color: rgba(30, 41, 59, 0.8);
+        color: #cbd5e1;
+        border-color: rgba(255,255,255,0.2);
+    }
+
     .btn-secondary:hover {
         background-color: #e2e8f0;
+    }
+
+    [data-theme="dark"] .btn-secondary:hover {
+        background-color: rgba(51, 65, 85, 1);
     }
 
     .btn-primary {

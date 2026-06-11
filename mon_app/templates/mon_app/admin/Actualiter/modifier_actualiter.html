@@ -1,0 +1,255 @@
+{% extends 'mon_app/baseA.html' %}
+{% load i18n %}
+{% load static %}
+
+{% block titre %}{% trans "Modifier une actualité" %} - Club-Prepa-Emploi{% endblock %}
+
+{% block content %}
+<link href="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.snow.css" rel="stylesheet">
+
+<style>
+    .formation-container {
+        width: 100%;
+        max-width: 1100px;
+        margin: 20px auto;
+        background: rgba(255, 255, 255, 0.3);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border-radius: 20px;
+        box-shadow: 0 20px 50px rgba(0,0,0,0.06);
+        border: 1px solid rgba(255, 255, 255, 0.45);
+        display: grid;
+        grid-template-columns: 0.9fr 1.1fr;
+        overflow: hidden;
+        min-height: 650px;
+    }
+    [data-theme="dark"] .formation-container {
+        background-color: rgba(30, 41, 59, 0.3);
+        border-color: rgba(255, 255, 255, 0.1);
+        box-shadow: 0 20px 50px rgba(0,0,0,0.2);
+    }
+
+    .formation-sidebar {
+        background: rgba(255,255,255,0.05);
+        padding: 3rem;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        border-right: 1px solid rgba(255,255,255,0.2);
+    }
+    .formation-hero-img {
+        width: 100%;
+        max-width: 340px;
+        height: auto;
+        filter: drop-shadow(0 10px 20px rgba(0,0,0,0.05));
+    }
+
+    .formation-form-area {
+        padding: 3rem;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+
+    .form-title { 
+        color: #4A7c59;
+        margin-bottom: 6px;
+        font-size: 26px;
+        font-weight: 700;
+        letter-spacing: -0.5px;
+    }
+
+    .form-subtitle {
+        font-size: 0.9rem;
+        color: #475569;
+        margin-bottom: 28px;
+    }
+
+    [data-theme="dark"] .form-subtitle { color: #94a3b8; }
+
+    .form-field { margin-bottom: 24px; }
+    .form-field label {
+        display: block;
+        font-weight: 600;
+        margin-bottom: 8px;
+        color: #334155;
+        font-size: 14px;
+    }
+    [data-theme="dark"] .form-field label { color: #cbd5e1; }
+
+    .form-field input[type="text"],
+    .form-field input[type="file"],
+    .form-field textarea,
+    .form-field select {
+        width: 100%;
+        padding: 12px;
+        border: 1px solid rgba(255, 255, 255, 0.4);
+        border-radius: 10px;
+        background-color: rgba(255, 255, 255, 0.25);
+        box-sizing: border-box;
+        transition: all 0.2s ease;
+        font-family: inherit;
+        color: #0f172a;
+        outline: none;
+    }
+
+    [data-theme="dark"] .form-field input[type="text"],
+    [data-theme="dark"] .form-field textarea,
+    [data-theme="dark"] .form-field select {
+        background-color: rgba(15, 23, 42, 0.25);
+        border-color: rgba(255, 255, 255, 0.1);
+        color: #ffffff;
+    }
+
+    .quill-editor-wrapper {
+        background-color: rgba(255, 255, 255, 0.25);
+        border-radius: 10px;
+        overflow: hidden;
+        border: 1px solid rgba(255, 255, 255, 0.4);
+    }
+
+    .ql-toolbar.ql-snow { border: none !important; border-bottom: 1px solid rgba(255, 255, 255, 0.3) !important; background: rgba(255,255,255,0.4) !important; }
+    [data-theme="dark"] .ql-toolbar.ql-snow { border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important; background: rgba(15, 23, 42, 0.4) !important; }
+
+    .ql-container.ql-snow {
+        border: none !important;
+        min-height: 250px;
+        font-family: 'Poppins', sans-serif !important;
+        font-size: 14px;
+        background: transparent;
+        color: #0f172a;
+    }
+    [data-theme="dark"] .ql-container.ql-snow { color: #ffffff; }
+
+    .form-actions {
+        margin-top: 30px;
+        display: flex;
+        justify-content: flex-end;
+        gap: 12px;
+        padding-top: 20px;
+        border-top: 1px solid rgba(255, 255, 255, 0.3);
+    }
+
+    .btn {
+        padding: 14px 28px;
+        border-radius: 10px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s;
+        font-size: 14px;
+        font-family: inherit;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        text-decoration: none;
+        border: none;
+    }
+
+    .btn-secondary {
+        background-color: rgba(255, 255, 255, 0.4);
+        color: #334155;
+        border: 1px solid rgba(255, 255, 255, 0.5);
+    }
+    [data-theme="dark"] .btn-secondary {
+        background-color: rgba(255, 255, 255, 0.08);
+        border-color: rgba(255, 255, 255, 0.1);
+        color: #cbd5e1;
+    }
+
+    .btn-primary {
+        background-color: #4A7c59;
+        color: white;
+        box-shadow: 0 4px 14px rgba(74, 124, 89, 0.2);
+    }
+    .btn-primary:hover { background-color: #385f44; transform: translateY(-1px); box-shadow: 0 6px 16px rgba(74, 124, 89, 0.3); }
+
+    @media (max-width: 960px) {
+        .formation-container { grid-template-columns: 1fr; max-width: 650px; }
+        .formation-sidebar { display: none; }
+        .formation-form-area { padding: 2.5rem 1.5rem; }
+    }
+</style>
+
+<div class="formation-container">
+    <div class="formation-sidebar" aria-hidden="true">
+        <img class="formation-hero-img" src="{% static 'images/Blog post-bro.svg' %}" alt="Illustration actualité" />
+    </div>
+
+    <div class="formation-form-area">
+        <h2 class="form-title">{% trans "Modifier l'actualité" %}</h2>
+        <p class="form-subtitle">{% trans "Mettez à jour le contenu et l'image." %}</p>
+
+        <form id="actualiteEditForm" method="POST" enctype="multipart/form-data" novalidate>
+            {% csrf_token %}
+
+            {% for field in form %}
+                <div class="form-field">
+                    {% if field.name == 'contenu' %}
+                        {{ field.as_widget }}
+                        <label>{{ field.label }}</label>
+                        <div class="quill-editor-wrapper">
+                            <div id="editor-container">{{ field.value|default_if_none:""|safe }}</div>
+                        </div>
+                    {% else %}
+                        <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                        {{ field }}
+                        {% if field.name == 'image' and actualite.image %}
+                            <div style="font-size:0.8em; color:#94a3b8; margin-top:6px;">
+                                {% trans "Actuel :" %} {{ actualite.image.name }}
+                            </div>
+                        {% endif %}
+                    {% endif %}
+
+                    {% if field.help_text %}
+                        <small style="color:#94a3b8; font-size:0.8rem; display:block; margin-top:4px;">{{ field.help_text }}</small>
+                    {% endif %}
+
+                    {% if field.errors %}
+                        <span style="color:#ef4444; font-size:0.8rem; font-weight:500; display:flex; align-items:center; gap:4px; margin-top:4px;">
+                            <i class="fas fa-exclamation-circle"></i> {{ field.errors.0 }}
+                        </span>
+                    {% endif %}
+                </div>
+            {% endfor %}
+
+            <div class="form-actions">
+                <a href="{% url 'actualite_liste' %}" class="btn btn-secondary">
+                    {% trans "Annuler" %}
+                </a>
+                <button type="submit" class="btn btn-primary shadow-md shadow-green-900/10">
+                    <i class="fas fa-save"></i> {% trans "Enregistrer" %}
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const toolbarOptions = [
+            [{ 'header': [1, 2, 3, false] }],
+            ['bold', 'italic', 'underline', 'strike'],
+            [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+            ['link', 'blockquote', 'clean']
+        ];
+
+        const quill = new Quill('#editor-container', {
+            modules: { toolbar: toolbarOptions },
+            theme: 'snow',
+            placeholder: "{% trans 'Rédigez le contenu de votre article ici...' %}"
+        });
+
+        const form = document.getElementById('actualiteEditForm');
+        const djangoTextarea = form.querySelector('textarea[name="contenu"]');
+
+        form.addEventListener('submit', function(e) {
+            if (djangoTextarea) {
+                djangoTextarea.value = quill.root.innerHTML;
+            }
+        });
+    });
+</script>
+{% endblock %}
+

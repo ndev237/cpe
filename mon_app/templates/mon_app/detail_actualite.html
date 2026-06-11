@@ -1,0 +1,115 @@
+{% extends 'mon_app/base.html' %}
+{% load i18n %}
+{% load static %}
+
+{% block title %}{{ actualite.titre }} - {% trans "Fil des actualités" %}{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<style>
+    /* --- CONTENEUR PRINCIPAL --- */
+    .fb-feed-wrapper {
+        max-width: 680px;
+        margin: 40px auto;
+        padding: 0 15px;
+    }
+
+    .fb-card {
+        background: #ffffff;
+        border: 1px solid #e4e6eb;
+        border-radius: 12px;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+        padding: 20px;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    /* --- EN-TÊTE --- */
+    .post-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+    .author-info { display: flex; align-items: center; gap: 12px; }
+    .author-avatar { width: 48px; height: 48px; border-radius: 50%; background-color: #4A7c59; color: #ffffff; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 18px; border: 1px solid #e4e6eb; }
+    .author-meta { display: flex; flex-direction: column; }
+    .author-name { font-weight: 600; color: #050505; font-size: 15px; display: inline-flex; align-items: center; gap: 6px; text-decoration: none; }
+    .badge-verified { color: #1877f2; font-size: 13px; }
+    .post-time-meta { font-size: 13px; color: #65676b; display: flex; align-items: center; gap: 4px; }
+
+    /* --- TITRE ET CONTENU --- */
+    .post-title { color: #050505; font-size: 24px; font-weight: 700; line-height: 1.3; margin: 10px 0 16px 0; }
+    .post-content { color: #050505; font-size: 18px; line-height: 1.6; margin-bottom: 20px; }
+    
+    /* --- MEDIA --- */
+    .post-media-container { margin-left: -20px; margin-right: -20px; border-top: 1px solid #f0f2f5; border-bottom: 1px solid #f0f2f5; background-color: #f8fafc; max-height: 500px; overflow: hidden; display: flex; align-items: center; justify-content: center; }
+    .post-image { width: 100%; height: auto; max-height: 500px; object-fit: cover; }
+
+    /* --- ACTIONS --- */
+    .post-actions-bar { display: flex; align-items: center; justify-content: space-between; padding-top: 12px; margin-top: 12px; border-top: 1px solid #e4e6eb; }
+    .action-btn { flex: 1; display: flex; align-items: center; justify-content: center; gap: 8px; padding: 8px; border-radius: 6px; color: #65676b; font-weight: 600; font-size: 14px; background: transparent; border: none; cursor: pointer; transition: background-color 0.2s; }
+    .action-btn:hover { background-color: #f2f3f5; color: #050505; }
+    .action-btn.active-like { color: #1877f2; }
+    .back-to-feed-btn { display: inline-flex; align-items: center; gap: 8px; color: #65676b; font-weight: 600; font-size: 14px; text-decoration: none; margin-bottom: 16px; }
+</style>
+
+<div class="fb-feed-wrapper">
+    <a href="{% url 'actualites_liste' %}" class="back-to-feed-btn">
+        <i class="fas fa-chevron-left"></i> {% trans "Retour aux actualités" %}
+    </a>
+
+    <article class="fb-card">
+        <div class="post-header">
+            <div class="author-info">
+                <div class="author-avatar">C</div>
+                <div class="author-meta">
+                    <span class="author-name">
+                        {% trans "Centre de Formation Professionnelle" %}
+                        <i class="fas fa-check-circle badge-verified"></i>
+                    </span>
+                    <div class="post-time-meta">
+                        <span>{{ actualite.date_publication|date:"d F Y" }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <h1 class="post-title">{{ actualite.titre }}</h1>
+
+        <div class="post-content">
+            {{ actualite.contenu|safe }}
+        </div>
+
+        {% if actualite.image %}
+            <div class="post-media-container">
+                <img class="post-image" src="{{ actualite.image.url }}" alt="{{ actualite.titre }}">
+            </div>
+        {% endif %}
+
+        <div class="post-actions-bar">
+            <button type="button" class="action-btn" id="likeBtn">
+                <i class="far fa-thumbs-up fa-lg"></i> <span>{% trans "J'aime" %}</span>
+            </button>
+            <button type="button" class="action-btn" onclick="window.print()">
+                <i class="far fa-file-alt fa-lg"></i> <span>{% trans "Imprimer" %}</span>
+            </button>
+            <button type="button" class="action-btn" id="shareBtn">
+                <i class="far fa-share-square fa-lg"></i> <span>{% trans "Partager" %}</span>
+            </button>
+        </div>
+    </article>
+</div>
+
+<script>
+    document.getElementById('likeBtn').addEventListener('click', function() {
+        this.classList.toggle('active-like');
+        const icon = this.querySelector('i');
+        icon.className = this.classList.contains('active-like') ? 'fas fa-thumbs-up fa-lg' : 'far fa-thumbs-up fa-lg';
+    });
+
+    document.getElementById('shareBtn').addEventListener('click', function() {
+        if (navigator.share) {
+            navigator.share({ title: "{{ actualite.titre|escapejs }}", url: window.location.href });
+        } else {
+            navigator.clipboard.writeText(window.location.href);
+            alert("{% trans 'Lien copié dans le presse-papier !' %}");
+        }
+    });
+</script>
+{% endblock %}

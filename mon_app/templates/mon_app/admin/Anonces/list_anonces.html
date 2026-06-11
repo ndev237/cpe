@@ -346,11 +346,20 @@
                     </td>
                     <td>
                         <div class="action-btn-group">
-                            <a href="#" class="action-btn btn-edit" title="Modifier l'annonce">
+                            <a href="{% url 'admin_modifier_annonce' annonce.slug %}" class="action-btn btn-edit" title="Modifier l'annonce">
                                 <i class="fas fa-pen"></i>
                             </a>
+
+
+                            <form method="post" action="{% url 'admin_supprimer_annonce' annonce.slug %}" style="margin:0;">
+                                {% csrf_token %}
+                                <button type="submit" class="action-btn" title="Supprimer" style="background-color: rgba(239, 68, 68, 0.15); border-color: rgba(239, 68, 68, 0.35); color: #dc2626;">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </form>
                         </div>
                     </td>
+
                 </tr>
                 {% empty %}
                 <tr>
