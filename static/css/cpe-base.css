@@ -1,0 +1,227 @@
+/* ============================================================
+   CPE - Système de design partagé
+   Variables, typographie, classes utilitaires.
+   Inclus depuis base.html / baseA.html.
+   ============================================================ */
+
+:root {
+    /* --- Palette de marque --- */
+    --cpe-marine:        #003366;
+    --cpe-marine-dark:   #002244;
+    --cpe-marine-light:  #1a4d80;
+    --cpe-rose:          #D18FB2;
+    --cpe-rose-dark:     #b87599;
+    --cpe-vert:          #A1D5B1;
+    --cpe-vert-dark:     #8bc49c;
+
+    /* --- Neutres --- */
+    --cpe-ink:           #1e293b;
+    --cpe-ink-soft:      #334155;
+    --cpe-muted:         #475569;
+    --cpe-muted-2:       #64748b;
+    --cpe-line:          #e2e8f0;
+    --cpe-line-soft:     #f1f5f9;
+    --cpe-bg:            #ffffff;
+    --cpe-bg-soft:       #f8fafc;
+
+    /* --- Typographie --- */
+    --cpe-font-display: Georgia, Cambria, "Times New Roman", Times, serif;
+    --cpe-font-body:    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+                        Helvetica, Arial, sans-serif;
+
+    /* --- Échelle --- */
+    --cpe-radius:        4px;
+    --cpe-radius-lg:     8px;
+    --cpe-shadow-sm:     0 2px 6px rgba(0, 51, 102, 0.06);
+    --cpe-shadow-md:     0 4px 14px rgba(0, 51, 102, 0.10);
+    --cpe-shadow-lg:     0 12px 30px rgba(0, 51, 102, 0.15);
+
+    /* --- Transitions --- */
+    --cpe-ease:          cubic-bezier(0.16, 1, 0.3, 1);
+    --cpe-tr-fast:       0.18s ease;
+    --cpe-tr-base:       0.3s var(--cpe-ease);
+}
+
+/* --- Reset léger --- */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+}
+
+body {
+    font-family: var(--cpe-font-body);
+    color: var(--cpe-ink);
+    background: var(--cpe-bg);
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+}
+
+/* --- Sélection texte aux couleurs de marque --- */
+::selection {
+    background: var(--cpe-rose);
+    color: var(--cpe-bg);
+}
+
+/* --- Focus visible accessible --- */
+:focus-visible {
+    outline: 3px solid var(--cpe-rose);
+    outline-offset: 2px;
+    border-radius: var(--cpe-radius);
+}
+
+/* ============================================================
+   Classes utilitaires CPE (préfixe .cpe-)
+   ============================================================ */
+
+/* Titre éditorial style académique */
+.cpe-heading {
+    font-family: var(--cpe-font-display);
+    color: var(--cpe-marine);
+    font-weight: 700;
+    line-height: 1.15;
+    letter-spacing: -0.01em;
+}
+
+/* Bouton primaire (marine) */
+.cpe-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 26px;
+    background: var(--cpe-marine);
+    color: var(--cpe-bg);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.95rem;
+    letter-spacing: 0.3px;
+    border: 1px solid var(--cpe-marine);
+    border-radius: var(--cpe-radius);
+    transition: background var(--cpe-tr-fast),
+                transform var(--cpe-tr-fast),
+                box-shadow var(--cpe-tr-fast);
+    cursor: pointer;
+}
+
+.cpe-btn:hover {
+    background: var(--cpe-marine-dark);
+    transform: translateY(-1px);
+    box-shadow: var(--cpe-shadow-md);
+}
+
+.cpe-btn--rose {
+    background: var(--cpe-rose);
+    border-color: var(--cpe-rose);
+    color: var(--cpe-bg);
+}
+.cpe-btn--rose:hover { background: var(--cpe-rose-dark); border-color: var(--cpe-rose-dark); }
+
+.cpe-btn--vert {
+    background: var(--cpe-vert);
+    border-color: var(--cpe-vert);
+    color: var(--cpe-marine);
+}
+.cpe-btn--vert:hover { background: var(--cpe-vert-dark); border-color: var(--cpe-vert-dark); }
+
+.cpe-btn--ghost {
+    background: transparent;
+    color: var(--cpe-marine);
+}
+.cpe-btn--ghost:hover {
+    background: var(--cpe-marine);
+    color: var(--cpe-bg);
+}
+
+/* Carte éditoriale */
+.cpe-card {
+    background: var(--cpe-bg);
+    border: 1px solid var(--cpe-line);
+    border-radius: var(--cpe-radius);
+    padding: 26px;
+    transition: transform var(--cpe-tr-base),
+                box-shadow var(--cpe-tr-base),
+                border-color var(--cpe-tr-base);
+}
+.cpe-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--cpe-shadow-lg);
+    border-color: var(--cpe-marine);
+}
+
+/* En-tête de section style "Harvard" */
+.cpe-section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 20px;
+    border-bottom: 2px solid var(--cpe-marine);
+    padding-bottom: 12px;
+    margin: 60px 0 30px;
+}
+.cpe-section-title {
+    font-family: var(--cpe-font-display);
+    font-size: clamp(1.6rem, 2.4vw, 2rem);
+    font-weight: 700;
+    color: var(--cpe-marine);
+    margin: 0;
+}
+
+/* Étiquette / kicker */
+.cpe-kicker {
+    display: inline-block;
+    text-transform: uppercase;
+    letter-spacing: 1.4px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: var(--cpe-rose);
+    margin-bottom: 12px;
+}
+
+/* Conteneur centré */
+.cpe-container {
+    max-width: 1200px;
+    width: 92%;
+    margin: 0 auto;
+}
+
+/* --- Apparition au scroll (utilisable via IntersectionObserver) --- */
+.cpe-reveal {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.9s var(--cpe-ease),
+                transform 0.9s var(--cpe-ease);
+    will-change: opacity, transform;
+}
+.cpe-reveal.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* --- États d'accessibilité --- */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.001ms !important;
+        transition-duration: 0.001ms !important;
+    }
+    html { scroll-behavior: auto; }
+}
+
+/* --- Print --- */
+@media print {
+    .navbar, .footer, .side-actions { display: none !important; }
+    body { color: #000; background: #fff; }
+    a { color: #000; text-decoration: underline; }
+}
