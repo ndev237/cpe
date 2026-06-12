@@ -658,9 +658,22 @@
 
             <div class="sidebar-section-title">Sécurité & Liens</div>
 
-            <a href="#" class="nav-link">
-                <i class="fas fa-users"></i> <span>Utilisateurs</span>
-            </a>
+            <div class="dropdown-container">
+                <a class="nav-link has-dropdown {% if request.resolver_match.url_name == 'admin_list_users' or request.resolver_match.url_name == 'admin_create_user' or request.resolver_match.url_name == 'admin_change_user_password' %}active{% endif %}">
+                    <div class="nav-title-block">
+                        <i class="fas fa-users"></i> <span>Utilisateurs</span>
+                    </div>
+                    <i class="fas fa-chevron-down arrow"></i>
+                </a>
+                <div class="dropdown-menu">
+                    <a href="{% url 'admin_create_user' %}" class="dropdown-item {% if request.resolver_match.url_name == 'admin_create_user' %}active{% endif %}">
+                        <i class="fas fa-user-plus"></i> Ajouter
+                    </a>
+                    <a href="{% url 'admin_list_users' %}" class="dropdown-item {% if request.resolver_match.url_name == 'admin_list_users' %}active{% endif %}">
+                        <i class="fas fa-list"></i> Liste complète
+                    </a>
+                </div>
+            </div>
 
             <a href="{% url 'index' %}" target="_blank" class="nav-link">
                 <i class="fas fa-globe"></i> <span>Voir le Site Public</span>

@@ -1,0 +1,300 @@
+{% extends 'mon_app/baseA.html' %}
+{% load static %}
+
+{% block content %}
+<style>
+    .users-shell {
+        width: 100%;
+        max-width: 1200px;
+        margin: 24px auto;
+        background-color: rgba(255, 255, 255, 0.35);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border: 1px solid rgba(255, 255, 255, 0.5);
+        border-radius: 20px;
+        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.08);
+        padding: 2.25rem 2.5rem 2.5rem;
+    }
+    [data-theme="dark"] .users-shell {
+        background-color: rgba(30, 41, 59, 0.35);
+        border-color: rgba(255, 255, 255, 0.08);
+    }
+
+    .users-head {
+        display: flex; flex-wrap: wrap; gap: 18px;
+        align-items: flex-end; justify-content: space-between;
+        margin-bottom: 1.75rem;
+        padding-bottom: 1.25rem;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+    }
+    [data-theme="dark"] .users-head { border-bottom-color: rgba(255,255,255,0.08); }
+
+    .users-title {
+        font-size: 1.85rem; font-weight: 800; color: #11321A;
+        letter-spacing: -0.5px; margin: 0;
+        display: inline-flex; align-items: center; gap: 12px;
+    }
+    [data-theme="dark"] .users-title { color: #ffffff; }
+    .users-title small {
+        font-size: 0.85rem; font-weight: 500;
+        color: #64748b; letter-spacing: 0;
+        background: rgba(209, 143, 178, 0.18);
+        padding: 4px 12px; border-radius: 999px;
+    }
+
+    .users-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+
+    .search-input {
+        padding: 0.7rem 1rem; border-radius: 12px;
+        border: 1px solid rgba(255,255,255,0.5);
+        background-color: rgba(255,255,255,0.45);
+        font-family: 'Poppins', sans-serif; font-size: 0.9rem;
+        color: #0f172a; min-width: 240px; outline: none;
+        transition: all 0.2s ease;
+    }
+    [data-theme="dark"] .search-input {
+        background-color: rgba(15,23,42,0.4);
+        border-color: rgba(255,255,255,0.1); color: #fff;
+    }
+    .search-input:focus {
+        border-color: #11321A;
+        box-shadow: 0 0 0 4px rgba(17, 50, 26, 0.15);
+        background-color: rgba(255,255,255,0.85);
+    }
+    [data-theme="dark"] .search-input:focus { background-color: rgba(15,23,42,0.85); }
+
+    .btn-pill {
+        display: inline-flex; align-items: center; gap: 8px;
+        padding: 0.7rem 1.25rem; border-radius: 12px;
+        font-family: 'Poppins', sans-serif; font-size: 0.9rem; font-weight: 600;
+        text-decoration: none; cursor: pointer; border: none;
+        transition: all 0.2s ease;
+    }
+    .btn-primary {
+        background: linear-gradient(135deg, #11321A 0%, #1f5230 100%);
+        color: #fff; box-shadow: 0 6px 16px rgba(17, 50, 26, 0.25);
+    }
+    .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 10px 22px rgba(17, 50, 26, 0.35); }
+
+    .btn-ghost {
+        background: rgba(255,255,255,0.45); color: #334155;
+        border: 1px solid rgba(255,255,255,0.6);
+    }
+    [data-theme="dark"] .btn-ghost {
+        background: rgba(255,255,255,0.08); color: #e2e8f0;
+        border-color: rgba(255,255,255,0.12);
+    }
+    .btn-ghost:hover { background: rgba(255,255,255,0.75); }
+
+    /* Alertes */
+    .form-alerts { display: flex; flex-direction: column; gap: 10px; margin-bottom: 1.25rem; }
+    .alert {
+        padding: 12px 16px; border-radius: 12px; font-size: 0.9rem; font-weight: 500;
+        border: 1px solid transparent; display: flex; align-items: flex-start; gap: 10px;
+    }
+    .alert-success {
+        background: rgba(74,124,89,0.12); color: #2f5b3c;
+        border-color: rgba(74,124,89,0.35);
+    }
+    .alert-error {
+        background: rgba(185,28,28,0.10); color: #991b1b;
+        border-color: rgba(185,28,28,0.30);
+    }
+
+    /* Grille des cartes utilisateur */
+    .users-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
+        gap: 18px;
+    }
+
+    .user-card {
+        background: rgba(255,255,255,0.55);
+        border: 1px solid rgba(255,255,255,0.6);
+        border-radius: 16px;
+        padding: 1.5rem 1.5rem 1.25rem;
+        display: flex; flex-direction: column; gap: 14px;
+        transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+        position: relative;
+    }
+    [data-theme="dark"] .user-card {
+        background: rgba(15,23,42,0.45);
+        border-color: rgba(255,255,255,0.08);
+    }
+    .user-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 14px 32px rgba(17, 50, 26, 0.12);
+        border-color: rgba(17, 50, 26, 0.25);
+    }
+
+    .user-card-head { display: flex; align-items: center; gap: 14px; }
+    .avatar {
+        width: 56px; height: 56px;
+        border-radius: 16px;
+        display: flex; align-items: center; justify-content: center;
+        background: linear-gradient(135deg, #11321A, #2c6b3d);
+        color: #fff; font-weight: 800; font-size: 1.4rem;
+        box-shadow: 0 6px 16px rgba(17,50,26,0.25);
+        font-family: 'Poppins', sans-serif;
+        flex-shrink: 0;
+    }
+    .user-card.is-current .avatar {
+        background: linear-gradient(135deg, #D18FB2, #b87599);
+        box-shadow: 0 6px 16px rgba(209,143,178,0.35);
+    }
+
+    .user-meta { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+    .user-name { font-weight: 700; color: #0f172a; font-size: 1.05rem; margin: 0; }
+    [data-theme="dark"] .user-name { color: #fff; }
+    .user-handle { color: #64748b; font-size: 0.8rem; margin: 0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+
+    .user-card-body { display: flex; flex-direction: column; gap: 8px; font-size: 0.85rem; color: #475569; }
+    [data-theme="dark"] .user-card-body { color: #cbd5e1; }
+    .user-card-body .row { display: flex; align-items: center; gap: 8px; }
+    .user-card-body i { width: 14px; color: #11321A; }
+    [data-theme="dark"] .user-card-body i { color: #D18FB2; }
+
+    .badge {
+        display: inline-flex; align-items: center; gap: 5px;
+        padding: 3px 10px; border-radius: 999px;
+        font-size: 0.72rem; font-weight: 700;
+        text-transform: uppercase; letter-spacing: 0.5px;
+    }
+    .badge-admin { background: rgba(17,50,26,0.12); color: #11321A; }
+    .badge-staff { background: rgba(209,143,178,0.18); color: #b87599; }
+    .badge-active { background: rgba(34,197,94,0.15); color: #15803d; }
+    .badge-inactive { background: rgba(107,114,128,0.18); color: #475569; }
+    .badge-me {
+        position: absolute; top: 14px; right: 14px;
+        background: #D18FB2; color: white;
+        padding: 4px 10px; border-radius: 999px;
+        font-size: 0.7rem; font-weight: 700;
+    }
+
+    .user-card-actions {
+        display: flex; gap: 8px; margin-top: 6px;
+        padding-top: 14px;
+        border-top: 1px solid rgba(0,0,0,0.06);
+    }
+    [data-theme="dark"] .user-card-actions { border-top-color: rgba(255,255,255,0.06); }
+
+    .icon-btn {
+        flex: 1; padding: 8px 10px; border-radius: 10px;
+        background: rgba(255,255,255,0.5);
+        border: 1px solid rgba(255,255,255,0.6);
+        color: #334155; font-size: 0.82rem; font-weight: 600;
+        cursor: pointer; transition: all 0.18s ease;
+        display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+        text-decoration: none;
+    }
+    [data-theme="dark"] .icon-btn {
+        background: rgba(255,255,255,0.07); border-color: rgba(255,255,255,0.1); color: #e2e8f0;
+    }
+    .icon-btn:hover { background: #11321A; color: #fff; border-color: #11321A; }
+    .icon-btn.danger:hover { background: #b91c1c; border-color: #b91c1c; }
+
+    .empty-state {
+        text-align: center; padding: 4rem 1rem; color: #64748b;
+    }
+    .empty-state i { font-size: 3rem; color: #cbd5e1; margin-bottom: 1rem; display: block; }
+
+    @media (max-width: 600px) {
+        .users-shell { padding: 1.5rem 1.25rem; }
+        .users-title { font-size: 1.5rem; }
+        .search-input { min-width: 100%; }
+    }
+</style>
+
+<div class="users-shell">
+
+    <div class="users-head">
+        <h1 class="users-title">
+            <i class="fas fa-users-gear" style="color:#D18FB2;"></i>
+            Utilisateurs
+            <small>{{ utilisateurs|length }} compte{{ utilisateurs|length|pluralize }}</small>
+        </h1>
+
+        <form method="get" class="users-actions" role="search">
+            <input type="text" name="search" value="{{ search_query|default:'' }}"
+                   placeholder="Rechercher un utilisateur..." class="search-input">
+            <button type="submit" class="btn-pill btn-ghost"><i class="fas fa-search"></i> Filtrer</button>
+            <a href="{% url 'admin_create_user' %}" class="btn-pill btn-primary">
+                <i class="fas fa-user-plus"></i> Nouvel utilisateur
+            </a>
+        </form>
+    </div>
+
+    {% if messages %}
+    <div class="form-alerts">
+        {% for message in messages %}
+            <div class="alert alert-{% if message.tags == 'error' %}error{% else %}success{% endif %}">
+                <i class="fas {% if message.tags == 'error' %}fa-circle-exclamation{% else %}fa-circle-check{% endif %}"></i>
+                <span>{{ message }}</span>
+            </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    {% if utilisateurs %}
+    <div class="users-grid">
+        {% for u in utilisateurs %}
+            <div class="user-card {% if u.id == current_user_id %}is-current{% endif %}">
+                {% if u.id == current_user_id %}<span class="badge-me">VOUS</span>{% endif %}
+
+                <div class="user-card-head">
+                    <div class="avatar">
+                        {% if u.first_name %}{{ u.first_name|slice:":1"|upper }}{% else %}{{ u.username|slice:":1"|upper }}{% endif %}
+                    </div>
+                    <div class="user-meta">
+                        <p class="user-name">
+                            {% if u.first_name or u.last_name %}{{ u.first_name }} {{ u.last_name }}{% else %}{{ u.username }}{% endif %}
+                        </p>
+                        <p class="user-handle">@{{ u.username }}</p>
+                    </div>
+                </div>
+
+                <div class="user-card-body">
+                    {% if u.email %}
+                    <div class="row"><i class="fas fa-envelope"></i> <span>{{ u.email }}</span></div>
+                    {% endif %}
+                    <div class="row"><i class="fas fa-calendar-day"></i>
+                        <span>Inscrit le {{ u.date_joined|date:"j M Y" }}</span>
+                    </div>
+                    <div class="row" style="gap:6px; flex-wrap:wrap;">
+                        {% if u.is_superuser %}<span class="badge badge-admin"><i class="fas fa-crown"></i> Super-admin</span>
+                        {% elif u.is_staff %}<span class="badge badge-staff"><i class="fas fa-user-shield"></i> Staff</span>{% endif %}
+                        {% if u.is_active %}<span class="badge badge-active">Actif</span>
+                        {% else %}<span class="badge badge-inactive">Désactivé</span>{% endif %}
+                    </div>
+                </div>
+
+                <div class="user-card-actions">
+                    <a href="{% url 'admin_change_user_password' pk=u.id %}" class="icon-btn">
+                        <i class="fas fa-key"></i> Mot de passe
+                    </a>
+                    {% if u.id != current_user_id %}
+                    <form method="POST" action="{% url 'admin_delete_user' pk=u.id %}" style="flex:1; display:flex;"
+                          onsubmit="return confirm('Supprimer définitivement « {{ u.username|escapejs }} » ? Cette action est irréversible.');">
+                        {% csrf_token %}
+                        <button type="submit" class="icon-btn danger" style="width:100%;">
+                            <i class="fas fa-trash-can"></i> Supprimer
+                        </button>
+                    </form>
+                    {% endif %}
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="empty-state">
+        <i class="fas fa-user-slash"></i>
+        <h3 style="margin:0 0 .5rem; color:#334155;">Aucun utilisateur trouvé</h3>
+        <p style="margin:0;">
+            {% if search_query %}Aucun résultat pour « {{ search_query }} ».
+            {% else %}Créez le premier compte d'administration.{% endif %}
+        </p>
+    </div>
+    {% endif %}
+</div>
+
+{% endblock %}

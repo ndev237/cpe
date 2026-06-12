@@ -295,6 +295,46 @@
         box-shadow: 0 6px 16px rgba(74, 124, 89, 0.3);
     }
 
+    /* --- MESSAGES & ERREURS --- */
+    .form-alerts {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        margin-bottom: 1.25rem;
+    }
+    .alert {
+        padding: 12px 16px;
+        border-radius: 12px;
+        font-size: 0.9rem;
+        font-weight: 500;
+        border: 1px solid transparent;
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+        line-height: 1.45;
+    }
+    .alert i { margin-top: 2px; }
+    .alert-success {
+        background: rgba(74, 124, 89, 0.12);
+        color: #2f5b3c;
+        border-color: rgba(74, 124, 89, 0.35);
+    }
+    .alert-error {
+        background: rgba(185, 28, 28, 0.10);
+        color: #991b1b;
+        border-color: rgba(185, 28, 28, 0.30);
+    }
+    .field-error {
+        font-size: 0.82rem;
+        color: #b91c1c;
+        margin-top: 4px;
+        font-weight: 500;
+    }
+    .input-invalid {
+        border-color: #b91c1c !important;
+        box-shadow: 0 0 0 3px rgba(185, 28, 28, 0.15) !important;
+    }
+
     /* --- INTEGRATION EDITEUR QUILL --- */
     .quill-editor-wrapper {
         background-color: rgba(255, 255, 255, 0.25);
@@ -355,18 +395,39 @@
             <div class="step-indicator" id="badgeStep2">2. {% trans "Média & Options" %}</div>
         </div>
 
-        <form method="POST" enctype="multipart/form-data" id="annonceForm">
+        {% if messages or form.non_field_errors %}
+        <div class="form-alerts">
+            {% for message in messages %}
+                <div class="alert alert-{% if message.tags == 'error' %}error{% else %}success{% endif %}">
+                    <i class="fas {% if message.tags == 'error' %}fa-circle-exclamation{% else %}fa-circle-check{% endif %}"></i>
+                    <span>{{ message }}</span>
+                </div>
+            {% endfor %}
+            {% for err in form.non_field_errors %}
+                <div class="alert alert-error">
+                    <i class="fas fa-circle-exclamation"></i>
+                    <span>{{ err }}</span>
+                </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <form method="POST" enctype="multipart/form-data" id="annonceForm"
+              data-step1-has-error="{% if form.titre.errors or form.slug.errors or form.contenu.errors %}1{% else %}0{% endif %}"
+              data-step2-has-error="{% if form.image.errors or form.est_epinglee.errors or form.est_active.errors %}1{% else %}0{% endif %}">
             {% csrf_token %}
 
             <div class="form-step active" id="step1">
                 <div class="form-group">
                     <label for="{{ form.titre.id_for_label }}">{{ form.titre.label }}</label>
                     {{ form.titre }}
+                    {% for err in form.titre.errors %}<div class="field-error">{{ err }}</div>{% endfor %}
                 </div>
 
                 <div class="form-group">
-                    <label for="{{ form.slug.id_for_label }}">{{ form.slug.label }}</label>
+                    <label for="{{ form.slug.id_for_label }}">{{ form.slug.label }} <span style="color:#94a3b8; font-weight:400;">(optionnel)</span></label>
                     {{ form.slug }}
+                    {% for err in form.slug.errors %}<div class="field-error">{{ err }}</div>{% endfor %}
                 </div>
 
                 <div class="form-group">
@@ -375,6 +436,7 @@
                     <div class="quill-editor-wrapper">
                         <div id="editor_contenu"></div>
                     </div>
+                    {% for err in form.contenu.errors %}<div class="field-error">{{ err }}</div>{% endfor %}
                 </div>
             </div>
 
@@ -387,6 +449,7 @@
                         <div style="display: none;">{{ form.image }}</div>
                         <img id="imagePreview" src="#" alt="Aperçu">
                     </div>
+                    {% for err in form.image.errors %}<div class="field-error">{{ err }}</div>{% endfor %}
                 </div>
 
                 <div class="form-group">
@@ -431,11 +494,29 @@
         const step2 = document.getElementById("step2");
         const badgeStep1 = document.getElementById("badgeStep1");
         const badgeStep2 = document.getElementById("badgeStep2");
-        
+
+        const form = document.getElementById("annonceForm");
         const btnCancel = document.getElementById("btnCancel");
         const btnBack = document.getElementById("btnBack");
         const btnNext = document.getElementById("btnNext");
         const btnSubmit = document.getElementById("btnSubmit");
+
+        function goToStep2() {
+            step1.classList.remove("active");
+            step2.classList.add("active");
+            badgeStep1.classList.remove("active");
+            badgeStep2.classList.add("active");
+            btnCancel.style.display = "none";
+            btnNext.style.display = "none";
+            btnBack.style.display = "inline-flex";
+            btnSubmit.style.display = "inline-flex";
+        }
+
+        // Si la soumission precedente a echoue, on ouvre directement le step
+        // contenant les erreurs serveur pour que l'admin les voie.
+        if (form.dataset.step2HasError === "1" && form.dataset.step1HasError !== "1") {
+            goToStep2();
+        }
 
         const titreInput = document.getElementById("{{ form.titre.id_for_label }}");
         const slugInput = document.getElementById("{{ form.slug.id_for_label }}");
@@ -444,25 +525,32 @@
 
         // --- 1. SCRIPT DE NAVIGATION ENTRE ÉTAPES ---
         btnNext.addEventListener("click", function() {
-            // Validation basique avant de passer à l'étape suivante (Titre obligatoire)
+            // Validation basique : titre + contenu obligatoires avant step 2
+            let invalid = false;
             if (titreInput && titreInput.value.trim() === "") {
+                titreInput.classList.add("input-invalid");
                 titreInput.focus();
-                titreInput.style.borderColor = "#b91c1c";
-                return;
+                invalid = true;
+            } else if (titreInput) {
+                titreInput.classList.remove("input-invalid");
             }
-            titreInput.style.borderColor = "rgba(255, 255, 255, 0.4)";
 
-            // Passage visuel à l'étape 2
-            step1.classList.remove("active");
-            step2.classList.add("active");
-            badgeStep1.classList.remove("active");
-            badgeStep2.classList.add("active");
+            // Verifie que Quill a du contenu reel (pas juste <p><br></p>)
+            const quillWrapper = document.querySelector(".quill-editor-wrapper");
+            if (typeof quillContenu !== "undefined" && quillContenu) {
+                const html = quillContenu.root.innerHTML.trim();
+                const text = (quillContenu.getText() || "").trim();
+                if (!text || html === "<p><br></p>" || html === "<p></p>") {
+                    if (quillWrapper) quillWrapper.classList.add("input-invalid");
+                    if (!invalid) quillContenu.focus();
+                    invalid = true;
+                } else if (quillWrapper) {
+                    quillWrapper.classList.remove("input-invalid");
+                }
+            }
+            if (invalid) return;
 
-            // Gestion des boutons
-            btnCancel.style.display = "none";
-            btnNext.style.display = "none";
-            btnBack.style.display = "inline-flex";
-            btnSubmit.style.display = "inline-flex";
+            goToStep2();
         });
 
         btnBack.addEventListener("click", function() {
@@ -530,10 +618,28 @@
         }
 
         // --- 5. SYNCHRONISATION AVANT ENVOI DU FORMULAIRE ---
-        const form = document.getElementById("annonceForm");
-        form.addEventListener("submit", function() {
+        form.addEventListener("submit", function(e) {
             if (textareaContenu && quillContenu) {
                 textareaContenu.value = quillContenu.root.innerHTML;
+
+                // Garde cote client : refuse l'envoi si contenu vide
+                const text = (quillContenu.getText() || "").trim();
+                const html = quillContenu.root.innerHTML.trim();
+                if (!text || html === "<p><br></p>" || html === "<p></p>") {
+                    e.preventDefault();
+                    // revient a l'etape 1 pour montrer l'erreur
+                    step2.classList.remove("active");
+                    step1.classList.add("active");
+                    badgeStep2.classList.remove("active");
+                    badgeStep1.classList.add("active");
+                    btnCancel.style.display = "inline-flex";
+                    btnNext.style.display = "inline-flex";
+                    btnBack.style.display = "none";
+                    btnSubmit.style.display = "none";
+                    const wrap = document.querySelector(".quill-editor-wrapper");
+                    if (wrap) wrap.classList.add("input-invalid");
+                    quillContenu.focus();
+                }
             }
         });
     });

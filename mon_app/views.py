@@ -322,6 +322,16 @@ def admin_creer_annonce(request):
             annonce = form.save()
             messages.success(request, f"L'annonce '{annonce.titre}' a été publiée avec succès !")
             return redirect('admin_list_anonces')
+        else:
+            # Construit un message lisible avec les champs en erreur
+            details = "; ".join(
+                f"{form.fields[f].label or f} : {' '.join(errs)}"
+                for f, errs in form.errors.items()
+            )
+            messages.error(
+                request,
+                f"Impossible de publier l'annonce. {details}"
+            )
     else:
         form = AnnonceForm()
 
@@ -476,6 +486,96 @@ def admin_supprimer_partenaire(request, pk):
         return redirect('admin_list_partenaires')
 
     return redirect('admin_list_partenaires')
+
+
+### --- GESTION DES UTILISATEURS DU DASHBOARD --- ###
+
+def _require_admin(request):
+    """Renvoie None si OK, sinon une réponse redirect/error."""
+    if not request.session.get('admin_brut_id'):
+        messages.error(request, "Veuillez vous connecter pour accéder au tableau de bord.")
+        return redirect('connexion_dashboard')
+    return None
+
+
+def admin_list_users(request):
+    redir = _require_admin(request)
+    if redir:
+        return redir
+    from django.contrib.auth.models import User
+    query = request.GET.get('search', '').strip()
+    users_qs = User.objects.all().order_by('-date_joined')
+    if query:
+        users_qs = users_qs.filter(username__icontains=query) | users_qs.filter(email__icontains=query)
+    return render(request, 'mon_app/admin/users/list_users.html', {
+        'utilisateurs': users_qs,
+        'search_query': query,
+        'current_user_id': request.session.get('admin_brut_id'),
+    })
+
+
+def admin_create_user(request):
+    redir = _require_admin(request)
+    if redir:
+        return redir
+    from .forms import AdminUserCreateForm
+    if request.method == 'POST':
+        form = AdminUserCreateForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            messages.success(request, f"L'utilisateur « {user.username} » a été créé avec succès.")
+            return redirect('admin_list_users')
+        else:
+            messages.error(request, "Impossible de créer l'utilisateur. Vérifiez les champs.")
+    else:
+        form = AdminUserCreateForm()
+    return render(request, 'mon_app/admin/users/create_user.html', {'form': form})
+
+
+def admin_change_user_password(request, pk):
+    redir = _require_admin(request)
+    if redir:
+        return redir
+    from django.contrib.auth.models import User
+    from .forms import AdminPasswordResetForm
+    user_obj = get_object_or_404(User, pk=pk)
+    if request.method == 'POST':
+        form = AdminPasswordResetForm(request.POST, user=user_obj)
+        if form.is_valid():
+            form.save()
+            messages.success(
+                request,
+                f"Le mot de passe de « {user_obj.username} » a été mis à jour."
+            )
+            return redirect('admin_list_users')
+        else:
+            messages.error(request, "Impossible de modifier le mot de passe. Vérifiez les champs.")
+    else:
+        form = AdminPasswordResetForm(user=user_obj)
+    return render(request, 'mon_app/admin/users/change_password.html', {
+        'form': form,
+        'utilisateur': user_obj,
+    })
+
+
+def admin_delete_user(request, pk):
+    redir = _require_admin(request)
+    if redir:
+        return redir
+    from django.contrib.auth.models import User
+    user_obj = get_object_or_404(User, pk=pk)
+    # interdiction de se supprimer soi-meme
+    if user_obj.pk == request.session.get('admin_brut_id'):
+        messages.error(request, "Vous ne pouvez pas supprimer votre propre compte.")
+        return redirect('admin_list_users')
+    if request.method == 'POST':
+        username = user_obj.username
+        user_obj.delete()
+        messages.success(request, f"L'utilisateur « {username} » a été supprimé.")
+    return redirect('admin_list_users')
+
+
+### --- FIN GESTION UTILISATEURS --- ###
 
 
 def admin_creer_partenaire(request):

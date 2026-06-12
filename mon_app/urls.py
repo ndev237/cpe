@@ -48,7 +48,11 @@ urlpatterns = [
    path('annonces/supprimer/<slug:slug>/', views.admin_supprimer_annonce, name='admin_supprimer_annonce'),
    path('actualites/modifier/<slug:slug>/', views.admin_actualite_modifier, name='admin_actualite_modifier'),
 
-
+   # =============================== Gestion utilisateurs ==========================
+   path('dashboard/utilisateurs/', views.admin_list_users, name='admin_list_users'),
+   path('dashboard/utilisateurs/creer/', views.admin_create_user, name='admin_create_user'),
+   path('dashboard/utilisateurs/<int:pk>/mot-de-passe/', views.admin_change_user_password, name='admin_change_user_password'),
+   path('dashboard/utilisateurs/<int:pk>/supprimer/', views.admin_delete_user, name='admin_delete_user'),
 
 ]
 

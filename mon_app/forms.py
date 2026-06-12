@@ -1,6 +1,110 @@
 from django import forms
 from .models import Formation, Annonce, AlbumPhoto, Actualite, Partenaire
 from django.utils.text import slugify
+from django.contrib.auth.models import User
+from django.contrib.auth.password_validation import validate_password
+from django.core.exceptions import ValidationError
+
+
+class AdminUserCreateForm(forms.Form):
+    """Création d'un compte autorisé à se connecter au dashboard."""
+    username = forms.CharField(
+        label="Nom d'utilisateur",
+        max_length=150,
+        widget=forms.TextInput(attrs={'placeholder': 'ex: marie.dupont'}),
+    )
+    email = forms.EmailField(
+        label="Adresse email",
+        required=False,
+        widget=forms.EmailInput(attrs={'placeholder': 'nom@exemple.com'}),
+    )
+    first_name = forms.CharField(
+        label="Prénom", max_length=150, required=False,
+        widget=forms.TextInput(attrs={'placeholder': 'Marie'}),
+    )
+    last_name = forms.CharField(
+        label="Nom", max_length=150, required=False,
+        widget=forms.TextInput(attrs={'placeholder': 'Dupont'}),
+    )
+    password = forms.CharField(
+        label="Mot de passe",
+        widget=forms.PasswordInput(attrs={'placeholder': '8 caractères minimum'}),
+    )
+    password_confirm = forms.CharField(
+        label="Confirmer le mot de passe",
+        widget=forms.PasswordInput(attrs={'placeholder': 'Retapez le mot de passe'}),
+    )
+    is_staff = forms.BooleanField(
+        label="Accès administrateur (peut gérer le contenu)",
+        required=False, initial=True,
+    )
+
+    def clean_username(self):
+        username = self.cleaned_data['username'].strip()
+        if User.objects.filter(username__iexact=username).exists():
+            raise ValidationError("Ce nom d'utilisateur est déjà pris.")
+        return username
+
+    def clean(self):
+        cleaned = super().clean()
+        pwd = cleaned.get('password')
+        pwd2 = cleaned.get('password_confirm')
+        if pwd and pwd2 and pwd != pwd2:
+            self.add_error('password_confirm', "Les deux mots de passe ne correspondent pas.")
+        if pwd:
+            try:
+                validate_password(pwd)
+            except ValidationError as e:
+                self.add_error('password', list(e.messages))
+        return cleaned
+
+    def save(self):
+        user = User.objects.create_user(
+            username=self.cleaned_data['username'],
+            email=self.cleaned_data.get('email') or '',
+            password=self.cleaned_data['password'],
+            first_name=self.cleaned_data.get('first_name') or '',
+            last_name=self.cleaned_data.get('last_name') or '',
+        )
+        user.is_staff = self.cleaned_data.get('is_staff', False)
+        user.save()
+        return user
+
+
+class AdminPasswordResetForm(forms.Form):
+    """Changement du mot de passe d'un utilisateur depuis le dashboard."""
+    new_password = forms.CharField(
+        label="Nouveau mot de passe",
+        widget=forms.PasswordInput(attrs={'placeholder': '8 caractères minimum'}),
+    )
+    new_password_confirm = forms.CharField(
+        label="Confirmer le nouveau mot de passe",
+        widget=forms.PasswordInput(attrs={'placeholder': 'Retapez le mot de passe'}),
+    )
+
+    def __init__(self, *args, user=None, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.user = user
+
+    def clean(self):
+        cleaned = super().clean()
+        pwd = cleaned.get('new_password')
+        pwd2 = cleaned.get('new_password_confirm')
+        if pwd and pwd2 and pwd != pwd2:
+            self.add_error('new_password_confirm', "Les deux mots de passe ne correspondent pas.")
+        if pwd:
+            try:
+                validate_password(pwd, user=self.user)
+            except ValidationError as e:
+                self.add_error('new_password', list(e.messages))
+        return cleaned
+
+    def save(self):
+        if not self.user:
+            raise RuntimeError("AdminPasswordResetForm requires `user` in __init__")
+        self.user.set_password(self.cleaned_data['new_password'])
+        self.user.save()
+        return self.user
 
 class FormationForm(forms.ModelForm):
     class Meta:
@@ -38,15 +142,25 @@ class FormationForm(forms.ModelForm):
 class AnnonceForm(forms.ModelForm):
     class Meta:
         model = Annonce
-        # Liste des champs modifiables par l'administrateur
         fields = ['titre', 'slug', 'contenu', 'image', 'est_epinglee', 'est_active']
 
-        # Ajout de classes CSS pour rendre le formulaire beau (compatible avec du style personnalisé)
         widgets = {
             'titre': forms.TextInput(attrs={'placeholder': "Entrez le titre de l'annonce..."}),
-            'slug': forms.TextInput(attrs={'placeholder': "Ex: depeche-rentree-2026 (ou laissez vide si généré automatiquement)"}),
+            'slug': forms.TextInput(attrs={'placeholder': "Laissez vide pour génération automatique"}),
             'contenu': forms.Textarea(attrs={'rows': 6, 'placeholder': "Rédigez le contenu détaillé de l'annonce ici..."}),
         }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # slug optionnel : auto-genere depuis le titre cote modele
+        self.fields['slug'].required = False
+
+    def clean_contenu(self):
+        contenu = (self.cleaned_data.get('contenu') or '').strip()
+        # Quill envoie souvent "<p><br></p>" quand vide
+        if contenu in ('', '<p><br></p>', '<p></p>'):
+            raise forms.ValidationError("Le contenu de l'annonce est obligatoire.")
+        return contenu
 
 
 class AlbumPhotoForm(forms.ModelForm):

@@ -106,7 +106,7 @@ class DemandeContact(models.Model):
 
 class Annonce(models.Model):
     titre = models.CharField(max_length=200, verbose_name="Titre de l'annonce")
-    slug = models.SlugField(max_length=200, unique=True)
+    slug = models.SlugField(max_length=200, unique=True, blank=True)
     contenu = models.TextField(verbose_name="Contenu de l'annonce ou de l'article")
     image = models.ImageField(upload_to='annonces/', verbose_name="Image d'illustration", blank=True, null=True)
     est_epinglee = models.BooleanField(default=False, verbose_name="Épingler en haut de page (Important)")
@@ -120,6 +120,18 @@ class Annonce(models.Model):
 
     def __str__(self):
         return self.titre
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            base = slugify(self.titre)
+            slug = base or 'annonce'
+            n = 1
+            qs = Annonce.objects.exclude(pk=self.pk) if self.pk else Annonce.objects.all()
+            while qs.filter(slug=slug).exists():
+                slug = f"{base}-{n}"
+                n += 1
+            self.slug = slug
+        super().save(*args, **kwargs)
 
 
 class Partenaire(models.Model):
