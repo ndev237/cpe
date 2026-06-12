@@ -147,13 +147,23 @@ class AnnonceForm(forms.ModelForm):
         widgets = {
             'titre': forms.TextInput(attrs={'placeholder': "Entrez le titre de l'annonce..."}),
             'slug': forms.TextInput(attrs={'placeholder': "Laissez vide pour génération automatique"}),
-            'contenu': forms.Textarea(attrs={'rows': 6, 'placeholder': "Rédigez le contenu détaillé de l'annonce ici..."}),
+            # IMPORTANT : pas de "required" HTML5 sur ce textarea. Il est cache
+            # derriere l'editeur Quill, donc le navigateur ne peut pas le
+            # focus pour signaler l'erreur et il annulerait silencieusement
+            # le submit. La validation cote serveur (clean_contenu) prend le relais.
+            'contenu': forms.Textarea(attrs={
+                'rows': 6,
+                'placeholder': "Rédigez le contenu détaillé de l'annonce ici...",
+                'required': False,
+            }),
         }
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         # slug optionnel : auto-genere depuis le titre cote modele
         self.fields['slug'].required = False
+        # contenu : on retire le required HTML5 (textarea cache), le serveur valide
+        self.fields['contenu'].required = False
 
     def clean_contenu(self):
         contenu = (self.cleaned_data.get('contenu') or '').strip()

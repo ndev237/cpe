@@ -6,36 +6,32 @@
 <link href="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.snow.css" rel="stylesheet">
 
 <style>
-    /* --- STRUCTURATION DU CONTENEUR SPLIT --- */
+    /* ============================================================
+       SHELL GLASSMORPHIQUE EN SPLIT
+       ============================================================ */
     .annonce-container {
         width: 100%;
         max-width: 1100px;
-        
-        /* Effet hyper transparent et flou accentué */
         background-color: rgba(255, 255, 255, 0.3);
         backdrop-filter: blur(16px);
         -webkit-backdrop-filter: blur(16px);
-        
         border-radius: 20px;
         box-shadow: 0 20px 50px rgba(0, 0, 0, 0.08);
         border: 1px solid rgba(255, 255, 255, 0.45);
         display: grid;
-        grid-template-columns: 0.9fr 1.1fr;
+        grid-template-columns: 0.85fr 1.15fr;
         overflow: hidden;
-        min-height: 650px;
         margin: 20px auto;
     }
-
     [data-theme="dark"] .annonce-container {
         background-color: rgba(30, 41, 59, 0.3);
         border-color: rgba(255, 255, 255, 0.1);
         box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
     }
 
-    /* --- COLONNE GAUCHE : VISUEL --- */
     .annonce-sidebar {
         background: rgba(255, 255, 255, 0.05);
-        padding: 3rem;
+        padding: 3rem 2.5rem;
         display: flex;
         flex-direction: column;
         justify-content: center;
@@ -43,7 +39,6 @@
         position: relative;
         border-right: 1px solid rgba(255, 255, 255, 0.2);
     }
-
     .annonce-sidebar::before {
         content: '';
         position: absolute;
@@ -52,265 +47,56 @@
         background: rgba(255, 255, 255, 0.3);
         border-radius: 50%;
         filter: blur(50px);
+        z-index: 0;
     }
-
     .annonce-hero-img {
         width: 100%;
-        max-width: 340px;
+        max-width: 320px;
         height: auto;
         display: block;
         position: relative;
         z-index: 1;
-        filter: drop-shadow(0 10px 20px rgba(0,0,0,0.05));
+        filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.05));
     }
+    .sidebar-caption {
+        position: relative; z-index: 1;
+        margin-top: 1.75rem; text-align: center;
+        font-size: 0.85rem; color: #475569;
+        line-height: 1.5; max-width: 280px;
+    }
+    [data-theme="dark"] .sidebar-caption { color: #cbd5e1; }
 
-    /* --- COLONNE DROITE : FORMULAIRE --- */
+    /* ============================================================
+       ZONE FORMULAIRE
+       ============================================================ */
     .annonce-form-area {
-        padding: 3rem;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
+        padding: 2.75rem 2.75rem 2.5rem;
+        display: flex; flex-direction: column;
     }
 
-    .annonce-header {
-        margin-bottom: 1.5rem;
-    }
-
+    .annonce-header { margin-bottom: 1.25rem; }
     .annonce-header h1 {
-        font-size: 2rem;
-        font-weight: 800;
-        color: #4A7c59;
-        letter-spacing: -0.5px;
+        font-size: 1.95rem; font-weight: 800;
+        color: #4A7c59; letter-spacing: -0.5px;
+        margin: 0;
     }
-
-    .annonce-header h1 span {
-        color: #D18FB2;
-    }
-
-    /* --- STEPPER (INDICATEUR D'ÉTAPE) --- */
-    .stepper {
-        display: flex;
-        gap: 15px;
-        margin-bottom: 1.5rem;
-    }
-
-    .step-indicator {
-        font-size: 0.8rem;
-        font-weight: 700;
+    .annonce-header h1 span { color: #D18FB2; }
+    .annonce-header p {
+        margin: 0.4rem 0 0; font-size: 0.92rem;
         color: #64748b;
-        padding-bottom: 5px;
-        border-bottom: 2px solid rgba(0, 0, 0, 0.08);
-        flex: 1;
-        transition: all 0.3s ease;
     }
+    [data-theme="dark"] .annonce-header p { color: #94a3b8; }
 
-    [data-theme="dark"] .step-indicator {
-        border-bottom-color: rgba(255, 255, 255, 0.1);
-        color: #94a3b8;
-    }
-
-    .step-indicator.active {
-        color: #4A7c59;
-        border-bottom-color: #4A7c59;
-    }
-
-    /* --- GESTION DES ÉTAPES VIA JS --- */
-    .form-step {
-        display: none; 
-        flex-direction: column;
-        gap: 1.25rem;
-    }
-
-    .form-step.active {
-        display: flex; 
-    }
-
-    .form-group {
-        display: flex;
-        flex-direction: column;
-    }
-
-    .form-group label {
-        font-size: 0.875rem;
-        font-weight: 600;
-        color: #334155;
-        margin-bottom: 0.5rem;
-    }
-
-    [data-theme="dark"] .form-group label {
-        color: #cbd5e1;
-    }
-
-    .form-group input[type="text"],
-    .form-group textarea {
-        width: 100%;
-        padding: 0.85rem 1.25rem;
-        font-family: 'Poppins', sans-serif;
-        font-size: 0.95rem;
-        border: 1px solid rgba(255, 255, 255, 0.4);
-        border-radius: 12px;
-        /* Rendu des inputs ultra-translucides */
-        background-color: rgba(255, 255, 255, 0.25); 
-        color: #0f172a;
-        outline: none;
-        transition: all 0.2s ease-in-out;
-    }
-
-    [data-theme="dark"] .form-group input[type="text"],
-    [data-theme="dark"] .form-group textarea {
-        background-color: rgba(15, 23, 42, 0.25);
-        border-color: rgba(255, 255, 255, 0.1);
-        color: #ffffff;
-    }
-
-    .form-group input[type="text"]:focus,
-    .form-group textarea:focus {
-        border-color: #4A7c59;
-        background-color: rgba(255, 255, 255, 0.9);
-        box-shadow: 0 0 0 4px rgba(74, 124, 89, 0.2);
-    }
-
-    [data-theme="dark"] .form-group input[type="text"]:focus,
-    [data-theme="dark"] .form-group textarea:focus {
-        background-color: rgba(15, 23, 42, 0.9);
-    }
-
-    /* --- CHECKBOXES ALIGNÉS --- */
-    .checkbox-group {
-        display: flex;
-        gap: 24px;
-        flex-wrap: wrap;
-        margin-top: 5px;
-    }
-
-    .checkbox-label {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        cursor: pointer;
-        font-size: 0.9rem;
-        font-weight: 500;
-        color: #334155;
-    }
-
-    [data-theme="dark"] .checkbox-label {
-        color: #cbd5e1;
-    }
-
-    .checkbox-label input[type="checkbox"] {
-        width: 18px;
-        height: 18px;
-        accent-color: #4A7c59;
-    }
-
-    /* --- FILE DROP ZONE DESIGN --- */
-    .file-drop-zone {
-        border: 2px dashed rgba(255, 255, 255, 0.5);
-        border-radius: 12px;
-        padding: 20px;
-        text-align: center;
-        background: rgba(255, 255, 255, 0.2);
-        cursor: pointer;
-        transition: all 0.2s ease;
-    }
-
-    [data-theme="dark"] .file-drop-zone {
-        background: rgba(15, 23, 42, 0.2);
-        border-color: rgba(255, 255, 255, 0.1);
-    }
-
-    .file-drop-zone:hover {
-        border-color: #4A7c59;
-        background: rgba(74, 124, 89, 0.08);
-    }
-
-    #imagePreview {
-        max-width: 100%;
-        max-height: 150px;
-        border-radius: 8px;
-        margin-top: 12px;
-        display: none;
-        object-fit: cover;
-        border: 1px solid rgba(255, 255, 255, 0.3);
-    }
-
-    /* --- ACTIONS / BOUTONS --- */
-    .form-actions {
-        display: flex;
-        justify-content: flex-end;
-        gap: 12px;
-        margin-top: 1.5rem;
-        border-top: 1px solid rgba(255, 255, 255, 0.3);
-        padding-top: 1.5rem;
-    }
-
-    [data-theme="dark"] .form-actions {
-        border-color: rgba(255, 255, 255, 0.05);
-    }
-
-    .btn {
-        padding: 0.85rem 1.75rem;
-        border-radius: 12px;
-        font-size: 0.95rem;
-        font-weight: 700;
-        cursor: pointer;
-        transition: all 0.2s ease;
-        text-decoration: none;
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-        font-family: 'Poppins', sans-serif;
-    }
-
-    .btn-secondary {
-        background-color: rgba(255, 255, 255, 0.4);
-        color: #334155;
-        border: 1px solid rgba(255, 255, 255, 0.5);
-    }
-
-    [data-theme="dark"] .btn-secondary {
-        background-color: rgba(255, 255, 255, 0.08);
-        color: #cbd5e1;
-        border-color: rgba(255, 255, 255, 0.1);
-    }
-
-    .btn-secondary:hover {
-        background-color: rgba(255, 255, 255, 0.7);
-    }
-
-    [data-theme="dark"] .btn-secondary:hover {
-        background-color: rgba(255, 255, 255, 0.15);
-    }
-
-    .btn-submit {
-        background-color: #4A7c59;
-        color: #ffffff;
-        border: none;
-        box-shadow: 0 4px 14px rgba(74, 124, 89, 0.2);
-    }
-
-    .btn-submit:hover {
-        background-color: #385f44;
-        transform: translateY(-1px);
-        box-shadow: 0 6px 16px rgba(74, 124, 89, 0.3);
-    }
-
-    /* --- MESSAGES & ERREURS --- */
+    /* --- ALERTES / MESSAGES --- */
     .form-alerts {
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
-        margin-bottom: 1.25rem;
+        display: flex; flex-direction: column;
+        gap: 10px; margin-bottom: 1.25rem;
     }
     .alert {
-        padding: 12px 16px;
-        border-radius: 12px;
-        font-size: 0.9rem;
-        font-weight: 500;
+        padding: 12px 16px; border-radius: 12px;
+        font-size: 0.9rem; font-weight: 500;
         border: 1px solid transparent;
-        display: flex;
-        align-items: flex-start;
-        gap: 10px;
+        display: flex; align-items: flex-start; gap: 10px;
         line-height: 1.45;
     }
     .alert i { margin-top: 2px; }
@@ -325,74 +111,269 @@
         border-color: rgba(185, 28, 28, 0.30);
     }
     .field-error {
-        font-size: 0.82rem;
-        color: #b91c1c;
-        margin-top: 4px;
-        font-weight: 500;
+        font-size: 0.82rem; color: #b91c1c;
+        margin-top: 4px; font-weight: 500;
     }
     .input-invalid {
         border-color: #b91c1c !important;
         box-shadow: 0 0 0 3px rgba(185, 28, 28, 0.15) !important;
     }
 
-    /* --- INTEGRATION EDITEUR QUILL --- */
+    /* --- SECTIONS DU FORMULAIRE --- */
+    .form-section {
+        padding-top: 1.25rem;
+        border-top: 1px dashed rgba(0, 0, 0, 0.10);
+        margin-top: 1.25rem;
+    }
+    .form-section:first-of-type {
+        border-top: none; margin-top: 0; padding-top: 0;
+    }
+    [data-theme="dark"] .form-section { border-top-color: rgba(255, 255, 255, 0.08); }
+
+    .section-label {
+        font-size: 0.72rem;
+        font-weight: 800;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        color: #D18FB2;
+        margin: 0 0 14px;
+        display: inline-flex; align-items: center; gap: 8px;
+    }
+    .section-label::before {
+        content: ''; width: 18px; height: 2px;
+        background: #D18FB2; display: inline-block;
+    }
+
+    .grid-2 {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+    }
+    @media (max-width: 700px) { .grid-2 { grid-template-columns: 1fr; } }
+
+    .form-group { display: flex; flex-direction: column; margin-bottom: 1rem; }
+    .form-group:last-child { margin-bottom: 0; }
+    .form-group label {
+        font-size: 0.85rem; font-weight: 600;
+        color: #334155; margin-bottom: 0.5rem;
+    }
+    [data-theme="dark"] .form-group label { color: #cbd5e1; }
+    .form-group label .optional {
+        font-weight: 400; color: #94a3b8;
+        margin-left: 6px; font-size: 0.78rem;
+    }
+
+    .form-group input[type="text"],
+    .form-group input[type="email"],
+    .form-group textarea {
+        width: 100%;
+        padding: 0.85rem 1.1rem;
+        font-family: 'Poppins', sans-serif;
+        font-size: 0.95rem;
+        border: 1px solid rgba(255, 255, 255, 0.4);
+        border-radius: 12px;
+        background-color: rgba(255, 255, 255, 0.25);
+        color: #0f172a;
+        outline: none;
+        transition: all 0.2s ease-in-out;
+    }
+    [data-theme="dark"] .form-group input[type="text"],
+    [data-theme="dark"] .form-group textarea {
+        background-color: rgba(15, 23, 42, 0.25);
+        border-color: rgba(255, 255, 255, 0.1);
+        color: #ffffff;
+    }
+    .form-group input[type="text"]:focus,
+    .form-group textarea:focus {
+        border-color: #4A7c59;
+        background-color: rgba(255, 255, 255, 0.9);
+        box-shadow: 0 0 0 4px rgba(74, 124, 89, 0.2);
+    }
+    [data-theme="dark"] .form-group input[type="text"]:focus,
+    [data-theme="dark"] .form-group textarea:focus { background-color: rgba(15, 23, 42, 0.9); }
+
+    /* --- QUILL --- */
     .quill-editor-wrapper {
         background-color: rgba(255, 255, 255, 0.25);
         border-radius: 12px;
         overflow: hidden;
         border: 1px solid rgba(255, 255, 255, 0.4);
+        transition: border-color 0.2s ease, box-shadow 0.2s ease;
     }
-
     [data-theme="dark"] .quill-editor-wrapper {
         background-color: rgba(15, 23, 42, 0.25);
         border-color: rgba(255, 255, 255, 0.1);
     }
-
+    .quill-editor-wrapper:focus-within {
+        border-color: #4A7c59;
+        box-shadow: 0 0 0 4px rgba(74, 124, 89, 0.18);
+    }
     .ql-toolbar.ql-snow {
         border: none !important;
         border-bottom: 1px solid rgba(255, 255, 255, 0.3) !important;
         background: rgba(255, 255, 255, 0.4) !important;
     }
-
     [data-theme="dark"] .ql-toolbar.ql-snow {
         border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
         background: rgba(15, 23, 42, 0.4) !important;
     }
-
     .ql-container.ql-snow {
         border: none !important;
-        min-height: 180px;
+        min-height: 200px;
         font-family: 'Poppins', sans-serif !important;
         background: transparent;
         color: #0f172a;
     }
+    [data-theme="dark"] .ql-container.ql-snow { color: #ffffff; }
 
-    [data-theme="dark"] .ql-container.ql-snow {
+    /* --- FILE DROP ZONE --- */
+    .file-drop-zone {
+        border: 2px dashed rgba(74, 124, 89, 0.35);
+        border-radius: 12px;
+        padding: 28px 20px;
+        text-align: center;
+        background: rgba(255, 255, 255, 0.2);
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+    [data-theme="dark"] .file-drop-zone {
+        background: rgba(15, 23, 42, 0.2);
+        border-color: rgba(255, 255, 255, 0.15);
+    }
+    .file-drop-zone:hover {
+        border-color: #4A7c59;
+        background: rgba(74, 124, 89, 0.08);
+    }
+    .file-drop-zone .drop-icon {
+        font-size: 2rem; color: #4A7c59;
+        margin-bottom: 8px; display: block; opacity: 0.7;
+    }
+    .file-drop-zone .drop-label {
+        font-size: 0.88rem; color: #64748b; font-weight: 500;
+    }
+    .file-drop-zone .drop-filename {
+        font-size: 0.78rem; color: #4A7c59;
+        margin-top: 6px; font-weight: 600;
+        display: none;
+    }
+    #imagePreview {
+        max-width: 100%;
+        max-height: 180px;
+        border-radius: 10px;
+        margin-top: 14px;
+        display: none;
+        object-fit: cover;
+        border: 1px solid rgba(255, 255, 255, 0.3);
+    }
+
+    /* --- TOGGLES (options) --- */
+    .options-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+    }
+    @media (max-width: 540px) { .options-row { grid-template-columns: 1fr; } }
+
+    .toggle-card {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 0.85rem 1rem;
+        border-radius: 12px;
+        border: 1px solid rgba(255, 255, 255, 0.4);
+        background: rgba(255, 255, 255, 0.25);
+        cursor: pointer;
+        transition: all 0.18s ease;
+    }
+    [data-theme="dark"] .toggle-card {
+        background: rgba(15, 23, 42, 0.25);
+        border-color: rgba(255, 255, 255, 0.1);
+    }
+    .toggle-card:hover { border-color: #4A7c59; }
+    .toggle-card input[type="checkbox"] {
+        width: 18px; height: 18px;
+        accent-color: #4A7c59; margin: 0;
+    }
+    .toggle-card .toggle-text {
+        display: flex; flex-direction: column;
+    }
+    .toggle-card .toggle-title {
+        font-size: 0.9rem; font-weight: 600; color: #334155;
+    }
+    [data-theme="dark"] .toggle-card .toggle-title { color: #e2e8f0; }
+    .toggle-card .toggle-sub {
+        font-size: 0.76rem; color: #94a3b8; margin-top: 1px;
+    }
+
+    /* --- ACTIONS --- */
+    .form-actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 12px;
+        margin-top: 1.75rem;
+        padding-top: 1.5rem;
+        border-top: 1px solid rgba(255, 255, 255, 0.3);
+    }
+    [data-theme="dark"] .form-actions { border-color: rgba(255, 255, 255, 0.05); }
+
+    .btn {
+        padding: 0.85rem 1.6rem;
+        border-radius: 12px;
+        font-size: 0.93rem;
+        font-weight: 700;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        font-family: 'Poppins', sans-serif;
+        border: none;
+    }
+    .btn-secondary {
+        background-color: rgba(255, 255, 255, 0.4);
+        color: #334155;
+        border: 1px solid rgba(255, 255, 255, 0.5);
+    }
+    [data-theme="dark"] .btn-secondary {
+        background-color: rgba(255, 255, 255, 0.08);
+        color: #cbd5e1;
+        border-color: rgba(255, 255, 255, 0.1);
+    }
+    .btn-secondary:hover { background-color: rgba(255, 255, 255, 0.7); }
+
+    .btn-submit {
+        background: linear-gradient(135deg, #4A7c59 0%, #385f44 100%);
         color: #ffffff;
+        box-shadow: 0 6px 16px rgba(74, 124, 89, 0.22);
+    }
+    .btn-submit:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 10px 22px rgba(74, 124, 89, 0.32);
     }
 
     @media (max-width: 960px) {
-        .annonce-container { grid-template-columns: 1fr; max-width: 650px; }
+        .annonce-container { grid-template-columns: 1fr; max-width: 720px; }
         .annonce-sidebar { display: none; }
-        .annonce-form-area { padding: 2.5rem 1.5rem; }
+        .annonce-form-area { padding: 2rem 1.5rem; }
     }
 </style>
 
 <div class="annonce-container">
-    
-    <div class="annonce-sidebar" aria-hidden="true">
-        <img class="annonce-hero-img" src="{% static 'images/Mobile Marketing-bro.svg' %}" alt="Illustration" />
-    </div>
+
+    <aside class="annonce-sidebar" aria-hidden="true">
+        <img class="annonce-hero-img" src="{% static 'images/Mobile Marketing-bro.svg' %}" alt="Illustration">
+        <p class="sidebar-caption">
+            Publiez vos communiqués, dépêches et actualités d'établissement
+            en quelques secondes — texte enrichi, image, mise en avant.
+        </p>
+    </aside>
 
     <div class="annonce-form-area">
-        
+
         <div class="annonce-header">
             <h1>{% trans "Nouvelle Annonce" %}<span>+</span></h1>
-        </div>
-
-        <div class="stepper">
-            <div class="step-indicator active" id="badgeStep1">1. {% trans "Contenu" %}</div>
-            <div class="step-indicator" id="badgeStep2">2. {% trans "Média & Options" %}</div>
+            <p>Remplissez le formulaire ci-dessous puis cliquez sur « Publier ».</p>
         </div>
 
         {% if messages or form.non_field_errors %}
@@ -412,217 +393,181 @@
         </div>
         {% endif %}
 
-        <form method="POST" enctype="multipart/form-data" id="annonceForm"
-              data-step1-has-error="{% if form.titre.errors or form.slug.errors or form.contenu.errors %}1{% else %}0{% endif %}"
-              data-step2-has-error="{% if form.image.errors or form.est_epinglee.errors or form.est_active.errors %}1{% else %}0{% endif %}">
+        <form method="POST" enctype="multipart/form-data" id="annonceForm" novalidate>
             {% csrf_token %}
 
-            <div class="form-step active" id="step1">
-                <div class="form-group">
-                    <label for="{{ form.titre.id_for_label }}">{{ form.titre.label }}</label>
-                    {{ form.titre }}
-                    {% for err in form.titre.errors %}<div class="field-error">{{ err }}</div>{% endfor %}
-                </div>
+            <!-- ========== SECTION 1 : CONTENU ========== -->
+            <div class="form-section">
+                <p class="section-label">Contenu de l'annonce</p>
 
-                <div class="form-group">
-                    <label for="{{ form.slug.id_for_label }}">{{ form.slug.label }} <span style="color:#94a3b8; font-weight:400;">(optionnel)</span></label>
-                    {{ form.slug }}
-                    {% for err in form.slug.errors %}<div class="field-error">{{ err }}</div>{% endfor %}
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label for="{{ form.titre.id_for_label }}">{{ form.titre.label }}</label>
+                        {{ form.titre }}
+                        {% for err in form.titre.errors %}<div class="field-error">{{ err }}</div>{% endfor %}
+                    </div>
+
+                    <div class="form-group">
+                        <label for="{{ form.slug.id_for_label }}">
+                            {{ form.slug.label }} <span class="optional">(optionnel)</span>
+                        </label>
+                        {{ form.slug }}
+                        {% for err in form.slug.errors %}<div class="field-error">{{ err }}</div>{% endfor %}
+                    </div>
                 </div>
 
                 <div class="form-group">
                     <label for="{{ form.contenu.id_for_label }}">{{ form.contenu.label }}</label>
                     <div style="display: none;">{{ form.contenu }}</div>
-                    <div class="quill-editor-wrapper">
+                    <div class="quill-editor-wrapper" id="quillWrapper">
                         <div id="editor_contenu"></div>
                     </div>
                     {% for err in form.contenu.errors %}<div class="field-error">{{ err }}</div>{% endfor %}
                 </div>
             </div>
 
-            <div class="form-step" id="step2">
+            <!-- ========== SECTION 2 : VISUEL ========== -->
+            <div class="form-section">
+                <p class="section-label">Visuel d'illustration</p>
+
                 <div class="form-group">
-                    <label for="{{ form.image.id_for_label }}">{{ form.image.label }}</label>
-                    <div class="file-drop-zone" onclick="document.getElementById('{{ form.image.id_for_label }}').click()">
-                        <i class="fas fa-cloud-upload-alt" style="font-size: 2rem; color: #4A7c59; margin-bottom: 8px; display: block; opacity: 0.7;"></i>
-                        <span style="font-size: 0.85rem; color: #64748b;">{% trans "Cliquez pour choisir une image d'illustration" %}</span>
+                    <label for="{{ form.image.id_for_label }}">
+                        {{ form.image.label }} <span class="optional">(optionnel)</span>
+                    </label>
+                    <div class="file-drop-zone" id="imageDropZone"
+                         onclick="document.getElementById('{{ form.image.id_for_label }}').click()">
+                        <i class="fas fa-cloud-upload-alt drop-icon"></i>
+                        <div class="drop-label">{% trans "Cliquez pour choisir une image d'illustration" %}</div>
+                        <div class="drop-filename" id="dropFilename"></div>
                         <div style="display: none;">{{ form.image }}</div>
                         <img id="imagePreview" src="#" alt="Aperçu">
                     </div>
                     {% for err in form.image.errors %}<div class="field-error">{{ err }}</div>{% endfor %}
                 </div>
+            </div>
 
-                <div class="form-group">
-                    <label>{% trans "Options de publication" %}</label>
-                    <div class="checkbox-group">
-                        <label class="checkbox-label">
-                            {{ form.est_epinglee }}
-                            <span>{{ form.est_epinglee.label }}</span>
-                        </label>
-                        <label class="checkbox-label">
-                            {{ form.est_active }}
-                            <span>{{ form.est_active.label }}</span>
-                        </label>
-                    </div>
+            <!-- ========== SECTION 3 : OPTIONS ========== -->
+            <div class="form-section">
+                <p class="section-label">Options de publication</p>
+
+                <div class="options-row">
+                    <label class="toggle-card">
+                        {{ form.est_epinglee }}
+                        <div class="toggle-text">
+                            <span class="toggle-title">Épingler en haut</span>
+                            <span class="toggle-sub">Affiché en priorité sur le site</span>
+                        </div>
+                    </label>
+
+                    <label class="toggle-card">
+                        {{ form.est_active }}
+                        <div class="toggle-text">
+                            <span class="toggle-title">Publier l'annonce</span>
+                            <span class="toggle-sub">Décochez pour brouillon</span>
+                        </div>
+                    </label>
                 </div>
             </div>
 
+            <!-- ========== ACTIONS ========== -->
             <div class="form-actions">
-                <a href="{% url 'admin_list_anonces' %}" class="btn btn-secondary" id="btnCancel">
-                    {% trans "Annuler" %}
+                <a href="{% url 'admin_list_anonces' %}" class="btn btn-secondary">
+                    <i class="fas fa-xmark"></i> {% trans "Annuler" %}
                 </a>
-                <button type="button" class="btn btn-secondary" id="btnBack" style="display: none;">
-                    <i class="fas fa-arrow-left"></i> {% trans "Retour" %}
-                </button>
-                <button type="button" class="btn btn-submit" id="btnNext">
-                    {% trans "Suivant" %} <i class="fas fa-arrow-right" style="font-size: 0.8rem; margin-left: 4px;"></i>
-                </button>
-                <button type="submit" class="btn btn-submit" id="btnSubmit" style="display: none;">
+                <button type="submit" class="btn btn-submit" id="btnSubmit">
                     <i class="fas fa-paper-plane"></i> {% trans "Publier l'annonce" %}
                 </button>
             </div>
         </form>
-        
     </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.js"></script>
 <script>
-    document.addEventListener("DOMContentLoaded", function() {
-        // Éléments du DOM pour le multi-étape
-        const step1 = document.getElementById("step1");
-        const step2 = document.getElementById("step2");
-        const badgeStep1 = document.getElementById("badgeStep1");
-        const badgeStep2 = document.getElementById("badgeStep2");
-
+    document.addEventListener("DOMContentLoaded", function () {
         const form = document.getElementById("annonceForm");
-        const btnCancel = document.getElementById("btnCancel");
-        const btnBack = document.getElementById("btnBack");
-        const btnNext = document.getElementById("btnNext");
-        const btnSubmit = document.getElementById("btnSubmit");
-
-        function goToStep2() {
-            step1.classList.remove("active");
-            step2.classList.add("active");
-            badgeStep1.classList.remove("active");
-            badgeStep2.classList.add("active");
-            btnCancel.style.display = "none";
-            btnNext.style.display = "none";
-            btnBack.style.display = "inline-flex";
-            btnSubmit.style.display = "inline-flex";
-        }
-
-        // Si la soumission precedente a echoue, on ouvre directement le step
-        // contenant les erreurs serveur pour que l'admin les voie.
-        if (form.dataset.step2HasError === "1" && form.dataset.step1HasError !== "1") {
-            goToStep2();
-        }
 
         const titreInput = document.getElementById("{{ form.titre.id_for_label }}");
-        const slugInput = document.getElementById("{{ form.slug.id_for_label }}");
+        const slugInput  = document.getElementById("{{ form.slug.id_for_label }}");
         const imageInput = document.getElementById("{{ form.image.id_for_label }}");
         const previewImg = document.getElementById("imagePreview");
+        const dropFilename = document.getElementById("dropFilename");
 
-        // --- 1. SCRIPT DE NAVIGATION ENTRE ÉTAPES ---
-        btnNext.addEventListener("click", function() {
-            // Validation basique : titre + contenu obligatoires avant step 2
-            let invalid = false;
-            if (titreInput && titreInput.value.trim() === "") {
-                titreInput.classList.add("input-invalid");
-                titreInput.focus();
-                invalid = true;
-            } else if (titreInput) {
-                titreInput.classList.remove("input-invalid");
-            }
-
-            // Verifie que Quill a du contenu reel (pas juste <p><br></p>)
-            const quillWrapper = document.querySelector(".quill-editor-wrapper");
-            if (typeof quillContenu !== "undefined" && quillContenu) {
-                const html = quillContenu.root.innerHTML.trim();
-                const text = (quillContenu.getText() || "").trim();
-                if (!text || html === "<p><br></p>" || html === "<p></p>") {
-                    if (quillWrapper) quillWrapper.classList.add("input-invalid");
-                    if (!invalid) quillContenu.focus();
-                    invalid = true;
-                } else if (quillWrapper) {
-                    quillWrapper.classList.remove("input-invalid");
-                }
-            }
-            if (invalid) return;
-
-            goToStep2();
-        });
-
-        btnBack.addEventListener("click", function() {
-            // Retour à l'étape 1
-            step2.classList.remove("active");
-            step1.classList.add("active");
-            badgeStep2.classList.remove("active");
-            badgeStep1.classList.add("active");
-
-            // Gestion des boutons
-            btnCancel.style.display = "inline-flex";
-            btnNext.style.display = "inline-flex";
-            btnBack.style.display = "none";
-            btnSubmit.style.display = "none";
-        });
-
-
-        // --- 2. TEXTE RICHE (QUILL) ---
-        const textareaContenu = document.getElementById("{{ form.contenu.id_for_label }}") || document.querySelector("[name='contenu']");
+        const textareaContenu = document.getElementById("{{ form.contenu.id_for_label }}")
+                              || document.querySelector("[name='contenu']");
         let quillContenu;
 
         if (textareaContenu) {
-            quillContenu = new Quill('#editor_contenu', {
+            quillContenu = new Quill("#editor_contenu", {
                 modules: {
                     toolbar: [
-                        [{ 'header': [1, 2, 3, false] }],
-                        ['bold', 'italic', 'underline', 'strike'],
-                        [{ 'list': 'ordered'}, { 'list': 'bullet' }],
-                        ['link', 'clean']
+                        [{ "header": [1, 2, 3, false] }],
+                        ["bold", "italic", "underline", "strike"],
+                        [{ "list": "ordered" }, { "list": "bullet" }],
+                        ["link", "clean"]
                     ]
                 },
-                theme: 'snow',
-                placeholder: 'Rédigez votre annonce ici...'
+                theme: "snow",
+                placeholder: "Rédigez votre annonce ici..."
             });
-            quillContenu.root.innerHTML = textareaContenu.value;
+
+            // Pre-remplit l'editeur si on edite une annonce existante.
+            // Le contenu vient d'un champ Django saisi par un admin authentifie
+            // (meme trust boundary qu'un staff Django), donc on utilise
+            // l'API officielle Quill pour injecter le HTML existant.
+            const initialContent = textareaContenu.value || "";
+            if (initialContent) {
+                quillContenu.clipboard.dangerouslyPasteHTML(initialContent);
+            }
+
+            // Sync continue : le textarea cache reflete toujours l'etat Quill.
+            quillContenu.on("text-change", function () {
+                textareaContenu.value = quillContenu.root.innerHTML;
+            });
         }
 
-        // --- 3. AUTO SLUG ---
+        // ===== AUTO SLUG =====
         if (titreInput && slugInput) {
-            titreInput.addEventListener("input", function() {
-                let text = titreInput.value;
-                let slug = text.toLowerCase().trim()
-                               .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
-                               .replace(/[^a-z0-9\s-]/g, '')
-                               .replace(/[\s_]+/g, '-').replace(/-+/g, '-');
+            titreInput.addEventListener("input", function () {
+                if (slugInput.dataset.touched === "1") return;
+                const slug = titreInput.value.toLowerCase().trim()
+                    .normalize("NFD").replace(/[̀-ͯ]/g, "")
+                    .replace(/[^a-z0-9\s-]/g, "")
+                    .replace(/[\s_]+/g, "-").replace(/-+/g, "-");
                 slugInput.value = slug;
             });
+            slugInput.addEventListener("input", function () {
+                slugInput.dataset.touched = "1";
+            });
         }
 
-        // --- 4. PREVIEW IMAGE ---
+        // ===== APERCU IMAGE =====
         if (imageInput && previewImg) {
-            imageInput.addEventListener("change", function() {
+            imageInput.addEventListener("change", function () {
                 const file = this.files[0];
                 if (file) {
                     const reader = new FileReader();
-                    reader.onload = function(e) {
+                    reader.onload = function (e) {
                         previewImg.src = e.target.result;
                         previewImg.style.display = "block";
-                    }
+                    };
                     reader.readAsDataURL(file);
+                    if (dropFilename) {
+                        dropFilename.textContent = file.name;
+                        dropFilename.style.display = "block";
+                    }
                 } else {
                     previewImg.style.display = "none";
+                    if (dropFilename) dropFilename.style.display = "none";
                 }
             });
         }
 
-        // --- 5. SYNCHRONISATION AVANT ENVOI DU FORMULAIRE ---
-        // On synchronise simplement le contenu Quill vers le textarea cache,
-        // puis on laisse le formulaire partir vers le serveur. Toute la
-        // validation (titre, contenu non vide, slug unique) est faite cote
-        // serveur et reaffichee via les messages d'erreur en haut du form.
-        form.addEventListener("submit", function() {
+        // ===== SYNC FINALE AVANT SUBMIT =====
+        // On laisse le formulaire partir librement. La validation (titre,
+        // contenu non vide, slug unique) est faite cote serveur et reaffichee
+        // via les alertes en haut du formulaire.
+        form.addEventListener("submit", function () {
             if (textareaContenu && quillContenu) {
                 textareaContenu.value = quillContenu.root.innerHTML;
             }
