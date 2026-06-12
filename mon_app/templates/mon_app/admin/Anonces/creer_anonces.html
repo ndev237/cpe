@@ -618,28 +618,13 @@
         }
 
         // --- 5. SYNCHRONISATION AVANT ENVOI DU FORMULAIRE ---
-        form.addEventListener("submit", function(e) {
+        // On synchronise simplement le contenu Quill vers le textarea cache,
+        // puis on laisse le formulaire partir vers le serveur. Toute la
+        // validation (titre, contenu non vide, slug unique) est faite cote
+        // serveur et reaffichee via les messages d'erreur en haut du form.
+        form.addEventListener("submit", function() {
             if (textareaContenu && quillContenu) {
                 textareaContenu.value = quillContenu.root.innerHTML;
-
-                // Garde cote client : refuse l'envoi si contenu vide
-                const text = (quillContenu.getText() || "").trim();
-                const html = quillContenu.root.innerHTML.trim();
-                if (!text || html === "<p><br></p>" || html === "<p></p>") {
-                    e.preventDefault();
-                    // revient a l'etape 1 pour montrer l'erreur
-                    step2.classList.remove("active");
-                    step1.classList.add("active");
-                    badgeStep2.classList.remove("active");
-                    badgeStep1.classList.add("active");
-                    btnCancel.style.display = "inline-flex";
-                    btnNext.style.display = "inline-flex";
-                    btnBack.style.display = "none";
-                    btnSubmit.style.display = "none";
-                    const wrap = document.querySelector(".quill-editor-wrapper");
-                    if (wrap) wrap.classList.add("input-invalid");
-                    quillContenu.focus();
-                }
             }
         });
     });
