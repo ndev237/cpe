@@ -196,7 +196,7 @@
                 <div class="harvard-course-body">
                     <span class="harvard-course-tag">— {{ f.get_categorie_display }}</span>
                     <h4 class="harvard-course-title">{{ f.titre }}</h4>
-                    <p class="harvard-course-desc">{{ f.description_courte }}</p>
+                    <p class="harvard-course-desc">{{ f.description_courte|safe|striptags|truncatewords:35 }}</p>
                     
                     <div class="harvard-course-meta">
                         <strong>{% trans "Durée du cycle :" %}</strong> {{ f.duree }}
@@ -226,7 +226,7 @@
                 <div class="harvard-course-body">
                     <span class="harvard-course-tag industrielle">— {{ f.get_categorie_display }}</span>
                     <h4 class="harvard-course-title">{{ f.titre }}</h4>
-                    <p class="harvard-course-desc">{{ f.description_courte }}</p>
+                    <p class="harvard-course-desc">{{ f.description_courte|safe|striptags|truncatewords:35 }}</p>
                     
                     <div class="harvard-course-meta">
                         <strong>{% trans "Durée du cycle :" %}</strong> {{ f.duree }}

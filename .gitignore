@@ -54,6 +54,9 @@ cover/
 # Translations
 *.mo
 *.pot
+# Mais on garde les .mo du projet (compilés depuis locale/) pour pouvoir
+# les déployer même si gettext n'est pas installé sur le serveur.
+!locale/**/*.mo
 
 # Django stuff:
 *.log

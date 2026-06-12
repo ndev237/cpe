@@ -410,7 +410,7 @@
                 {{ formation.get_categorie_display|default:_("Formation Professionnelle") }}
             </span>
             <h1 class="hero-title">{{ formation.titre }}</h1>
-            <p class="hero-desc">{{ formation.description_courte }}</p>
+            <p class="hero-desc">{{ formation.description_courte|safe|striptags|truncatewords:50 }}</p>
         </div>
 
         {% if formation.image %}
