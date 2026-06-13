@@ -116,7 +116,85 @@
 
     .post-content-text {
         margin-bottom: 1.25rem;
-        white-space: pre-line;
+    }
+
+    /* --- Typographie du contenu riche (Quill) --- */
+    .post-content-text p {
+        margin: 0 0 1em 0;
+        line-height: 1.65;
+    }
+    .post-content-text p:last-child { margin-bottom: 0; }
+    .post-content-text p:empty { display: none; }
+
+    .post-content-text h1,
+    .post-content-text h2,
+    .post-content-text h3 {
+        font-family: Georgia, Cambria, "Times New Roman", Times, serif;
+        color: #003366;
+        font-weight: 700;
+        letter-spacing: -0.01em;
+        line-height: 1.25;
+        margin: 1.6em 0 .6em;
+    }
+    .post-content-text h1 { font-size: 1.65rem; }
+    .post-content-text h2 { font-size: 1.35rem; }
+    .post-content-text h3 { font-size: 1.15rem; }
+
+    .post-content-text strong { font-weight: 700; color: #0f172a; }
+    .post-content-text em     { font-style: italic; }
+    .post-content-text u      { text-decoration: underline; text-decoration-thickness: 1.5px; text-underline-offset: 3px; }
+    .post-content-text s      { color: #94a3b8; }
+
+    .post-content-text a {
+        color: #003366;
+        text-decoration: underline;
+        text-decoration-color: #D18FB2;
+        text-decoration-thickness: 1.5px;
+        text-underline-offset: 3px;
+        transition: color .18s ease;
+    }
+    .post-content-text a:hover { color: #D18FB2; }
+
+    .post-content-text ol,
+    .post-content-text ul {
+        margin: .25em 0 1.25em;
+        padding-left: 1.6em;
+    }
+    .post-content-text li {
+        margin-bottom: .35em;
+        line-height: 1.6;
+    }
+    .post-content-text ol > li::marker {
+        color: #003366;
+        font-weight: 700;
+    }
+    .post-content-text ul > li::marker {
+        color: #D18FB2;
+    }
+
+    .post-content-text blockquote {
+        border-left: 3px solid #D18FB2;
+        margin: 1em 0;
+        padding: .25em 0 .25em 1em;
+        color: #475569;
+        font-style: italic;
+        background: #f8fafc;
+    }
+
+    .post-content-text code {
+        background: #f1f5f9;
+        padding: .1em .35em;
+        border-radius: 3px;
+        font-size: 0.92em;
+        font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+        color: #0f172a;
+    }
+
+    .post-content-text img {
+        max-width: 100%;
+        height: auto;
+        border-radius: 6px;
+        margin: .75em 0;
     }
 
     /* --- VISUEL / IMAGE ATTACHÉE --- */
@@ -229,7 +307,7 @@
         <h1 class="post-title">{{ annonce.titre }}</h1>
 
         <div class="post-content">
-            <div class="post-content-text">{{ annonce.contenu|linebreaksbr }}</div>
+            <div class="post-content-text">{{ annonce.contenu|safe }}</div>
         </div>
 
         {% if annonce.image %}

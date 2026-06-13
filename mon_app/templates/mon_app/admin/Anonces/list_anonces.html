@@ -324,7 +324,7 @@
                             {{ annonce.titre }}
                         </div>
                         <div class="annonce-searchable-content annonce-content-text">
-                            {{ annonce.contenu }}
+                            {{ annonce.contenu|safe|striptags|truncatewords:20 }}
                         </div>
                     </td>
                     <td class="annonce-date-text">
